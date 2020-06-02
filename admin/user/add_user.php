@@ -23,15 +23,16 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/sis_lib.php'; 
-require_once '../../lib/sis_ui_lib.php'; 
-require_once '../../lib/sis_query_lib.php'; 
+require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_ui_lib.php'; 
+require_once '../../lib/jra_query_lib.php'; 
+require_once '../../user/lib.php'; //user library
 require_once 'lib.php';
 
 require_once 'form.php';
 
 $urlparams = $_GET;
-$PAGE->set_url('/local/sis/user/account/add_user.php', $urlparams);
+$PAGE->set_url('/local/jra/admin/user/index.php', $urlparams);
 $PAGE->set_course($SITE);
 $PAGE->set_cacheable(false);
 
@@ -40,29 +41,28 @@ $access_rules = array(
 	'role' => 'admin',
 	'subrole' => 'all',
 );
-sis_access_control($access_rules);
+jra_access_control($access_rules);
 
 $id = optional_param('id', false, PARAM_INT);
 if($id)
 {
 	$qs = '?id=' . $id;
-	$bc = 'update_user';
+	$bc = ['update', 'user'];
 }
 else
 {
 	$qs = '';
-	$bc = 'add_user';
+	$bc = ['add', 'user'];
 }
-//sis - 1 column
-$PAGE->set_pagelayout('sis');
-$PAGE->set_title(sis_site_fullname());
-$PAGE->set_heading(sis_site_fullname());
-sis_set_session('sis_home_tab', 'system');
-$PAGE->navbar->add(get_string('system', 'local_sis'), new moodle_url($CFG->wwwroot . '/index.php', array('tab' => 'system')));
-$PAGE->navbar->add(get_string('user', 'local_sis'), new moodle_url('index.php'));
-$PAGE->navbar->add(get_string($bc, 'local_sis'), new moodle_url('add_user.php' . $qs));
+//jra - 1 column
+$PAGE->set_pagelayout('jra');
+$PAGE->set_title(jra_site_fullname());
+$PAGE->set_heading(jra_site_fullname());
+$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(jra_get_string(['user', 'management']), new moodle_url('index.php'));
+$PAGE->navbar->add(jra_get_string($bc), new moodle_url('add_user.php'));
 
-$return_params = sis_get_session('si_user_return_params');
+$return_params = jra_get_session('jra_user_return_params');
 if($return_params == '')
 	$return_params = array();
 $return_url = new moodle_url('index.php', $return_params);
@@ -79,55 +79,32 @@ if ($mform->is_cancelled())
 else if ($data = $mform->get_data()) 
 {		
 	//validate that there is no duplicate
-	$isDuplicate = sis_user_account_duplicate($data);
+	$isDuplicate = jra_username_duplicate($data);
 	if(!$isDuplicate) //no duplicate, update it
 	{
 		$now = time();
-		$institute = sis_get_institute();
 		if($data->id == '') //create new
 		{
-			if($data->appid == sis_global_var('TEMP_USER_ID'))
-				$data->eff_status = 'I';
-			else
-				$data->eff_status = 'A';
-			if($data->appid == sis_global_var('TEMP_USER_ID')) //---
-				$data->deleted = 1;
-			else
-				$data->deleted = 0;
-		
+			//for manual creation, the account is automatically active
+			$data->active_status = 'A';
+			$data->deleted = 0;
 			$data->enable_login = 'Y';
+			$data->email = $data->username;
+			$var_name = 'system_default_password_custom';
+			$pswd = jra_get_config($var_name);
+			$data->password = jra_user_password_hash($pswd);
+			$data->password_change = 'Y'; //force password to change in the first time login
+			
+			$data->active_date = $now;
 			$data->date_created = $now;
 			$data->date_updated = $now;
-			$new_id = $DB->insert_record('si_user', $data);	
-			//create the civil id
-			$info = new stdClass();
-			$info->user_id = $new_id;
-			$info->civil_id = $data->national_id;
-			$info->id_type = $data->id_type;
-			$info->language_track = 'en';
-			$info->date_created = $now;
-			$info->date_updated = $now;
-			$info->institute = $institute;
-			$DB->insert_record('si_personal_data', $info);	
-			if($data->email_primary != '') //has email, create it
-			{
-				$contact = new stdClass();
-				$contact->user_id = $new_id;
-				$contact->address_type = 'primary';
-				$contact->email_primary = $data->email_primary;
-				$contact->date_created = $now;
-				$contact->date_updated = $now;
-				$contact->institute = $institute;
-				$DB->insert_record('si_personal_contact', $contact);	
-				
-			}
-
+			$DB->insert_record('jra_user', $data);	
 		}
 		else
 		{
 			$data->date_updated = $now;
-			$DB->update_record('si_user', $data);			
-			sis_log_data('si_user', $data); //log the change
+			$DB->update_record('jra_user', $data);			
+			jra_log_data('jra_user', $data); //log the change
 		}
 	    redirect($return_url);
 	}
@@ -136,9 +113,9 @@ else if ($data = $mform->get_data())
 echo $OUTPUT->header();
 
 if($isDuplicate)
-	sis_ui_alert(get_string('duplicate_user', 'local_sis'), 'danger');
+	jra_ui_alert(get_string('duplicate_user', 'local_jra'), 'danger');
 //content code starts here
-sis_ui_page_title(get_string('add_user', 'local_sis'));
+jra_ui_page_title(jra_get_string($bc));
 
 if(isset($_GET['id']))
 {
@@ -150,7 +127,7 @@ if(isset($_GET['id']))
 
 $mform->display();
 
-$PAGE->requires->js('/local/sis/user/account/account.js');
-$PAGE->requires->js('/local/sis/script.js'); //global javascript
+$PAGE->requires->js('/local/jra/user/account/account.js');
+$PAGE->requires->js('/local/jra/script.js'); //global javascript
 
 echo $OUTPUT->footer();

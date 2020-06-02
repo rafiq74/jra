@@ -1198,7 +1198,7 @@ function jra_ui_search_reference($fields)
 			}
 			else if($key == 'eff_status')
 			{
-				$arr = jra_lookup_isactive();
+				$arr = jra_lookup_is_active();
 				if(isset($field['header']))
 					$k = $field['header'];
 				else
@@ -1508,6 +1508,8 @@ function jra_ui_dropdown_menu($items, $text, $type = 'primary', $ret = true)
 			$str = $str . '<div class="dropdown-divider"></div>';
 		else
 		{
+			$target = '';
+			$icon = '';
 			if($item['target'] != '')
 				$target = 'target="' . $item['target'] . '"';
 			if($item['icon'] != '')

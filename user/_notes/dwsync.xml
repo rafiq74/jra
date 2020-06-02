@@ -2,16 +2,9 @@
 <dwsync>
 <file name="index.php" server="ftp.itechjo.com/public_html/sis/" local="132132592734442681" remote="132184288800000000" />
 <file name="lib.php" server="ftp.itechjo.com/public_html/sis/" local="132249509525353552" remote="132249258000000000" />
-<file name="role_action.php" server="ftp.itechjo.com/public_html/sis/" local="132111958145311525" remote="132184288800000000" />
-<file name="suspend.php" server="ftp.itechjo.com/public_html/sis/" local="132132592735066246" remote="132184288800000000" />
-<file name="suspend_action.php" server="ftp.itechjo.com/public_html/sis/" local="132111958144831492" remote="132184288800000000" />
-<file name="suspend_form.php" server="ftp.itechjo.com/public_html/sis/" local="131514942862588626" remote="132184288800000000" />
-<file name="suspend_message.php" server="ftp.itechjo.com/public_html/sis/" local="132132592735804026" remote="132184288800000000" />
-<file name="tabs.php" server="ftp.itechjo.com/public_html/sis/" local="132109299584780489" remote="132184288800000000" />
 <file name="user.js" server="ftp.itechjo.com/public_html/sis/" local="132011829010000000" remote="132184288800000000" />
 <file name="user_action.php" server="ftp.itechjo.com/public_html/sis/" local="132111958144351488" remote="132184288800000000" />
 <file name="change_password.php" server="ftp.itechjo.com/public_html/sis/" local="132167631022257290" remote="132184288800000000" />
-<file name="change_password_form.php" server="ftp.itechjo.com/public_html/sis/" local="132167629258579419" remote="132184288800000000" />
 <file name="forget_password.php" server="ftp.itechjo.com/public_html/sis/" local="132167594627688442" remote="132184288800000000" />
 <file name="reset_password.php" server="ftp.itechjo.com/public_html/sis/" local="132167634108312060" remote="132184288800000000" />
 <file name="eula.php" server="ftp.itechjo.com/public_html/sis/" local="132253045046490675" remote="132252795000000000" />

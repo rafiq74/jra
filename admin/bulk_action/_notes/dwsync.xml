@@ -6,9 +6,5 @@
 <file name="tabs.php" server="ftp.itechjo.com/public_html/sis/" local="132140613869315306" remote="132184285200000000" />
 <file name="migrate.php" server="ftp.itechjo.com/public_html/sis/" local="132341448530189268" remote="132341691000000000" />
 <file name="view.php" server="ftp.itechjo.com/public_html/sis/" local="132332452827731373" remote="132341170800000000" />
-<file name="delete_institute.php" server="ftp.itechjo.com/public_html/sis/" local="132140598689780142" remote="132184285200000000" />
-<file name="delete_institute_data.php" server="ftp.itechjo.com/public_html/sis/" local="132140601900961501" remote="132184285200000000" />
-<file name="replicate_institute_data.php" server="ftp.itechjo.com/public_html/sis/" local="132140613293182197" remote="132184285200000000" />
-<file name="replication.php" server="ftp.itechjo.com/public_html/sis/" local="132140600530619351" remote="132184285200000000" />
 <file name="backup.php" server="ftp.itechjo.com/public_html/sis/" local="132297007869661414" remote="132296755800000000" />
 </dwsync>

@@ -34,6 +34,14 @@ function jra_admin_menu()
 	$str = $str . '<div class="row text-center">';
 	//one icon
 	$str = $str . '<div class="col-md-2 pt-' . $padding . '">';
+	$icon_url = new moodle_url('/local/jra/admin/user/index.php');
+	$url_text = '<div>' . jra_ui_icon('group', '3', true) . '</div>';
+	$url_text = $url_text . '<div class="pt-2 pb-3"><strong>' . jra_get_string(['user', 'management']) . '</strong></div>';
+	$str = $str . html_writer::link($icon_url, $url_text, array());
+	$str = $str . '</div>';
+	//end of one icon
+	//one icon
+	$str = $str . '<div class="col-md-2 pt-' . $padding . '">';
 	$icon_url = new moodle_url('plan/index.php');
 	$url_text = '<div>' . jra_ui_icon('ticket', '3', true) . '</div>';
 	$url_text = $url_text . '<div class="pt-2 pb-3"><strong>' . jra_get_string(['subscription', 'plan']) . '</strong></div>';
@@ -56,6 +64,22 @@ function jra_admin_menu()
 	$str = $str . html_writer::link($icon_url, $url_text, array());
 	$str = $str . '</div>';
 	//end of one icon
+
+	$access_rules = array(
+		'system' => ''
+	); //super admin role only
+	$is_system = jra_access_control($access_rules, false);
+	if($is_system) //only for system administrator
+	{
+		//one icon
+		$str = $str . '<div class="col-md-2 pt-' . $padding . '">';
+		$icon_url = new moodle_url('bulk_action/index.php');
+		$url_text = '<div>' . jra_ui_icon('cubes', '3', true) . '</div>';
+		$url_text = $url_text . '<div class="pt-2 pb-3"><strong>' . jra_get_string(['bulk', 'action']) . '</strong></div>';
+		$str = $str . html_writer::link($icon_url, $url_text, array());
+		$str = $str . '</div>';
+		//end of one icon
+	}
 	$str = $str . '</div>';
 	return $str;	
 }

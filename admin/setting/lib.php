@@ -50,7 +50,6 @@ function jra_admin_setting_security()
 	$var_name = 'system_default_password';
 	$var_value = jra_get_config($var_name);
 	$password_list = array(
-		'civil_id' => get_string('civil_id', 'local_jra'),
 		'custom' => get_string('custom_password_text', 'local_jra'),
 	);
 	$obj->right_content = jra_ui_select($var_name, $password_list, $var_value);
@@ -62,7 +61,7 @@ function jra_admin_setting_security()
 	$obj->left_content = get_string('custom_password_text', 'local_jra');
 	$var_name = 'system_default_password_custom';
 	$var_value = jra_get_config($var_name);
-	$obj->right_content = jra_ui_input($var_name, '5', $var_value);
+	$obj->right_content = jra_ui_input($var_name, '30', $var_value);
 	$data[] = $obj;
 	//end of data row	
 	$yesno = jra_lookup_yes_no();
@@ -71,26 +70,6 @@ function jra_admin_setting_security()
 	$obj->column = 2;
 	$obj->left_content = get_string('force_password_change', 'local_jra');
 	$var_name = 'system_force_password_change';
-	$var_value = jra_get_config($var_name);
-	$obj->right_content = jra_ui_select($var_name, $yesno, $var_value);
-	$data[] = $obj;
-	//end of data row	
-	//one row of data
-	$obj = new stdClass();
-	$obj->column = 3;
-	$obj->left_content = '';
-	$obj->center_content = get_string('student', 'local_jra');
-	$obj->right_content = get_string('employee', 'local_jra');
-	$data[] = $obj;
-	//end of data row	
-	//one row of data
-	$obj = new stdClass();
-	$obj->column = 3;
-	$obj->left_content = get_string('allow_password_change', 'local_jra');
-	$var_name = 'student_allow_password_change';
-	$var_value = jra_get_config($var_name);
-	$obj->center_content = jra_ui_select($var_name, $yesno, $var_value);
-	$var_name = 'employee_allow_password_change';
 	$var_value = jra_get_config($var_name);
 	$obj->right_content = jra_ui_select($var_name, $yesno, $var_value);
 	$data[] = $obj;

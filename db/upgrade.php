@@ -58,7 +58,7 @@ function xmldb_local_jra_upgrade($oldversion) {
     $dbman = $DB->get_manager(); //this is new in moodle 3.0
     
     // Put any upgrade step following this.
-    $newversion = 2016062460; //put the new version number here
+    $newversion = 2016062461; //put the new version number here
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
 		
@@ -117,19 +117,21 @@ function xmldb_local_jra_upgrade($oldversion) {
         }
 */
 
-        // Define table jra_plan to be created.
-        $table = new xmldb_table('jra_plan');
+        // Rename field sort_order on table si_plan to NEWNAMEGOESHERE.
+        $table = new xmldb_table('jra_user');
+        $field = new xmldb_field('appid', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'id');
 
-        $field = new xmldb_field('eff_status', XMLDB_TYPE_CHAR, '1', null, null, null, null, 'filename');
+        // Launch rename field sort_order.
+        $dbman->rename_field($table, $field, 'username');
+		
+        $field = new xmldb_field('moodle_user_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'username');
+
+        // Launch rename field sort_order.
+        $dbman->rename_field($table, $field, 'moodle_user_id');
+
+        $field = new xmldb_field('email', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'moodle_user_id');
 
         // Conditionally launch add field suspended.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        $field = new xmldb_field('sort_order', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'eff_seq');
-
-        // Conditionally launch add field deleted.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }

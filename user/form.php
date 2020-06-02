@@ -121,9 +121,6 @@ class forget_password_form extends moodleform
 
 		$mform->addElement('hidden', 'id', '');	
 
-		$mform->addElement('text', 'username', get_string('username'), array('size' => 50));
-		$mform->addRule('username', get_string('username') . ' ' . get_string('cannot_empty', 'local_sis'), 'required', '', 'client', false, false);
-		
 		$mform->addElement('text', 'email', get_string('email'), array('size' => 50));
 		$mform->addRule('email', get_string('email') . ' ' . get_string('cannot_empty', 'local_sis'), 'required', '', 'client', false, false);
 		

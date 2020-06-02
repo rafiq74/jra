@@ -27,11 +27,11 @@
 require('../../../config.php');
 require_once $CFG->libdir.'/authlib.php';
 require_once($CFG->dirroot.'/user/lib.php');
-//require_once '../lib/sis_lib.php'; //
-//require_once '../lib/sis_lib.php'; //never allow sis_lib to be here because it will cause cyclic redirection for password redirect
-require_once '../lib/sis_ui_lib.php'; 
+//require_once '../lib/jra_lib.php'; //
+//require_once '../lib/jra_lib.php'; //never allow jra_lib to be here because it will cause cyclic redirection for password redirect
+require_once '../lib/jra_ui_lib.php'; 
 require('lib.php');
-require_once('change_password_form.php');
+require_once('form.php');
 
 $id     = optional_param('id', SITEID, PARAM_INT); // current course
 $return = optional_param('return', 0, PARAM_BOOL); // redirect after password change
@@ -39,10 +39,10 @@ $return = optional_param('return', 0, PARAM_BOOL); // redirect after password ch
 $systemcontext = context_system::instance();
 
 //HTTPS is required in this page when $CFG->loginhttps enabled
-$PAGE->https_required();
+//$PAGE->https_required();
 
 $urlparams = array('id' => $id);
-$PAGE->set_url('/local/sis/user/change_password.php', $urlparams);
+$PAGE->set_url('/local/jra/user/change_password.php', $urlparams);
 
 $PAGE->set_context($systemcontext);
 
@@ -70,37 +70,19 @@ require_login(); //always require login
 $allowChange = true;
 if ($USER->auth != 'db') 
 {
-	$a_url = new moodle_url($CFG->httpswwwroot.'/user/editadvanced.php', array('id' => $USER->id, 'course' => 1, 'returnto' => 'profile'));
+	$a_url = new moodle_url($CFG->wwwroot.'/user/editadvanced.php', array('id' => $USER->id, 'course' => 1, 'returnto' => 'profile'));
     redirect($a_url);
-}
-else if($USER->auth == 'db') //check if user allow to change password 
-{
-	$user = $DB->get_record('si_user', array('id' => $USER->idnumber));
-	$var_name = $user->user_type . '_allow_password_change';
-	//cannot use get_config because we cannot include the global library due to the bootstraper
-	//manually retrieve the variable
-	$condition = array(
-		'institute' => $user->institute,
-		'name' => $var_name,
-	);
-	$result = $DB->get_record('si_config', $condition);
-	if($result)
-		$var_value = $result->var_value;
-	else
-		$var_value = '';		
-	if($var_value == 'N')
-		$allowChange = false;
 }
 
 $PAGE->set_context(context_user::instance($USER->id));
 $PAGE->set_pagelayout('maintenance'); //set to maintenance where there is no redirect function to avoid circular redirection
 $PAGE->set_course($course);
 
-$PAGE->set_title(get_string('brand_name', 'local_sis'));
-$PAGE->set_heading(get_string('brand_name', 'local_sis'));
-$_SESSION['sis_home_tab'] = 'sis';
-$PAGE->navbar->add(get_string('system', 'local_sis'), new moodle_url($CFG->wwwroot . '/index.php', array('tab' => 'system')));
-$PAGE->navbar->add(get_string('change_password', 'local_sis'), new moodle_url('change_password.php'));
+$PAGE->set_title(get_string('brand_name', 'local_jra'));
+$PAGE->set_heading(get_string('brand_name', 'local_jra'));
+$_SESSION['jra_home_tab'] = 'jra';
+$PAGE->navbar->add(get_string('system', 'local_jra'), new moodle_url($CFG->wwwroot . '/index.php', array('tab' => 'system')));
+$PAGE->navbar->add(get_string('change_password', 'local_jra'), new moodle_url('change_password.php'));
 
 $mform = new login_change_password_form();
 $mform->set_data(array('id'=>$course->id));
@@ -110,7 +92,7 @@ $navlinks[] = array('name' => $strparticipants, 'link' => "$CFG->wwwroot/user/in
 
 if ($mform->is_cancelled()) 
 {
-	if(isset($_SESSION['sis_change_password']) && $_SESSION['sis_change_password'] === true)
+	if(isset($_SESSION['jra_change_password']) && $_SESSION['jra_change_password'] === true)
 	{
 		$sesskey = $USER->sesskey;
 		$url = new moodle_url($CFG->wwwroot.'/login/logout.php', array('sesskey' => $sesskey));
@@ -121,8 +103,8 @@ if ($mform->is_cancelled())
 } 
 else if ($data = $mform->get_data()) 
 {	
-	if(sis_user_update_password($USER, $data->newpassword1)) //if successfully change password
-		$_SESSION['sis_change_password'] = false; //cancel the password change session
+	if(jra_user_update_password($USER, $data->newpassword1)) //if successfully change password
+		$_SESSION['jra_change_password'] = false; //cancel the password change session
     if (!empty($CFG->passwordchangelogout)) {
         \core\session\manager::kill_user_sessions($USER->id, session_id());
     }
@@ -148,7 +130,7 @@ else if ($data = $mform->get_data())
 }
 
 // make sure we really are on the https page when https login required
-$PAGE->verify_https_required();
+//$PAGE->verify_https_required();
 
 $strchangepassword = get_string('changepassword');
 
@@ -158,7 +140,7 @@ $PAGE->set_title($strchangepassword);
 $PAGE->set_heading($fullname);
 echo $OUTPUT->header();
 
-sis_ui_page_title(get_string('changepassword'));
+jra_ui_page_title(get_string('changepassword'));
 
 if($allowChange)
 {
@@ -166,17 +148,17 @@ if($allowChange)
 		echo $OUTPUT->notification(get_string('forcepasswordchangenotice'));
 	}
 	
-	if(isset($_SESSION['sis_change_password']) && $_SESSION['sis_change_password'] === true)
+	if(isset($_SESSION['jra_change_password']) && $_SESSION['jra_change_password'] === true)
 	{
-		sis_ui_alert(get_string('need_change_password', 'local_sis'), 'info', 'Note', true, false);
+		jra_ui_alert(get_string('need_change_password', 'local_jra'), 'info', 'Note', true, false);
 	}
 	$mform->display();
 }
 else
 {
-	$msg = get_string('cannot_change_password', 'local_sis');
+	$msg = get_string('cannot_change_password', 'local_jra');
 	$url = new moodle_url($CFG->wwwroot . '/index.php');
-	$msg = $msg . '<div class="pt-3 text-center">' . sis_ui_button(get_string('continue'), $url) . '</div>';	
-	sis_ui_alert($msg, 'danger', 'Note', false, false);		
+	$msg = $msg . '<div class="pt-3 text-center">' . jra_ui_button(get_string('continue'), $url) . '</div>';	
+	jra_ui_alert($msg, 'danger', 'Note', false, false);		
 }
 echo $OUTPUT->footer();

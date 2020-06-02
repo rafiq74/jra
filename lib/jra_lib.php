@@ -292,8 +292,8 @@ $params = [role] => [subrole] => [parameter1, parameter2, parameter3]
 					
 $params['admin'] is a special role for super admin (site administrator)
 */
-//check if user is SIS system admin. We avoid using is_siteadmin because it only allows 1 user.
-//for now we use is_siteadmin. But later we can change to other role. This role must be a moodle defined role, not sis role
+//check if user is jra system admin. We avoid using is_siteadmin because it only allows 1 user.
+//for now we use is_siteadmin. But later we can change to other role. This role must be a moodle defined role, not jra role
 function jra_is_system_admin()
 {
 	if(is_siteadmin()) //for super admin, always allow
@@ -304,7 +304,7 @@ function jra_is_system_admin()
 
 /* params is a list of allowable access pass from the page access by user
 system - moodle site administrator
-admin - sis administrator
+admin - jra administrator
 
 error_fail will throw error if failed, else return false
 
@@ -422,7 +422,7 @@ function jra_validate_user_role($user_roles, $params)
 function jra_throw_access_denied($msg = 'access_error')
 {
 	global $PAGE, $OUTPUT, $SITE;
-	$PAGE->set_pagelayout('sis');
+	$PAGE->set_pagelayout('jra');
 	$PAGE->set_title(jra_site_fullname());
 	$PAGE->set_heading(jra_site_fullname());
 	echo $OUTPUT->header();
@@ -502,7 +502,7 @@ function jra_get_roles()
 	$arr['student'] = get_string('student', 'local_jra');
 	$arr['finance'] = get_string('finance', 'local_jra');
 	$arr['employee'] = get_string('employee', 'local_jra');
-	$arr['admin'] = get_string('sis', 'local_jra') . ' ' . get_string('administrator');
+	$arr['admin'] = get_string('jra', 'local_jra') . ' ' . get_string('administrator');
 	return $arr;
 }
 
@@ -576,21 +576,13 @@ function jra_bootstraper($redir = true)
 	if($USER->auth == 'db' && !isset($USER->jra_user))
 	{
 		$u = $DB->get_record('jra_user', array('id' => $USER->idnumber));
-		if($u->user_type == 'student') //if he is a student, check for activeness
-		{
-			require_once 'jra_query_lib.php';
-			require_once 'jra_app_lib.php';
-			require_once 'jra_ui_lib.php';
-			if(!jra_app_get_active_student($u->appid)) //student not active, don't allow log in
-			{
-				$url = new moodle_url($CFG->wwwroot . '/login/logout.php');
-				throw new moodle_exception(get_string('inactive_student_error', 'local_jra') . '<br /><br />' . jra_ui_button_link($url, get_string('continue'), 'warning') . '');	
-			}
-		}
 		$USER->jra_user = $u; //remember the session
 	}
-	jra_eula(); //end user licence agreement
-	jra_need_change_password();
+	if (isloggedin()) //this part only for logged in user
+	{
+		jra_eula(); //end user licence agreement
+		jra_need_change_password();
+	}
 	//check if user is suspended
 //	jra_is_suspended();
 	//for course page bootstraper
@@ -612,7 +604,7 @@ function jra_need_change_password($redir = true)
 		{			
 			if($redir)
 			{
-				$url = new moodle_url($CFG->wwwroot . '/local/sis/user/change_password.php');
+				$url = new moodle_url($CFG->wwwroot . '/local/jra/user/change_password.php');
 			    redirect($url);
 			}
 			else
@@ -625,21 +617,16 @@ function jra_need_change_password($redir = true)
 		if($USER->auth == 'db') //only if it is from external user
 		{
 			$u = $DB->get_record('jra_user', array('id' => $USER->idnumber));
-			$var_name = $u->user_type . '_allow_password_change';
-			$var_value = jra_get_config($var_name);
-			if($var_value == 'Y')
+			if($u && $u->password_change == 'Y')
 			{
-				if($u && $u->password_change == 'Y')
+				$_SESSION['jra_change_password'] = true;
+				if($redir)
 				{
-					$_SESSION['jra_change_password'] = true;
-					if($redir)
-					{
-						$url = new moodle_url($CFG->wwwroot . '/local/sis/user/change_password.php');
-						redirect($url);
-					}
-					else
-						return true;
+					$url = new moodle_url($CFG->wwwroot . '/local/jra/user/change_password.php');
+					redirect($url);
 				}
+				else
+					return true;
 			}
 		}
 	}
@@ -654,7 +641,7 @@ function jra_eula($redir = true)
 		{			
 			if($redir)
 			{
-				$url = new moodle_url($CFG->wwwroot . '/local/sis/user/eula.php');
+				$url = new moodle_url($CFG->wwwroot . '/local/jra/user/eula.php');
 			    redirect($url);
 			}
 			else
@@ -664,7 +651,7 @@ function jra_eula($redir = true)
 		{
 			if($USER->jra_user->eula == 'R')
 			{
-				$url = new moodle_url($CFG->wwwroot . '/local/sis/user/eula_reject.php');
+				$url = new moodle_url($CFG->wwwroot . '/local/jra/user/eula_reject.php');
 				redirect($url);
 			}
 		}
@@ -684,7 +671,7 @@ function jra_eula($redir = true)
 					$_SESSION['jra_eula'] = 2; //user has not confirm eula
 					if($redir)
 					{
-						$url = new moodle_url($CFG->wwwroot . '/local/sis/user/eula.php');
+						$url = new moodle_url($CFG->wwwroot . '/local/jra/user/eula.php');
 						redirect($url);
 					}
 					else
@@ -693,7 +680,7 @@ function jra_eula($redir = true)
 				else if($u->eula == 'R') //user has rejected the eula, so redirect to reject page
 				{
 					$_SESSION['jra_eula'] = 3; //user rejected eula
-					$url = new moodle_url($CFG->wwwroot . '/local/sis/user/eula_reject.php');
+					$url = new moodle_url($CFG->wwwroot . '/local/jra/user/eula_reject.php');
 					redirect($url);
 				}
 			}
@@ -704,17 +691,7 @@ function jra_eula($redir = true)
 function jra_allow_password_change($m_user)
 {
 	global $DB;
-	if($m_user->auth == 'db') //only if it is from external user
-	{
-		$user = $DB->get_record('jra_user', array('id' => $m_user->idnumber));
-		$var_name = $user->user_type . '_allow_password_change';
-		$var_value = jra_get_config($var_name);
-		if($var_value == 'N')
-			return false;
-		else
-			return true;
-	}
-	return true;
+	return true; //for jra, always return true
 }
 
 //convert date to hijrah given a date in the format d-M-Y
@@ -878,7 +855,7 @@ function jra_is_suspended($redir = true)
 		{			
 			if($redir)
 			{
-				$url = new moodle_url($CFG->wwwroot . '/local/sis/suspended.php');
+				$url = new moodle_url($CFG->wwwroot . '/local/jra/suspended.php');
 			    redirect($url);
 			}
 			else
