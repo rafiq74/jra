@@ -29,13 +29,8 @@ require_once 'lib.php'; //local library
 
 require_login(); //always require login
 
-//Role checking code here
-$isAdmin = jra_is_system_admin();
-if(!isAdmin) //not admin, do not allow
-	throw new moodle_exception('Access denied. This module is only accessible by administrator.');
-
 $urlparams = $_GET;
-$PAGE->set_url('/local/jra/user/index.php', $urlparams);
+$PAGE->set_url('/local/jra/user/profile.php', $urlparams);
 $PAGE->set_course($SITE);
 $PAGE->set_cacheable(false);
 
@@ -44,7 +39,7 @@ $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
 //set up breadcrumb
-$PAGE->navbar->add(get_string('user_management', 'local_jra'), new moodle_url('index.php'));
+$PAGE->navbar->add(jra_get_string(['user', 'profiles']), new moodle_url('profile.php'));
 //end of breadcrumb
 
 echo $OUTPUT->header();
@@ -52,7 +47,7 @@ echo $OUTPUT->header();
 //content code starts here
 
 //content code starts here
-jra_ui_page_title(get_string('user_management', 'local_jra'));
+jra_ui_page_title(jra_get_string(['user', 'profiles']));
 
 
 //for now no need js yet

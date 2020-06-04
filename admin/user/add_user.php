@@ -67,11 +67,7 @@ if($return_params == '')
 	$return_params = array();
 $return_url = new moodle_url('index.php', $return_params);
 
-//put before header so we can redirect
-if($id) //update
-	$mform = new user_form_edit();
-else
-	$mform = new user_form();
+$mform = new user_form();
 if ($mform->is_cancelled()) 
 {
     redirect('index.php');
@@ -102,6 +98,7 @@ else if ($data = $mform->get_data())
 		}
 		else
 		{
+			$data->email = $data->username;
 			$data->date_updated = $now;
 			$DB->update_record('jra_user', $data);			
 			jra_log_data('jra_user', $data); //log the change
@@ -120,14 +117,14 @@ jra_ui_page_title(jra_get_string($bc));
 if(isset($_GET['id']))
 {
 	$id = $_GET['id'];
-	$toform = $DB->get_record('si_user', array('id' => $id));
+	$toform = $DB->get_record('jra_user', array('id' => $id));
 	if($toform)
 		$mform->set_data($toform);
 }
 
 $mform->display();
 
-$PAGE->requires->js('/local/jra/user/account/account.js');
+$PAGE->requires->js('/local/jra/admin/user/user.js');
 $PAGE->requires->js('/local/jra/script.js'); //global javascript
 
 echo $OUTPUT->footer();

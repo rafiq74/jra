@@ -48,7 +48,7 @@ function jra_username_duplicate($data)
 }
 
 ///////rc roles function//////////////////
-function jra_user_account_assign_role($to_add, $role, $subrole, $role_value, $campus = '')
+function jra_admin_user_assign_role($to_add, $role, $subrole, $role_value, $campus = '')
 {
 	global $DB, $USER;
 	$now = time();
@@ -64,22 +64,22 @@ function jra_user_account_assign_role($to_add, $role, $subrole, $role_value, $ca
 		$data->scope = '';
 		$data->added_by = $USER->id;
 		$data->date_added = $now;
-		$data->institute = jra_get_institute();
+		$data->country = jra_get_country();
 		$duplicate_condition = array(
 			'user_id' => $data->user_id,
 			'role' => $data->role,
 			'subrole' => $data->subrole,
 		);
-		$isDuplicate = jra_query_is_duplicate('si_role_user', $duplicate_condition, $data->id);
+		$isDuplicate = jra_query_is_duplicate('jra_role_user', $duplicate_condition, $data->id);
 		if(!$isDuplicate) //no duplicate, update it, otherwise, don't do anything
 		{
-			jra_user_account_assign_moodle_role($data);
-			$DB->insert_record('si_role_user', $data);	
+			jra_admin_user_assign_moodle_role($data);
+			$DB->insert_record('jra_role_user', $data);	
 		}
 	}
 }
 
-function jra_user_account_assign_moodle_role($data)
+function jra_admin_user_assign_moodle_role($data)
 {
 	global $DB;
 	if($data->role == 'admin' || $data->role == 'academic') //system admin
@@ -100,20 +100,20 @@ function jra_user_account_assign_moodle_role($data)
 	}
 }
 
-function jra_user_account_remove_role($to_remove)
+function jra_admin_user_remove_role($to_remove)
 {
 	global $DB, $USER;
 	$cascade = array();
 	foreach($to_remove as $u)
 	{
-		$role = $DB->get_record('si_role_user', array('id' => $u->id));
+		$role = $DB->get_record('jra_role_user', array('id' => $u->id));
 		if($role)
-			jra_user_account_unassign_moodle_role($role);
-		jra_query_delete_cascade('si_role_user', $u->id, $cascade);		
+			jra_admin_user_unassign_moodle_role($role);
+		jra_query_delete_cascade('jra_role_user', $u->id, $cascade);		
 	}
 }
 
-function jra_user_account_unassign_moodle_role($data)
+function jra_admin_user_unassign_moodle_role($data)
 {
 	global $DB;
 	if($data->role == 'admin' || $data->role == 'academic') //system admin
@@ -136,7 +136,7 @@ function jra_user_account_unassign_moodle_role($data)
 
 
 //remove any space after , in role value
-function jra_user_account_format_role_value($role_value)
+function jra_admin_user_format_role_value($role_value)
 {
 	$arr = explode(',', $role_value);
 	$str = '';
@@ -152,7 +152,7 @@ function jra_user_account_format_role_value($role_value)
 	return $str;
 }
 
-function jra_user_account_role_search_form($role, $subrole, $source, $role_value)
+function jra_admin_user_role_search_form($role, $subrole, $source, $role_value)
 {
 	$roles = jra_get_roles();
 	$str = '';
@@ -168,7 +168,7 @@ function jra_user_account_role_search_form($role, $subrole, $source, $role_value
 		$str = $str . '&nbsp;&nbsp;&nbsp;';
 		$str = $str . get_string('operation', 'local_jra') . ' : ' . jra_ui_select('subrole', $subroles, $subrole, "refresh_role('$source')");
 		$str = $str . '&nbsp;&nbsp;&nbsp;';
-		$str = $str . jra_user_account_role_parameter($role, $subrole, $role_value);
+		$str = $str . jra_admin_user_role_parameter($role, $subrole, $role_value);
 		$str = $str . '&nbsp;&nbsp;&nbsp;';
 		
 		$search_url = "javascript:refresh_role('$source')";
@@ -179,7 +179,7 @@ function jra_user_account_role_search_form($role, $subrole, $source, $role_value
 }
 
 //depending on the role, some need a text base parameters, some needs drop down
-function jra_user_account_role_parameter($role, $subrole, $role_value)
+function jra_admin_user_role_parameter($role, $subrole, $role_value)
 {
 	if($role == 'position') //for these roles, use drop down
 	{
@@ -197,7 +197,7 @@ function jra_user_account_role_parameter($role, $subrole, $role_value)
 }
 
 //to initialize the default role
-function jra_user_account_init_role()
+function jra_admin_user_init_role()
 {
 	$roles = jra_get_roles();
 	foreach($roles as $key => $value)
@@ -205,7 +205,7 @@ function jra_user_account_init_role()
 }
 
 //add a user to role
-function jra_user_account_role_add_form($role, $subrole)
+function jra_admin_user_role_add_form($role, $subrole)
 {
 	global $CFG;
 	$str = '<form id="form2" name="form2" method="post" action="">';
@@ -233,7 +233,7 @@ function jra_user_account_role_add_form($role, $subrole)
 }
 
 ///////end of role management/////////////
-function jra_user_account_personal_info($id, $tab_active, $content)
+function jra_admin_user_personal_info($id, $tab_active, $content)
 {
 	global $DB;
 	$str = '';
@@ -249,14 +249,14 @@ function jra_user_account_personal_info($id, $tab_active, $content)
 	return $str;	
 }
 
-function jra_user_account_address_info($id, $tab_active, $content)
+function jra_admin_user_contact_info($id, $tab_active, $content)
 {
 	$str = '';
 	if($tab_active != '')
 	{
-		$params = array('id' => $id, 'tab' => 'address', 'op' => 'edit');
+		$params = array('id' => $id, 'tab' => 'contact', 'op' => 'edit');
 		$add_url = new moodle_url('view_user.php', $params);	
-		$str = $str . '<span class="pull-right rc-secondary-tab">' . html_writer::link($add_url, jra_ui_icon('plus-circle', '1', true) . ' ' . get_string('add_contact', 'local_jra'), array('title' => get_string('add_contact', 'local_jra'))) . '</span>';
+		$str = $str . '<span class="pull-right rc-secondary-tab">' . html_writer::link($add_url, jra_ui_icon('plus-circle', '1', true) . ' ' . jra_get_string(['add', 'contact']), array('title' => jra_get_string(['add', 'contact']))) . '</span>';
 		$str = $str . '<div id="ajax-content">';
 		$str = $str . $content;	
 		$str = $str . '</div>';	
@@ -264,37 +264,7 @@ function jra_user_account_address_info($id, $tab_active, $content)
 	return $str;	
 }
 
-function jra_user_account_employee_info($id, $tab_active, $content)
-{
-	$str = '';
-	if($tab_active != '')
-	{
-		$params = array('id' => $id, 'tab' => 'employee', 'op' => 'edit');
-		$edit_url = new moodle_url('view_user.php', $params);	
-		$str = $str . '<span class="pull-right rc-secondary-tab">' . html_writer::link($edit_url, jra_ui_icon('pencil', '1', true) . ' ' . get_string('edit', 'local_jra'), array('title' => get_string('edit', 'local_jra'))) . '</span>';
-		$str = $str . $content;
-		$str = $str . '<div id="ajax-content">';
-		$str = $str . '</div>';	
-	}
-	return $str;	
-}
-
-function jra_user_account_student_info($id, $tab_active, $content)
-{
-	$str = '';
-	if($tab_active != '')
-	{
-		$params = array('id' => $id, 'tab' => 'student_info', 'op' => 'edit');
-		$edit_url = new moodle_url('view_user.php', $params);	
-		$str = $str . '<span class="pull-right rc-secondary-tab">' . html_writer::link($edit_url, jra_ui_icon('pencil', '1', true) . ' ' . get_string('edit', 'local_jra'), array('title' => get_string('edit', 'local_jra'))) . '</span>';
-		$str = $str . $content;
-		$str = $str . '<div id="ajax-content">';
-		$str = $str . '</div>';	
-	}
-	return $str;	
-}
-
-function jra_user_account_account_info($id, $tab_active, $content)
+function jra_admin_user_account_info($id, $tab_active, $content)
 {
 	$str = '';
 	if($tab_active != '')
@@ -309,36 +279,10 @@ function jra_user_account_account_info($id, $tab_active, $content)
 	return $str;	
 }
 
-function jra_user_account_finance_info($id, $tab_active, $content)
+function jra_admin_user_show_personal_contact($id)
 {
 	global $DB;
-	$str = '';
-	if($tab_active != '')
-	{
-		$user_data = $DB->get_record('si_personal_finance', array('user_id' => $id));
-		$edit_url = new moodle_url('view_user.php', array('id' => $id, 'tab' => 'finance', 'op' => 'edit'));	
-		$reset_url = new moodle_url('view_user.php', array('id' => $id, 'tab' => 'finance', 'op' => 'delete'));	
-		
-		$msg = get_string('confirm_reset_iban', 'local_jra');
-		$js_url = "javascript:reset_iban('" . $reset_url->out(false) . "', '$msg')";
-		$str = $str . '<span class="pull-right rc-secondary-tab">';
-		if($user_data)
-		{
-			$str = $str . html_writer::link($js_url, jra_ui_icon('trash', '1', true) . ' ' . get_string('reset'), array('title' => get_string('reset') . ' ' . get_string('iban_no', 'local_jra'))) . '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
-		}
-		$str = $str . html_writer::link($edit_url, jra_ui_icon('pencil', '1', true) . ' ' . get_string('edit', 'local_jra'), array('title' => get_string('edit', 'local_jra')));
-		$str = $str . '</span>';
-		$str = $str . $content;
-		$str = $str . '<div id="ajax-content">';
-		$str = $str . '</div>';	
-	}
-	return $str;	
-}
-
-function jra_user_account_show_personal_address($id)
-{
-	global $DB;
-	$records = $DB->get_records('si_personal_contact', array('user_id' => $id));
+	$records = $DB->get_records('jra_user_contact', array('user_id' => $id));
 		
 	$detail_data = array();
 	foreach($records as $user_data)
@@ -346,9 +290,9 @@ function jra_user_account_show_personal_address($id)
 		//one row of data
 		$obj = new stdClass();
 		$obj->title = get_string($user_data->address_type, 'local_jra');
-		$obj->content = jra_user_account_format_address($user_data);
+		$obj->content = jra_admin_user_format_contact($user_data);
 		
-		$params = array('id' => $id, 'tab' => 'address', 'op' => 'edit', 'dataid' => $user_data->id);
+		$params = array('id' => $id, 'tab' => 'contact', 'op' => 'edit', 'dataid' => $user_data->id);
 		$edit_url = new moodle_url('view_user.php', $params);			
 		$obj->edit = '<span class="pull-right">' . html_writer::link($edit_url, jra_ui_icon('pencil', '1', true), array('title' => get_string('edit', 'local_jra'))) . '</span>';
 		$detail_data[$user_data->address_type] = $obj;
@@ -365,7 +309,7 @@ function jra_user_account_show_personal_address($id)
 	echo $str;
 }
 
-function jra_user_account_format_address($user_data)
+function jra_admin_user_format_contact($user_data)
 {
 	$str = $user_data->address1;
 	if($user_data->address2 != '')
@@ -407,7 +351,7 @@ function jra_user_account_format_address($user_data)
 	{
 		if($str != '')
 			$str = $str . '<br />';
-		$str = $str . get_string('email', 'local_jra') . ' (' . get_string('primary', 'local_jra') . ') : ' . $user_data->email_primary;
+		$str = $str . get_string('email', 'local_jra') . ' : ' . $user_data->email_primary;
 	}
 	if($user_data->email_secondary != '')
 	{
@@ -430,63 +374,38 @@ function jra_user_account_format_address($user_data)
 	return $str;
 }
 
-function jra_user_account_show_personal_info($user_data)
+function jra_admin_user_show_personal_info($user_data)
 {
 	$detail_data = array();
 	//one row of data
 	$obj = new stdClass();
-	$obj->title = get_string($user_data->id_type, 'local_jra');
-	$obj->content = $user_data->civil_id;
+	$obj->title = jra_get_string(['national', 'id']);
+	$obj->content = $user_data->national_id == '' ? '-' : $user_data->national_id;
 	$detail_data[] = $obj;
 	//end of data row
 	//one row of data
 	$obj = new stdClass();
 	$obj->title = get_string('passport_no', 'local_jra');
-	$obj->content = $user_data->passport_id;
+	$obj->content = $user_data->passport == '' ? '-' : $user_data->passport_id;
 	$detail_data[] = $obj;
 	//end of data row
 	//one row of data
 	$obj = new stdClass();
 	$obj->title = get_string('date_of_birth', 'local_jra');
-	$obj->content = date('d-M-Y', $user_data->dob);
+	$obj->content = $user_data->dob == 0 ? '-' : date('d-M-Y', $user_data->dob);
 	$detail_data[] = $obj;
 	//end of data row
 	//one row of data
 	$obj = new stdClass();
 	$obj->title = get_string('nationality', 'local_jra');
-	$obj->content = jra_lookup_countries($user_data->nationality);
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('nationality_at_birth', 'local_jra');
-	$obj->content = jra_lookup_countries($user_data->nationality_at_birth);
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$languages = jra_lookup_language();
-	$obj = new stdClass();
-	$obj->title = get_string('language_track', 'local_jra');
-	$obj->content = $languages[$user_data->language_track];
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('religion', 'local_jra');
-	$obj->content = $user_data->religion;
+	$obj->content = $user_data->nationality == '' ? '-' : jra_lookup_countries($user_data->nationality);
 	$detail_data[] = $obj;
 	//end of data row
 	//one row of data
 	$marital_status = jra_lookup_marital_status();
 	$obj = new stdClass();
 	$obj->title = get_string('marital_status', 'local_jra');
-	$obj->content = $marital_status[$user_data->marital_status];
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('blood_group', 'local_jra');
-	$obj->content = $user_data->blood_type;
+	$obj->content = $user_data->marital_status == '' ? '-' : $marital_status[$user_data->marital_status];
 	$detail_data[] = $obj;
 	//end of data row
 	
@@ -494,77 +413,7 @@ function jra_user_account_show_personal_info($user_data)
 	echo $str;
 }
 
-function jra_user_account_show_employee_info($user_data)
-{
-	$detail_data = array();
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('join_date', 'local_jra');
-	$obj->content = date('d-M-Y', $user_data->join_date);
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('employment_type', 'local_jra');
-	$obj->content = get_string($user_data->employment_type, 'local_jra');
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('employment_category', 'local_jra');
-	$obj->content = get_string($user_data->employment_category, 'local_jra');
-	$detail_data[] = $obj;
-	//end of data row
-	
-	$str = jra_ui_data_detail($detail_data);
-	echo $str;
-}
-
-function jra_user_account_show_student_info($user_data)
-{
-	$detail_data = array();
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('admission_date', 'local_jra');
-	$obj->content = date('d-M-Y', $user_data->admission_date);
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('admission_type', 'local_jra');
-	$obj->content = get_string($user_data->admission_type, 'local_jra');
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('student_type', 'local_jra');
-	$obj->content = get_string($user_data->student_type, 'local_jra');
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('student_category', 'local_jra');
-	$obj->content = get_string($user_data->student_category, 'local_jra');
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('financing_source', 'local_jra');
-	$obj->content = get_string($user_data->financing_source, 'local_jra');
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('payroll_active', 'local_jra');
-	$obj->content = jra_output_show_yesno($user_data->payroll_active);
-	$detail_data[] = $obj;
-	//end of data row
-	
-	$str = jra_ui_data_detail($detail_data);
-	echo $str;
-}
-
-function jra_user_account_show_account_info($user_data)
+function jra_admin_user_show_account_info($user_data)
 {
 	global $CFG;
 	//try to get the moodle user
@@ -572,7 +421,19 @@ function jra_user_account_show_account_info($user_data)
 	$detail_data = array();
 	//one row of data
 	$obj = new stdClass();
-	$obj->title = get_string('enable_login', 'local_jra');
+	$obj->title = jra_get_string(['user', 'id']);
+	$obj->content = $user_data->id;
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = get_string('username');
+	$obj->content = $prefix . $user_data->username;
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = jra_get_string(['enable', 'login']);
 	$obj->content = jra_output_show_yesno($user_data->enable_login);
 	$detail_data[] = $obj;
 	//end of data row
@@ -587,22 +448,11 @@ function jra_user_account_show_account_info($user_data)
 	$obj->content = jra_ui_square(nl2br($user_data->suspend_message), true);
 	$detail_data[] = $obj;
 	//end of data row
-	if($user_data->enable_login == 'Y')
-	{
-		$prefix = jra_get_institute('prefix');
-		//one row of data
-		$obj = new stdClass();
-		$obj->title = get_string('username');
-		$obj->content = $prefix . $user_data->appid;
-		$detail_data[] = $obj;
-		//end of data row
-	}
-	//end of data row
 	if($m_user && $user_data->enable_login == 'Y')
 	{
 		//one row of data
 		$obj = new stdClass();
-		$obj->title = get_string('account_id', 'local_jra');
+		$obj->title = 'Moodle ' . jra_get_string(['user', 'id']);
 		$obj->content = $m_user->id;
 		$detail_data[] = $obj;
 		//end of data row
@@ -635,7 +485,7 @@ function jra_user_account_show_account_info($user_data)
 			if($m_user) //user already has moodle account, enable to go to user profile page so we can perform loginas
 			{
 				$user_profile_url = new moodle_url($CFG->wwwroot . '/user/profile.php', array(id => $m_user->id));
-				$profile_page = '&nbsp;&nbsp;&nbsp;' . html_writer::link($user_profile_url, get_string('user_profile', 'local_jra'),
+				$profile_page = '&nbsp;&nbsp;&nbsp;' . html_writer::link($user_profile_url, jra_get_string(['user', 'profiles']),
 					array(
 						'class' => 'btn btn-primary',
 						'aria-label' => get_string('user_profile', 'local_jra'),
@@ -667,27 +517,4 @@ function jra_user_account_show_account_info($user_data)
 	}
 	$str = jra_ui_data_detail($detail_data);
 	echo $str;
-}
-
-function jra_user_account_show_financial_info($user_data, $ret = false)
-{
-	$detail_data = array();
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('bank', 'local_jra');
-	$obj->content = $user_data->bank_name . ' (' . $user_data->bank_name_a . ')';
-	$detail_data[] = $obj;
-	//end of data row
-	//one row of data
-	$obj = new stdClass();
-	$obj->title = get_string('iban_no', 'local_jra');
-	$obj->content = jra_output_iban($user_data);
-	$detail_data[] = $obj;
-	//end of data row
-	
-	$str = jra_ui_data_detail($detail_data);
-	if(!$ret)
-		echo $str;
-	else
-		return $str;
 }

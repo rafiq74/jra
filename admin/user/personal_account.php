@@ -32,15 +32,11 @@ $roles[] = array(
 	'role' => 'admin',
 	'subrole' => 'all',
 );
-$roles[] = array(
-	'role' => 'student',
-	'subrole' => 'all',
-);
 $access_rules = array(
 	'role' => $roles,
 );
 
-sis_access_control($access_rules);
+jra_access_control($access_rules);
 
 $post_data = $_POST;
 if(isset($post_data['uid']))
@@ -49,9 +45,6 @@ else
 	$id = required_param('id', PARAM_INT);
 	
 $operation = optional_param('op', '', PARAM_TEXT);
-
-//get the personal data (false if not created
-$toform = $DB->get_record('si_user', array('id' => $id));
 
 //put before header so we can redirect
 $return_url = new moodle_url('view_user.php', array('id' => $id, 'tab' => 'account'));
@@ -65,13 +58,15 @@ else if ($data = $mform->get_data())
 {		
 	$now = time();
 	$data->date_updated = $now;
-	$DB->update_record('si_user', $data);			
+	$DB->update_record('jra_user', $data);			
 	redirect($return_url);
 }
 
 //content code starts here
-sis_ui_page_title(sis_get_string(['student', 'account', 'information']));
+jra_ui_page_title(jra_get_string(['account', 'information']));
 	
+$toform = $DB->get_record('jra_user', array('id' => $id));
+
 if($toform)
 {
 	$mform->set_data($toform);
@@ -83,18 +78,18 @@ if($toform)
 	{
 		if($operation == 'reset')
 		{			
-			$success = sis_user_reset_password($toform->id);
+			$success = jra_user_reset_password($toform->id);
 			if($success)
-				sis_ui_alert(get_string('password_reset_successful', 'local_sis'), 'success', false, false);
+				jra_ui_alert(get_string('password_reset_successful', 'local_jra'), 'success', false, false);
 			else
-				sis_ui_alert(get_string('password_reset_failed', 'local_sis'), 'danger', false, false);
+				jra_ui_alert(get_string('password_reset_failed', 'local_jra'), 'danger', false, false);
 		}
 		else if($operation == 'eula')
 		{
 			$toform->eula = '';
 			$toform->eula_date = null;
-			$DB->update_record('si_user', $toform);
+			$DB->update_record('jra_user', $toform);
 		}
-		sis_user_account_show_account_info($toform);
+		jra_admin_user_show_account_info($toform);
 	}
 }

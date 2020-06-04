@@ -70,7 +70,7 @@ function jra_output_select_all_text()
 	return '- ' . get_string('all', 'local_jra') . ' -';
 }
 
-function jra_output_show_user_name($user, $with_id = false, $full = false, $lang = true, $force_alternate = false)
+function jra_output_show_user_name($user, $full = true, $lang = true, $force_alternate = false)
 {
 	$arr = array();
 	if($full)
@@ -78,15 +78,13 @@ function jra_output_show_user_name($user, $with_id = false, $full = false, $lang
 		if(!$force_alternate)
 		{
 			$arr[] = jra_output_show_field_language($user, 'first_name', $lang);
-			$arr[] = jra_output_show_field_language($user, 'father_name', $lang);
-			$arr[] = jra_output_show_field_language($user, 'grandfather_name', $lang);
+			$arr[] = jra_output_show_field_language($user, 'middle_name', $lang);
 			$arr[] = jra_output_show_field_language($user, 'family_name', $lang);
 		}
 		else
 		{
 			$arr[] = jra_output_show_field_force_alternate($user, 'first_name');
-			$arr[] = jra_output_show_field_force_alternate($user, 'father_name');
-			$arr[] = jra_output_show_field_force_alternate($user, 'grandfather_name');
+			$arr[] = jra_output_show_field_force_alternate($user, 'middle_name');
 			$arr[] = jra_output_show_field_force_alternate($user, 'family_name');
 		}
  	}
@@ -95,11 +93,13 @@ function jra_output_show_user_name($user, $with_id = false, $full = false, $lang
 		if(!$force_alternate)
 		{
 			$arr[] = jra_output_show_field_language($user, 'first_name', $lang);
+			$arr[] = jra_output_show_field_language($user, 'middle_name', $lang);
 			$arr[] = jra_output_show_field_language($user, 'family_name', $lang);
 		}
 		else
 		{
 			$arr[] = jra_output_show_field_force_alternate($user, 'first_name');
+			$arr[] = jra_output_show_field_force_alternate($user, 'middle_name');
 			$arr[] = jra_output_show_field_force_alternate($user, 'family_name');
 		}
 	}
@@ -113,10 +113,7 @@ function jra_output_show_user_name($user, $with_id = false, $full = false, $lang
 			$str = $str . $a;
 		}
 	}
-	if($with_id)
-		return $user->appid . ' - ' . $str;
-	else
-		return $str;
+	return $str;
 }
 
 function jra_output_currency($currency, $amount)

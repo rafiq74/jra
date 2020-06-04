@@ -55,14 +55,15 @@ if(jra_is_system_admin() && isset($_POST['delete_id'])) //only allow site admin 
 {
 	//we have to remove any cascading record (even if we don't delete the user physically)
 	$cascade = array(
-		'si_role_user' => 'user_id',
+//		'jra_role_user' => 'user_id',
 	);
 	jra_query_delete_multiple($_POST['delete_id'], $cascade, jra_get_country());
 	//we don't delete from db, but we make the deleted field as 2
 	$data->id = $_POST['delete_id'];
 	$data->date_updated = time();
 	$data->deleted = 2;
-	$DB->update_record('si_user', $data);			
+	$DB->update_record('jra_user', $data);			
+    redirect('index.php'); //we redirect to indext again to kill the submit post data
 }
 
 echo $OUTPUT->header();

@@ -1132,7 +1132,7 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 		 <script>
 			function delete_'.$name.'(id, action_url)
 			{
-				if(confirm("'.get_string('confirm_delete_record', 'local_jra').'"))
+				if(confirm("'.get_string('confirm_delete', 'local_jra').'"))
 				{
 					document.form_list.delete_id.value = id;
 					if(action_url != "")

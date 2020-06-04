@@ -32,15 +32,11 @@ $roles[] = array(
 	'role' => 'admin',
 	'subrole' => 'all',
 );
-$roles[] = array(
-	'role' => 'student',
-	'subrole' => 'all',
-);
 $access_rules = array(
 	'role' => $roles,
 );
 
-sis_access_control($access_rules);
+jra_access_control($access_rules);
 
 $post_data = $_POST;
 if(isset($post_data['uid']))
@@ -49,9 +45,6 @@ else
 	$id = required_param('id', PARAM_INT);
 	
 $operation = optional_param('op', '', PARAM_TEXT);
-
-//get the personal data (false if not created
-$toform = $DB->get_record('si_personal_data', array('user_id' => $id));
 
 //put before header so we can redirect
 $return_url = new moodle_url('view_user.php', array('id' => $id));
@@ -63,41 +56,17 @@ if ($mform->is_cancelled())
 } 
 else if ($data = $mform->get_data()) 
 {		
-	//validate that there is no duplicate
-	$data->user_id = $data->uid;
-	$duplicate_condition = array(
-		'user_id' => $data->user_id,
-	);
-	$isDuplicate = sis_query_is_duplicate('si_personal_data', $duplicate_condition, $data->id);
-	if(!$isDuplicate) //no duplicate, update it
-	{
-		$now = time();
-		if($data->id == '') //create new
-		{
-			$data->date_created = $now;
-			$data->date_updated = $now;
-			$data->institute = sis_get_institute();
-			$DB->insert_record('si_personal_data', $data);	
-		}
-		else
-		{
-			$data->date_updated = $now;
-			$DB->update_record('si_personal_data', $data);			
-		}
-		//we must also update the national_id field in si_user
-		$u = $DB->get_record('si_user', array('id' => $data->user_id));
-		if($u)
-		{
-			$u->national_id = $data->civil_id;
-			$DB->update_record('si_user', $u);
-		}
-	    redirect($return_url);
-	}
+	$now = time();
+	$data->date_updated = $now;
+	$DB->update_record('jra_user', $data);			
+	redirect($return_url);
 }
 
 //content code starts here
-sis_ui_page_title(get_string('personal_info', 'local_sis'));
+jra_ui_page_title(get_string('personal_info', 'local_jra'));
 	
+	
+$toform = $DB->get_record('jra_user', array('id' => $id));
 if($toform)
 	$mform->set_data($toform);
 
@@ -108,7 +77,7 @@ if($operation == 'edit')
 else
 {
 	if($toform)
-		sis_user_account_show_personal_info($toform);
+		jra_admin_user_show_personal_info($toform);
 	else
-		sis_ui_alert(get_string('no_personal_info', 'local_sis'), 'info', false, false);
+		jra_ui_alert(get_string('no_personal_info', 'local_jra'), 'info', false, false);
 }
