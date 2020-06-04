@@ -25,7 +25,7 @@
 /**
  * The default size of a user selector.
  */
-define('SIS_USER_SELECTOR_DEFAULT_ROWS', 20);
+define('JRA_USER_SELECTOR_DEFAULT_ROWS', 20);
 
 /**
  * Base class for user selectors.
@@ -37,7 +37,7 @@ define('SIS_USER_SELECTOR_DEFAULT_ROWS', 20);
  * @copyright 1999 onwards Martin Dougiamas  http://dougiamas.com
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class sis_user_selector_base {
+abstract class jra_user_selector_base {
     /** @var string The control name (and id) in the HTML. */
     protected $name;
     /** @var array Extra fields to search on and return in addition to firstname and lastname. */
@@ -48,7 +48,7 @@ abstract class sis_user_selector_base {
     /** @var boolean Whether the conrol should allow selection of many users, or just one. */
     protected $multiselect = true;
     /** @var int The height this control should have, in rows. */
-    protected $rows = SIS_USER_SELECTOR_DEFAULT_ROWS;
+    protected $rows = JRA_USER_SELECTOR_DEFAULT_ROWS;
     /** @var array A list of userids that should not be returned by this control. */
     protected $exclude = array();
     /** @var array|null A list of the users who are selected. */
@@ -71,7 +71,7 @@ abstract class sis_user_selector_base {
     /** @var array JavaScript YUI3 Module definition */
     protected static $jsmodule = array(
                 'name' => 'user_selector',
-                'fullpath' => '/local/sis/user/selector/module.js',
+                'fullpath' => '/local/jra/user/selector/module.js',
                 'requires'  => array('node', 'event-custom', 'datasource', 'json', 'moodle-core-notification'),
                 'strings' => array(
                     array('previouslyselectedusers', 'moodle', '%%SEARCHTERM%%'),
@@ -249,7 +249,7 @@ abstract class sis_user_selector_base {
 
         // And the search options.
         $optionsoutput = false;
-        if (!sis_user_selector_base::$searchoptionsoutput) {
+        if (!jra_user_selector_base::$searchoptionsoutput) {
             $output .= print_collapsible_region_start('', 'userselector_options',
                 get_string('searchoptions'), 'userselector_optionscollapsed', true, true);
             $output .= $this->option_checkbox('preserveselected', $this->preserveselected,
@@ -261,7 +261,7 @@ abstract class sis_user_selector_base {
             $output .= print_collapsible_region_end(true);
 
             $PAGE->requires->js_init_call('M.core_user.init_user_selector_options_tracker', array(), false, self::$jsmodule);
-            sis_user_selector_base::$searchoptionsoutput = true;
+            jra_user_selector_base::$searchoptionsoutput = true;
         }
         $output .= "</div>\n</div>\n\n";
 
@@ -578,7 +578,7 @@ abstract class sis_user_selector_base {
      * @return string a string representation of the user.
      */
     public function output_user($user) {
-        $out = $user->appid . ' - ' . fullname($user, $this->viewfullnames);
+        $out = fullname($user, $this->viewfullnames) . ' (' . $user->username . ')';
         if ($this->extrafields) {
             $displayfields = array();
             foreach ($this->extrafields as $field) {
@@ -678,7 +678,7 @@ abstract class sis_user_selector_base {
  * @copyright 1999 onwards Martin Dougiamas  http://dougiamas.com
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class sis_groups_user_selector_base extends sis_user_selector_base {
+abstract class jra_groups_user_selector_base extends jra_user_selector_base {
     /** @var int */
     protected $groupid;
     /** @var  int */
@@ -753,7 +753,7 @@ abstract class sis_groups_user_selector_base extends sis_user_selector_base {
  * @copyright 1999 onwards Martin Dougiamas  http://dougiamas.com
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class sis_group_members_selector extends sis_groups_user_selector_base {
+class jra_group_members_selector extends jra_groups_user_selector_base {
 
     /**
      * Finds users to display in this control.
@@ -781,7 +781,7 @@ class sis_group_members_selector extends sis_groups_user_selector_base {
  * @copyright 1999 onwards Martin Dougiamas  http://dougiamas.com
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class sis_group_non_members_selector extends sis_groups_user_selector_base {
+class jra_group_non_members_selector extends jra_groups_user_selector_base {
     /**
      * An array of user ids populated by find_users() used in print_user_summaries()
      * @var array

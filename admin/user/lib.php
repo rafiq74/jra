@@ -27,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 //for duplicate, we have check the email as well as the moodle email id
-function jra_username_duplicate($data)
+function jra_admin_user_username_duplicate($data)
 {
 	global $DB;
 	$duplicate_condition = array(
@@ -39,8 +39,13 @@ function jra_username_duplicate($data)
 	{
 		$sql = "select * from {user} where username = '$data->username' or email = '$data->username'";
 		$user = $DB->get_record_sql($sql);
-		if($user)
-			$isDuplicate = true;
+		if($user) //has a moodle user, most likely updating
+		{
+			if($data->id == $user->idnumber) //same user, no duplicate
+				$isDuplicate = false;
+			else
+				$isDuplicate = true;
+		}
 		else
 			$isDuplicate = false;
 	}	
@@ -62,19 +67,19 @@ function jra_admin_user_assign_role($to_add, $role, $subrole, $role_value, $camp
 		$data->role_value = $role_value;
 		$data->campus = $campus;
 		$data->scope = '';
-		$data->added_by = $USER->id;
-		$data->date_added = $now;
+		$data->added_user = $USER->id;
+		$data->added_date = $now;
 		$data->country = jra_get_country();
 		$duplicate_condition = array(
 			'user_id' => $data->user_id,
 			'role' => $data->role,
 			'subrole' => $data->subrole,
 		);
-		$isDuplicate = jra_query_is_duplicate('jra_role_user', $duplicate_condition, $data->id);
+		$isDuplicate = jra_query_is_duplicate('jra_user_role', $duplicate_condition, $data->id);
 		if(!$isDuplicate) //no duplicate, update it, otherwise, don't do anything
 		{
 			jra_admin_user_assign_moodle_role($data);
-			$DB->insert_record('jra_role_user', $data);	
+			$DB->insert_record('jra_user_role', $data);	
 		}
 	}
 }
@@ -106,10 +111,10 @@ function jra_admin_user_remove_role($to_remove)
 	$cascade = array();
 	foreach($to_remove as $u)
 	{
-		$role = $DB->get_record('jra_role_user', array('id' => $u->id));
+		$role = $DB->get_record('jra_user_role', array('id' => $u->id));
 		if($role)
 			jra_admin_user_unassign_moodle_role($role);
-		jra_query_delete_cascade('jra_role_user', $u->id, $cascade);		
+		jra_query_delete_cascade('jra_user_role', $u->id, $cascade);		
 	}
 }
 

@@ -25,10 +25,10 @@
 define('AJAX_SCRIPT', true);
 
 require_once(__DIR__ . '/../../../../config.php');
-require_once($CFG->dirroot . '/local/sis/user/selector/lib.php');
+require_once($CFG->dirroot . '/local/jra/user/selector/lib.php');
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url('/local/sis/user/selector/search.php');
+$PAGE->set_url('/local/jra/user/selector/search.php');
 
 echo $OUTPUT->header();
 

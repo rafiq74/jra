@@ -75,7 +75,7 @@ if ($mform->is_cancelled())
 else if ($data = $mform->get_data()) 
 {		
 	//validate that there is no duplicate
-	$isDuplicate = jra_username_duplicate($data);
+	$isDuplicate = jra_admin_user_username_duplicate($data);
 	if(!$isDuplicate) //no duplicate, update it
 	{
 		$now = time();
@@ -101,7 +101,7 @@ else if ($data = $mform->get_data())
 			$data->email = $data->username;
 			$data->date_updated = $now;
 			$DB->update_record('jra_user', $data);			
-			jra_log_data('jra_user', $data); //log the change
+//			jra_log_data('jra_user', $data); //log the change
 		}
 	    redirect($return_url);
 	}

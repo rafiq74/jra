@@ -7,8 +7,6 @@ if($role_page == '')
 	$role_page = 'role';
 $url = new moodle_url('index.php', array());
 $tabs[] = new tabobject('user', $url, get_string('users','local_jra'));
-$url = new moodle_url('login_list.php', array());
-$tabs[] = new tabobject('login', $url, jra_get_string(['login','accounts']));
 $url = new moodle_url($role_page . '.php', array());
 $tabs[] = new tabobject('role', $url, get_string('roles','local_jra'));
 /*

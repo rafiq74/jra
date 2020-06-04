@@ -498,42 +498,14 @@ function jra_has_access($roles, $permitted_roles)
 //do not use the role admin as it is reserved for site administrator
 function jra_get_roles()
 {
-	$arr['academic'] = get_string('academic', 'local_jra');
-	$arr['student'] = get_string('student', 'local_jra');
-	$arr['finance'] = get_string('finance', 'local_jra');
-	$arr['employee'] = get_string('employee', 'local_jra');
-	$arr['admin'] = get_string('jra', 'local_jra') . ' ' . get_string('administrator');
+	$arr['admin'] = 'JRA ' . get_string('administrator');
 	return $arr;
 }
 
 function jra_get_subroles($role)
 {	
-	$arr['academic'] = array(
-		'all' => get_string('all_operations', 'local_jra'),
-		'timetable' => get_string('timetable', 'local_jra'),
-		'examination' => get_string('examination', 'local_jra'),
-		'elearning' => get_string('elearning', 'local_jra'),
-		);
-	$arr['student'] = array(
-		'all' => get_string('all_operations', 'local_jra'),
-		'attendance' => get_string('attendance', 'local_jra') . ' ' . get_string('administrator', 'local_jra'),
-		'admission' => get_string('admission', 'local_jra'),
-		'dormitory' => get_string('dormitory', 'local_jra'),
-		);
-	$arr['finance'] = array(
-		'all' => get_string('all_operations', 'local_jra'),
-		);
-	$arr['admission'] = array(
-		'all' => get_string('all_operations', 'local_jra'),
-		);
-	$arr['employee'] = array(
-		'all' => get_string('all_operations', 'local_jra'),
-		);
-	$arr['report'] = array(
-		'all' => get_string('all_operations', 'local_jra'),
-		);
 	$arr['admin'] = array(
-		'all' => get_string('all_operations', 'local_jra'),
+		'all' => jra_get_string(['all', 'operations']),
 		);
 	
 	$ret = $arr[$role];		
