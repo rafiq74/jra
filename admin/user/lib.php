@@ -523,3 +523,32 @@ function jra_admin_user_show_account_info($user_data)
 	$str = jra_ui_data_detail($detail_data);
 	echo $str;
 }
+
+//reset the jra_user password to the default system password
+function jra_admin_user_reset_password($id)
+{
+	global $DB;
+	$var_name = 'system_default_password';
+	$reset_option = jra_get_config($var_name);
+	$pswd = '';
+	if($reset_option == 'custom')
+	{
+		$var_name = 'system_default_password_custom';
+		$pswd = jra_get_config($var_name);
+	}
+	if($pswd != '')
+	{
+		$user = $DB->get_record('jra_user', array('id' => $id));
+		if($user)
+		{
+			//get the default password
+			$var_name = 'system_force_password_change';
+			$force_change = jra_get_config($var_name); //force change			
+			$user->password = jra_user_password_hash($pswd);
+			$user->password_change = $force_change;
+			$DB->update_record('jra_user', $user);
+			return true;
+		}
+	}
+	return false;
+}

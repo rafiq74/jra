@@ -100,16 +100,17 @@ $cost = format_float($cost, 2, false);
 try {
 
     require_once($CFG->dirroot . '/local/jra/lib/jra_lib.php');
-    require_once($CFG->dirroot . '/local/jra/vendor/Stripe/lib/Stripe.php');
+//    require_once($CFG->dirroot . '/local/jra/vendor/Stripe/lib/Stripe.php');
+    require_once($CFG->dirroot . '/local/jra/vendor/Stripe/init.php');
 	
 	$stripeSecretKey = jra_decrypt(jra_get_config('stripe_secret_key'));
 	
-	Stripe::setApiKey($stripeSecretKey);
-    $charge1 = Stripe_Customer::create(array(
+	\Stripe\Stripe::setApiKey($stripeSecretKey);
+    $charge1 = \Stripe\Customer::create(array(
         "email" => required_param('stripeEmail', PARAM_EMAIL),
         "description" => get_string('charge_description1', 'enrol_stripepayment')
     ));
-    $charge = Stripe_Charge::create(array(
+    $charge = \Stripe\Charge::create(array(
       "amount" => $cost * 100,
       "currency" => $data->currency_code,
       "card" => required_param('stripeToken', PARAM_RAW),

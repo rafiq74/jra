@@ -55,49 +55,6 @@ function jra_user_password_hash($pswd)
 	return md5($pswd);
 }
 
-//reset the jra_user password to the default system password
-function jra_user_reset_password($id)
-{
-	global $DB;
-	$var_name = 'system_default_password';
-	$reset_option = jra_get_config($var_name);
-	$pswd = '';
-	if($reset_option == 'custom')
-	{
-		$var_name = 'system_default_password_custom';
-		$pswd = jra_get_config($var_name);
-	}
-	if($pswd != '')
-	{
-		$user = $DB->get_record('jra_user', array('id' => $id));
-		if($user)
-		{
-			 //check if user allow to change password
-			$m_user = $DB->get_record('user', array('idnumber' => $user->id));
-			if($m_user)
-			{
-				if(jra_allow_password_change($m_user))
-				{
-					$var_name = 'system_force_password_change';
-					$force_change = jra_get_config($var_name);
-				}
-				else
-					$force_change = 'N';
-			}
-			else
-			{
-				$var_name = 'system_force_password_change';
-				$force_change = jra_get_config($var_name);
-			}
-			$user->password = jra_user_password_hash($pswd);
-			$user->password_change = $force_change;
-			$DB->update_record('jra_user', $user);
-			return true;
-		}
-	}
-	return false;
-}
-
 function jra_user_send_password_change_info($user, $jra_user) {
     global $CFG, $DB;
 

@@ -88,40 +88,6 @@ else if($action == 2) //update course code separator
 		$DB->update_record('si_course', $data);	
 	}
 }
-else if($action == 3) //reset all active student password
-{
-	//get active user list
-	$institute = jra_get_institute();
-	$sql = "select 
-		b.id, a.appid, a.program, a.program_status, a.program_action, a.eff_date, b.first_name, b.family_name, b.gender from {si_student_program} a inner join {si_user} b on a.user_id = b.id 
-	where " . jra_query_eff_date('si_student_program', 'a', array('user_id'), $enforce_eff_date) . " and " . jra_query_eff_seq('si_student_program', 'a', array('user_id')) . " $student_status_where and a.institute = '$institute' and a.eff_status = 'AC'"; //effective date and seq
-	
-	$users = $DB->get_records_sql($sql);
-	foreach($users as $u)
-	{
-		$success = jra_user_reset_password($u->id);
-		if($success)
-			print_object($u);
-	}
-}
-else if($action == 4)
-{
-	//make all active student si_user account active
-	//get active user list
-	$institute = jra_get_institute();
-	$sql = "select 
-		b.id, a.appid, a.program, a.program_status, a.program_action, a.eff_date, b.first_name, b.family_name, b.gender from {si_student_program} a inner join {si_user} b on a.user_id = b.id 
-	where " . jra_query_eff_date('si_student_program', 'a', array('user_id'), $enforce_eff_date) . " and " . jra_query_eff_seq('si_student_program', 'a', array('user_id')) . " $student_status_where and a.institute = '$institute'"; //effective date and seq
-	
-	$users = $DB->get_records_sql($sql);
-	foreach($users as $u)
-	{
-		$a = $DB->get_record('si_user', array('id' => $u->id));
-		$a->eff_status = 'A';
-		$DB->update_record('si_user', $a);
-		print_object($a);
-	}
-}
 
 echo $OUTPUT->box_end();
 

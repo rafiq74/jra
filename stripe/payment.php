@@ -1,6 +1,7 @@
 <div class="mdl-align">
 <h3><?php echo $instance->name; ?></h3>
-<p><?php echo $message; ?></p>
+<div class="stripe-img"><img src="<?php echo $CFG->wwwroot; ?>/local/jra/stripe/stripe_powered_by.png" width="200" height="51"></div>
+<p><strong><?php echo '<br />' . $message; ?></strong></p>
 <p><b><?php echo get_string("cost").": {$instance->currency} {$localisedcost}"; ?></b></p>
 <div>
 
@@ -29,7 +30,7 @@
 <input type="hidden" name="country" value="<?php p($USER->country) ?>" />
 <script
     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-    data-label="<?php echo get_string('btntext','enrol_stripepayment') ?>"
+    data-label="<?php echo jra_get_string(['submit','payment']) ?>"
     data-key="<?php echo $publishablekey; ?>"
     data-image=""
     data-name="<?php p($coursefullname) ?>"
@@ -43,5 +44,4 @@
 >
 </script>
 </form>
-
 </div>

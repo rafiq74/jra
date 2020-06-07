@@ -78,11 +78,11 @@ if($toform)
 	{
 		if($operation == 'reset')
 		{			
-			$success = jra_user_reset_password($toform->id);
+			$success = jra_admin_user_reset_password($toform->id);
 			if($success)
-				jra_ui_alert(get_string('password_reset_successful', 'local_jra'), 'success', false, false);
+				jra_ui_alert(get_string('password_reset_successful', 'local_jra'), 'success', true, false);
 			else
-				jra_ui_alert(get_string('password_reset_failed', 'local_jra'), 'danger', false, false);
+				jra_ui_alert(get_string('password_reset_failed', 'local_jra'), 'danger', true, false);
 		}
 		else if($operation == 'eula')
 		{

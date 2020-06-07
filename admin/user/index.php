@@ -134,7 +134,7 @@ $master_filter = $master_filter . get_string('status', 'local_jra') . '</strong>
 $master_filter = $master_filter . '</span>';
 
 $sql = "select * from v_jra_user";
-$conditionWhere = " country = '" . jra_get_country() . "' and deleted <= 1";
+$conditionWhere = " country = '" . jra_get_country() . "' and deleted = 0";
 
 //	$condition['user_type'] = $user_type;
 //setup the table options

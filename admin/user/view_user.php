@@ -28,7 +28,7 @@ require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_query_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
-require_once '../lib.php'; //parent local library
+require_once '../../user/lib.php'; //user library
 require_once 'lib.php'; //local library
 
 $post_data = $_POST;
