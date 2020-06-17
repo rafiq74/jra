@@ -58,13 +58,13 @@ function xmldb_local_jra_upgrade($oldversion) {
     $dbman = $DB->get_manager(); //this is new in moodle 3.0
     
     // Put any upgrade step following this.
-    $newversion = 2016062462; //put the new version number here
+    $newversion = 2016062465; //put the new version number here
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
 		
 /*		
-        // Define field suspended to be added to si_user.
-        $table = new xmldb_table('si_user');
+        // Define field suspended to be added to jra_user.
+        $table = new xmldb_table('jra_user');
         $field = new xmldb_field('suspended', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'institute');
 
         // Conditionally launch add field suspended.
@@ -73,8 +73,8 @@ function xmldb_local_jra_upgrade($oldversion) {
         }
 
 
-        // Define field deleted to be added to si_user.
-        $table = new xmldb_table('si_user');
+        // Define field deleted to be added to jra_user.
+        $table = new xmldb_table('jra_user');
         $field = new xmldb_field('deleted', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'enable_login');
 
         // Conditionally launch add field deleted.
@@ -82,8 +82,8 @@ function xmldb_local_jra_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 		
-        // Define field temp_grade_num to be added to si_section_student.
-        $table = new xmldb_table('si_section_student');
+        // Define field temp_grade_num to be added to jra_section_student.
+        $table = new xmldb_table('jra_section_student');
         $field = new xmldb_field('temp_grade_num', XMLDB_TYPE_NUMBER, '20, 3', null, null, null, null, 'temp_grade');
 
         // Conditionally launch add field temp_grade_num.
@@ -91,24 +91,24 @@ function xmldb_local_jra_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 		
-        // Changing precision of field description on table si_lookup to (255).
-        $table = new xmldb_table('si_course');
+        // Changing precision of field description on table jra_lookup to (255).
+        $table = new xmldb_table('jra_course');
         $field = new xmldb_field('course_code', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'course_num');
 
         // Launch change of precision for field description.
         $dbman->change_field_precision($table, $field);
 		
 
-        // Rename field sort_order on table si_plan to NEWNAMEGOESHERE.
-        $table = new xmldb_table('si_plan');
+        // Rename field sort_order on table jra_plan to NEWNAMEGOESHERE.
+        $table = new xmldb_table('jra_plan');
         $field = new xmldb_field('sort_order', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'plan_type');
 
         // Launch rename field sort_order.
         $dbman->rename_field($table, $field, 'NEWNAMEGOESHERE');
 
 
-        // Define field program to be dropped from si_payroll_user_summary.
-        $table = new xmldb_table('si_payroll_user_summary');
+        // Define field program to be dropped from jra_payroll_user_summary.
+        $table = new xmldb_table('jra_payroll_user_summary');
         $field = new xmldb_field('program');
 
         // Conditionally launch drop field program.
@@ -117,43 +117,68 @@ function xmldb_local_jra_upgrade($oldversion) {
         }
 */
 
-        // Define index user_id (not unique) to be dropped form jra_user_contact.
-        $table = new xmldb_table('jra_user_contact');
-        $index = new xmldb_index('country', XMLDB_INDEX_NOTUNIQUE, ['country']);
+        // Define table jra_state to be dropped.
+        $table = new xmldb_table('jra_city');
 
-        // Conditionally launch drop index user_id.
-        if ($dbman->index_exists($table, $index)) {
-            $dbman->drop_index($table, $index);
+        // Conditionally launch drop table for jra_state.
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
         }
 
-        // Define table jra_plan_user to be created.
-        $table = new xmldb_table('jra_plan_user');
+        // Define table jra_state to be dropped.
+        $table = new xmldb_table('jra_state');
 
-        // Adding fields to table jra_plan_user.
+        // Conditionally launch drop table for jra_state.
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+
+        // Define table jra_city to be created.
+        $table = new xmldb_table('jra_city');
+
+        // Adding fields to table jra_city.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('plan_code', XMLDB_TYPE_CHAR, '50', null, null, null, null);
-        $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-        $table->add_field('start_date', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('end_date', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('action', XMLDB_TYPE_CHAR, '50', null, null, null, null);
-        $table->add_field('action_remark', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-        $table->add_field('eff_status', XMLDB_TYPE_CHAR, '1', null, null, null, null);
-        $table->add_field('date_created', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('date_updated', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('action_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('state', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('state_code', XMLDB_TYPE_CHAR, '20', null, null, null, null);
+        $table->add_field('city', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('city_a', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('postcode', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
         $table->add_field('country', XMLDB_TYPE_CHAR, '50', null, null, null, null);
 
-        // Adding keys to table jra_plan_user.
+        // Adding keys to table jra_city.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
-        // Adding indexes to table jra_plan_user.
-        $table->add_index('plan_code', XMLDB_INDEX_NOTUNIQUE, ['country']);
+        // Adding indexes to table jra_city.
+        $table->add_index('state', XMLDB_INDEX_NOTUNIQUE, ['state']);
 
-        // Conditionally launch create table for jra_plan_user.
+        // Conditionally launch create table for jra_city.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
+        // Define table jra_state to be created.
+        $table = new xmldb_table('jra_state');
+
+        // Adding fields to table jra_state.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('state_code', XMLDB_TYPE_CHAR, '20', null, null, null, null);
+        $table->add_field('state', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('state_a', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('sort_order', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('country', XMLDB_TYPE_CHAR, '50', null, null, null, null);
+
+        // Adding keys to table jra_state.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Adding indexes to table jra_state.
+        $table->add_index('country', XMLDB_INDEX_NOTUNIQUE, ['country']);
+
+        // Conditionally launch create table for jra_state.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
 
 
 		// upgrade code ends here

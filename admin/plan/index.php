@@ -89,8 +89,8 @@ $options = array(
 	'detail_var' => 'id', //variable name in query string for id. var=id
 	'search' => true, //allow search
 	'default_search_field' => 'plan_code', //default field choose for search
-	'view_page' => 'edit_plan.php',
-	'edit_page' => '',
+	'edit_page' => 'edit_plan.php',
+	'view_page' => 'plan_user.php',
 	'perpage' => jra_global_var('PER_PAGE'), //use large number to remove pagination
 	'delete_admin' => true, //only allow to delete if it is siteadmin
 //	'debug' => true,
@@ -126,7 +126,12 @@ $fields = array(
 		'size' => '10%',
 		'format' => 'date',
 	),	
-	'*' => array(), //action
+	'*' => array(
+		'view' => array(
+				'icon' => 'user',
+				'title' => 'plan_user',
+			),
+	), //action
 );
 
 //output the table

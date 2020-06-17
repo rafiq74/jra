@@ -1494,11 +1494,12 @@ function jra_ui_record_navigator($records, $current_id, $page, $field = 'id', $e
 }
 
 //blank is the first item that does nothing
-function jra_ui_dropdown_menu($items, $text, $type = 'primary', $ret = true)
+//size = btn-sm for small
+function jra_ui_dropdown_menu($items, $text, $type = 'primary', $size = '', $ret = true)
 {
 	$str = '';
 	$str = '<div class="dropdown">
-	  <button class="btn btn-' . $type . ' dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	  <button class="btn btn-' . $type . ' ' . $size . ' dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		' . $text . '
 	  </button>
 	  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';

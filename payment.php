@@ -24,8 +24,7 @@
 
 require_once '../../config.php';
 require_once 'lib/jra_lib.php';
-require_once 'lib/jra_ui_lib.php';
-require_once 'locallib.php'; //local library (for index we name it as locallib because there is already an official lib.php from moodle
+require_once 'lib.php'; //local library
 
 require_login(); //always require login
 
@@ -43,9 +42,8 @@ $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
 echo $OUTPUT->header();
-//content code starts here
-jra_ui_page_title(get_string('payment', 'local_jra'));
 
+//content code starts here
 
 $cost = 20;
 $localisedcost = format_float($cost, 2, true);
@@ -74,25 +72,8 @@ $billingaddress = jra_get_config('stripe_validate_billing');
 $validatezipcode = jra_get_config('stripe_validate_postcode');
 
 
-//build the content
-ob_start();
 include($CFG->dirroot.'/local/jra/stripe/payment.php');
-$content = ob_get_clean();		
 
-$data = array();
-//one row of data
-$obj = new stdClass();
-$obj->column = 3;
-$obj->left_content = '';
-$obj->center_content = jra_ui_box($content, jra_get_string(['payment']), '', true);
-$obj->right_content = '';
-$data[] = $obj;
-//end of data row
-
-$str = jra_ui_multi_column($data, 3);
-echo $str;
 
 //content code ends here
 echo $OUTPUT->footer();
-
-$PAGE->requires->js('/local/jra/script.js'); //global javascript

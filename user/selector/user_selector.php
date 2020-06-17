@@ -57,7 +57,7 @@ class jra_user_role_available_selector extends jra_user_selector_base {
 		$not_in = $_SESSION['ajax_user_role_not_in'];
 		$params = array(); //leave it empty
 		$sortparams = array(); //leave it empty
-        $wherecondition = "user_type = 'employee' and country = '" . jra_get_country() . "'";
+        $wherecondition = "user_type = 'employee' and deleted = 0 and country = '" . jra_get_country() . "'";
 		if($not_in != '')
 			$wherecondition = $wherecondition . " and id not in($not_in)";
 		if($search != '')
@@ -66,10 +66,10 @@ class jra_user_role_available_selector extends jra_user_selector_base {
         $fields      = "select id, username, first_name as firstname, family_name as lastname";
         $countfields = 'SELECT COUNT(1)';
 
-        $sql = " from v_jra_userlogin
+        $sql = " from v_jra_user
                 WHERE $wherecondition";
 
-        $order = ' ORDER BY username';
+        $order = ' ORDER BY first_name, family_name';
 
         // Check to see if there are too many to show sensibly.
         if (!$this->is_validating()) {
@@ -139,6 +139,151 @@ class jra_user_assigned_role_selector extends jra_user_selector_base {
                 WHERE $wherecondition";
 
         $order = ' ORDER BY b.username';
+
+        // Check to see if there are too many to show sensibly.
+        if (!$this->is_validating()) {
+            $potentialcount = $DB->count_records_sql($countfields . $sql, $params);
+            if ($potentialcount > $this->maxusersperpage) {
+                return $this->too_many_results($search, $potentialcount);
+            }
+        }
+
+        $availableusers = $DB->get_records_sql($fields . $sql . $order, array_merge($params, $sortparams));
+
+        if (empty($availableusers)) {
+            return array();
+        }
+
+        if ($search) {
+            $groupname = get_string('assigned_users', 'local_jra', $search);
+        } else {
+            $groupname = get_string('assigned_users', 'local_jra');
+        }
+
+        return array($groupname => $availableusers);
+    }
+
+    protected function get_options() {
+        global $CFG;
+        $options = parent::get_options();
+        $options['file'] = $CFG->admin . '/roles/lib.php';
+        return $options;
+    }
+	
+}
+
+
+/////////////////////////////////////////////////////////////////////
+///////CLASSES FOR PLAN USER////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+//for list of user who are eligible to be assigned a role
+class jra_user_plan_available_selector extends jra_user_selector_base {
+    /**
+     * Create instance.
+     *
+     * @param string $name control name
+     * @param array $options should have two elements with keys groupid and courseid.
+     */
+	var $section;
+	var $not_in;
+	
+    public function __construct($name = null, $options = array()) {
+        global $CFG;
+        if (is_null($name)) {
+            $name = 'addselect';
+        }
+        $options['multiselect'] = true;
+        $options['exclude'] = explode(',', $CFG->siteadmins);
+        parent::__construct($name, $options);
+    }
+
+    public function find_users($search) {
+        global $CFG, $DB;
+		$this->extrafields = array();
+		$not_in = $_SESSION['ajax_user_plan_not_in'];
+		$params = array(); //leave it empty
+		$sortparams = array(); //leave it empty
+        $wherecondition = "user_type = 'public' and deleted = 0 and country = '" . jra_get_country() . "'";
+		if($not_in != '')
+			$wherecondition = $wherecondition . " and id not in($not_in)";
+		if($search != '')
+			$wherecondition = $wherecondition . " and (username like '%$search%' or first_name like '%$search%' or family_name like '%$search%')";
+
+        $fields      = "select id, username, first_name as firstname, family_name as lastname";
+        $countfields = 'SELECT COUNT(1)';
+
+        $sql = " from v_jra_user
+                WHERE $wherecondition";
+
+        $order = ' ORDER BY first_name, family_name';
+
+        // Check to see if there are too many to show sensibly.
+        if (!$this->is_validating()) {
+            $potentialcount = $DB->count_records_sql($countfields . $sql, $params);
+            if ($potentialcount > $this->maxusersperpage) {
+                return $this->too_many_results($search, $potentialcount);
+            }
+        }
+
+        $availableusers = $DB->get_records_sql($fields . $sql . $order, array_merge($params, $sortparams));
+
+        if (empty($availableusers)) {
+            return array();
+        }
+
+        if ($search) {
+            $groupname = get_string('potential_users', 'local_jra', $search);
+        } else {
+            $groupname = get_string('potential_users', 'local_jra');
+        }
+
+        return array($groupname => $availableusers);
+    }
+
+    protected function get_options() {
+        global $CFG;
+        $options = parent::get_options();
+        $options['file'] = $CFG->admin . '/roles/lib.php';
+        return $options;
+    }
+}
+
+//for list of user who already been assigned a plan
+class jra_user_assigned_plan_selector extends jra_user_selector_base {
+    /**
+     * Create instance.
+     *
+     * @param string $name control name
+     * @param array $options should have two elements with keys groupid and courseid.
+     */
+    public function __construct($name = null, $options = array()) {
+        global $CFG;
+        if (is_null($name)) {
+            $name = 'existingselect';
+        }
+        $options['multiselect'] = true;
+        $options['exclude'] = explode(',', $CFG->siteadmins);
+        parent::__construct($name, $options);
+    }
+
+    public function find_users($search) {
+        global $CFG, $DB;
+		$plan = $_SESSION['ajax_user_plan_plan'];
+		$this->extrafields = array($plan->plan_code);
+		$params = array(); //leave it empty
+		$sortparams = array(); //leave it empty
+		$country = jra_get_country();
+        $wherecondition = "a.plan_code = '$plan->plan_code' and a.country = '$country'";
+		if($search != '')
+			$wherecondition = $wherecondition . " and (b.username like '%$search%' or b.first_name like '%$search%' or b.family_name like '%$search%')";
+
+        $fields      = "select a.id, b.username, b.first_name as firstname, b.family_name as lastname, a.plan_code";
+        $countfields = 'SELECT COUNT(1)';
+
+        $sql = " from {jra_plan_user} a inner join {jra_user} b on a.user_id = b.id
+                WHERE $wherecondition";
+
+        $order = ' ORDER BY b.first_name, b.family_name';
 
         // Check to see if there are too many to show sensibly.
         if (!$this->is_validating()) {

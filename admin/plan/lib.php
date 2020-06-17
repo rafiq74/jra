@@ -227,3 +227,61 @@ function jra_admin_plan_display_plan($plan_data, $highlight)
 	$str = jra_ui_alert($content, $highlight, '', false, true);
 	return $str;
 }
+
+function jra_admin_plan_add_plan_user($to_add, $plan, $start_date = '', $end_date = '')
+{
+	global $DB, $USER;
+	$now = time();
+	$country = jra_get_country();
+	if($start_date == '')
+		$start_date = jra_output_today();
+	if($end_date == '')
+		$end_date = strtotime(date('d-M-Y', $start_date) . ' + 1 year'); //for now
+	foreach($to_add as $u)
+	{
+		$data = new stdClass();
+		$data->id = '';
+		$data->user_id = $u->id;
+		$data->plan_code = $plan->plan_code;
+		$data->title = $plan->title;
+		$data->start_date = $start_date;
+		$data->end_date = $end_date;
+		$data->action = 'add';
+		$data->action_remark = '';
+		$data->eff_status = 'A';
+		$data->date_created = $now;
+		$data->date_updated = $now;
+		$data->action_user = $USER->id;
+		$data->country = $country;
+		$duplicate_condition = array(
+			'user_id' => $data->user_id,
+			'plan_code' => $data->plan_code,
+		);
+		$isDuplicate = jra_query_is_duplicate('jra_plan_user', $duplicate_condition, $data->id);
+		if(!$isDuplicate) //no duplicate, update it, otherwise, don't do anything
+		{
+			$DB->insert_record('jra_plan_user', $data);	
+		}
+	}	
+}
+
+function jra_admin_plan_remove_plan_user($to_remove)
+{
+	global $DB, $USER;
+	$cascade = array();
+	foreach($to_remove as $u)
+	{
+		jra_query_delete_cascade('jra_plan_user', $u->id, $cascade);		
+	}
+}
+
+function jra_admin_plan_total_subscriber($plan)
+{
+	global $DB;
+	$condition = array(
+		'plan_code' => $plan->plan_code,
+		'country' => jra_get_country(),
+	);
+	return $DB->count_records('jra_plan_user', $condition);
+}
+

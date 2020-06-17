@@ -152,6 +152,14 @@ function jra_set_session($name, $value)
 	$_SESSION[$name] = $value;
 }
 
+function jra_include_jquery()
+{
+	global $PAGE;
+	$PAGE->requires->jquery();
+	$PAGE->requires->jquery_plugin('ui');
+	$PAGE->requires->jquery_plugin('ui-css'); 
+}
+
 //get the default country. Pass the field like country to get the country of the country
 function jra_get_country()
 {

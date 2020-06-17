@@ -15,16 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * This file contains main class for the course format Weeks
  *
- * @package    block_jra
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since     Moodle 2.0
+ * @package   format_jra
+ * @copyright Muhammd Rafiq
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016062465;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2015111600;        // Requires this Moodle version
-$plugin->component = 'local_jra'; // Full name of the plugin (used for diagnostics)
-$plugin->cron = 300;
+function jra_locallib_xxx()
+{
+}
+

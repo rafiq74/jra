@@ -169,7 +169,11 @@ function jra_output_formal_datetime($timestamp)
 	return date('d-M-Y, h:i:s', $timestamp);
 }
 
-
+//return today, i.e. normalized to time 00
+function jra_output_today()
+{
+	return strtotime(date('d-M-Y', time()));
+}
 /********************************************************
 ******* UNVERIFIED FUNCTIONS ****************************/
 //given a semester, format it according to semester and year

@@ -61,15 +61,15 @@ else
 $bc = ['update', 'plan'];
 
 //make sure the plan is valid
-$co = $DB->get_record('jra_plan', array('id' => $id));
-if(!$co)
+$plan = $DB->get_record('jra_plan', array('id' => $id));
+if(!$plan)
 	throw new moodle_exception(get_string('invalid_parameter', 'local_jra'));	
 
 if(isset($_POST['delete_id'])) //need to delete plan
 {
 	$delete_id = $_POST['delete_id'];
 	$DB->delete_records('jra_plan', array('id' => $delete_id));
-	$max_plan = jra_app_get_plan($co, false); //get the max record
+	$max_plan = jra_app_get_plan($plan, false); //get the max record
 	if(!$max_plan) //no more plan left, we redict user back to the index page
 	{
 		$return_params = jra_get_session('jra_plan_return_params'); //make sure we get the index session information

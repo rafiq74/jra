@@ -32,7 +32,7 @@ require_once 'lib.php';
 require_once 'form.php';
 
 $urlparams = $_GET;
-$PAGE->set_url('/local/jra/admin/plan/index.php', $urlparams);
+$PAGE->set_url('/local/jra/admin/plan/add_plan.php', $urlparams);
 $PAGE->set_course($SITE);
 $PAGE->set_cacheable(false);
 

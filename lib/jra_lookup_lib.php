@@ -215,6 +215,19 @@ function jra_lookup_user_type()
 	);
 }
 
+function jra_lookup_asset_category($blank = '')
+{
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	$arr['property'] = get_string('properties', 'local_jra');
+	$arr['vehicle'] = get_string('vehicles', 'local_jra');
+	$arr['service'] = get_string('services', 'local_jra');
+	$arr['facility'] = get_string('facilities', 'local_jra');
+	$arr['others'] = get_string('others', 'local_jra');
+	return $arr;
+}
+
 function jra_lookup_user_title()
 {
 	return array(
@@ -267,32 +280,34 @@ function jra_lookup_active_status()
 	);
 }
 
-function jra_lookup_city()
-{
-	global $DB;
-	$sql = "select id, city from {jra_city}";
-	$rec = $DB->get_records_sql($sql);
 
-		$arr = array();
-	foreach($rec as $r)
+function jra_lookup_state($blank = '', $country = 'MY')
+{
+	global $DB;	
+	$states = jra_get_session('jra_state'); //try to see if the state session is defined
+	if(!is_array($states)) //state not defined
 	{
-		$arr[$r->id] = $r->city;
+		$states = $DB->get_records_menu('jra_state', ['country' => $country], 'sort_order', 'state_code, state');
+		jra_set_session('jra_state', $states);
 	}
+	if($blank != '')
+		$arr = array_merge(['' => $blank], $states);
+	else
+		$arr = $states;
 	return $arr;
 }
 
-function jra_lookup_state($country)
+function jra_lookup_city($state_code = '', $blank = '', $country = 'MY')
 {
 	global $DB;
-	$condition = array(
-		'country' => $country,
-	);
-	$rec = $DB->get_records('jra_state', $condition);
-	$arr = array();
-
-	foreach($rec as $r){
-		$arr[$r->id] = $r->state;
-	}
+	$condition = array();
+	$condition['country'] = $country;
+	if($state_code != '')
+		$condition['state_code'] = $state_code;
+	$cities = $DB->get_records_menu('jra_city', $condition, 'city', 'id, city');
+	if($blank != '')
+		$arr = array_merge(['' => $blank], $cities);
+	else
+		$arr = $cities;
 	return $arr;
 }
-

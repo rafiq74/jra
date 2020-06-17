@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,16 +16,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Change password form definition.
  *
- * @package    block_jra
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @package    core
+ * @subpackage auth
+ * @copyright  2006 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+//defined('MOODLE_INTERNAL') || die(); //for some reason, this will not work
 
-$plugin->version   = 2016062465;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2015111600;        // Requires this Moodle version
-$plugin->component = 'local_jra'; // Full name of the plugin (used for diagnostics)
-$plugin->cron = 300;
+$arr[] = ['label' => 'All', 'value' => 'All'];
+$arr[] = ['label' => 'Baby', 'value' => 'Baby'];
+$arr[] = ['label' => 'Cat', 'value' => 'Cat'];
+$arr[] = ['label' => 'Dog', 'value' => 'Dog'];
+$arr[] = ['label' => 'Egg', 'value' => 'Egg'];
+
+header("Content-Type", "application/json"); //needed for auto complete
+echo json_encode($arr);
