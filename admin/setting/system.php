@@ -29,6 +29,7 @@ require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
 require_once '../../lib/jra_query_lib.php';
 require_once '../../lib/jra_system_lib.php';
+require_once '../../lib/jra_exdb_lib.php';
 require_once 'lib.php'; //local library
 
 $urlparams = $_GET;
@@ -48,11 +49,12 @@ $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
-$PAGE->navbar->add(get_string('system', 'local_jra'), new moodle_url('system.php'));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' ' , new moodle_url('system.php'));
 
 echo $OUTPUT->header();
 
+$test_connection = false;
 if(isset($_POST['button_save']))
 {
 	foreach($_POST as $key => $value)
@@ -60,21 +62,19 @@ if(isset($_POST['button_save']))
 		if($key != 'button_save')
 		{
 			$subfield = '';
-			jra_update_config($key, $subfield, $value);
 			//if need to have further processing
-			if($key == 'enable_student_login')
+			if($key == 'sis_dbpassword') //password, encrypt it
 			{
-				$institute = jra_get_institute();
-				$sql = "select appid, user_id from v_si_active_student where institute = '$institute'";
-				$users = $DB->get_records_sql_menu($sql);
-				$inStr = jra_system_implode_instr($users);
-				$sql = "update {si_user} set enable_login = '$value' where id in ($inStr)";
-				$DB->execute($sql);
+				$value = jra_encrypt($value);
 			}
+			if($key != 'sis_testconnection')
+				jra_update_config($key, $subfield, $value);
 		}
 	}
 }
 
+if(isset($_POST['sis_testconnection']))
+	$test_connection = true;
 //content code starts here
 jra_ui_page_title(get_string('system','local_jra') .  ' ' . get_string('administrator') . ' ' . get_string('settings'));
 $currenttab = 'system'; //change this according to tab
@@ -88,8 +88,8 @@ $data = array();
 //one row of data
 $obj = new stdClass();
 $obj->column = 2;
-$obj->left_content = jra_admin_setting_system_login();
-$obj->right_content = jra_admin_setting_system_eula();
+$obj->left_content = jra_admin_setting_sis_config($test_connection);
+$obj->right_content = ''; //jra_admin_setting_system_eula();
 $data[] = $obj;
 //end of data row
 

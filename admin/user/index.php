@@ -26,6 +26,7 @@ require_once '../../../../config.php';
 require_once '../../lib/jra_lib.php'; 
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
+require_once '../../lib/jra_file_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_query_lib.php';
 require_once 'lib.php'; //local library
@@ -48,23 +49,59 @@ $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
 $PAGE->navbar->add(jra_get_string(['user', 'management']), new moodle_url('index.php'));
 
 //Any form processing code
 if(jra_is_system_admin() && isset($_POST['delete_id'])) //only allow site admin to delete
 {
+	$user_id = $_POST['delete_id'];
+	//check if it is an applicant
+	$del_applicant = $DB->get_record('si_applicant', array('user_id' => $user_id));
+	if($del_applicant)
+	{
+		//now delete the file
+		if($del_applicant->national_id_file != '')
+		{
+			$file_path = jra_file_supporting_document_path(jra_get_semester()) . $del_applicant->national_id_file;
+			jra_file_delete_file($file_path);
+		}
+		if($del_applicant->secondary_file != '')
+		{
+			$file_path = jra_file_supporting_document_path(jra_get_semester()) . $del_applicant->secondary_file;
+			jra_file_delete_file($file_path);
+		}
+		if($del_applicant->tahseli_file != '')
+		{
+			$file_path = jra_file_supporting_document_path(jra_get_semester()) . $del_applicant->tahseli_file;
+			jra_file_delete_file($file_path);
+		}
+		if($del_applicant->qudorat_file != '')
+		{
+			$file_path = jra_file_supporting_document_path(jra_get_semester()) . $del_applicant->qudorat_file;
+			jra_file_delete_file($file_path);
+		}
+		$cascade = array(
+			'si_applicant_contact' => 'applicant_id',		
+		);
+		jra_query_delete_cascade('si_applicant', $del_applicant->id, $cascade);
+	}	
+	//delete from moodle
+	$DB->delete_records('user', array('idnumber' => $user_id));
 	//we have to remove any cascading record (even if we don't delete the user physically)
 	$cascade = array(
-//		'jra_role_user' => 'user_id',
+		'jra_user_role' => 'user_id',
+		'jra_user_contact' => 'user_id',
+		'si_applicant' => 'user_id',
 	);
-	jra_query_delete_multiple($_POST['delete_id'], $cascade, jra_get_country());
-	//we don't delete from db, but we make the deleted field as 2
-	$data->id = $_POST['delete_id'];
-	$data->date_updated = time();
-	$data->deleted = 2;
-	$DB->update_record('jra_user', $data);			
-    redirect('index.php'); //we redirect to indext again to kill the submit post data
+	jra_query_delete_cascade('jra_user', $user_id, $cascade);
+	
+	
+	$return_params = jra_get_session('jra_user_return_params');
+	if($return_params == '')
+		$return_params = array();
+	$return_url = new moodle_url('index.php', $return_params);
+    redirect($return_url); //we redirect to indext again to kill the submit post data
 }
 
 echo $OUTPUT->header();
@@ -75,42 +112,10 @@ include('tabs.php');
 jra_set_session('jra_user_tab', 'user');
 echo $OUTPUT->box_start('jra_tabbox');
 
-$status_list = array_merge(array('all' => get_string('all', 'local_jra')), jra_lookup_is_active());
+$status_list = jra_lookup_user_status(get_string('all', 'local_jra'));
+$user_type_list = jra_lookup_user_type(get_string('all', 'local_jra'));
 
-$user_type_list = array_merge(array('' => get_string('all', 'local_jra')), jra_lookup_user_type());
 $qs = $_GET;
-//for status
-$status = 'A';
-if(isset($_GET['status'])) //if there is aountry from query string, get it
-{
-	$status = $_GET['status'];	
-	if(!isset($status_list[$status])) //validate that it is a valid country
-		$status = 'A';
-	else
-		jra_set_session('user_account_status', $status);	
-}
-else //if not, try to get it from the session
-{
-	$status = jra_get_session('user_account_status');
-}
-if($status == '')
-	$status = 'A';
-	
-//for user type
-$user_type = '';
-if(isset($_GET['user_type'])) //if there is aountry from query string, get it
-{
-	$user_type = $_GET['user_type'];	
-	if(!isset($user_type_list[$user_type])) //validate that it is a valid country
-		$user_type = '';
-	else
-		jra_set_session('user_account_user_type', $user_type);	
-}
-else //if not, try to get it from the session
-{
-	$user_type = jra_get_session('user_account_user_type');
-}
-
 //create the master filter of program
 unset($qs['status']); //have to remove existing status query string
 unset($qs['user_type']); //have to remove existing user type query string
@@ -127,6 +132,9 @@ $action_item[] = array(
 $action_menu = '<div class="row pull-right pr-3">' . jra_ui_dropdown_menu($action_item, get_string('action', 'local_jra')) . '</div><br /><br />';
 echo $action_menu;
 
+$status = jra_ui_filter_value('status', 'A', 'userlist', $status_list, true);
+$user_type = jra_ui_filter_value('user_type', '', 'userlist', $user_type_list, true);
+
 
 $master_filter = '<span class="pull-right"><strong>';
 $master_filter = $master_filter . jra_get_string(['user', 'type']) . '</strong>&nbsp;&nbsp;&nbsp;' . jra_ui_select('user_type', $user_type_list, $user_type, $user_type_url);
@@ -134,8 +142,14 @@ $master_filter = $master_filter . jra_ui_space(3);
 $master_filter = $master_filter . get_string('status', 'local_jra') . '</strong>&nbsp;&nbsp;&nbsp;' . jra_ui_select('status', $status_list, $status, $user_type_url);
 $master_filter = $master_filter . '</span>';
 
+$active_status_filter = '';
+if($status != '')
+	$active_status_filter = " and active_status = '$status'";
+$user_type_filter = '';
+if($user_type != '')
+	$user_type_filter = " and user_type = '$user_type'";
 $sql = "select * from v_jra_user";
-$conditionWhere = " country = '" . jra_get_country() . "' and deleted = 0";
+$conditionWhere = " country = '" . jra_get_country() . "' and deleted = 0 $active_status_filter $user_type_filter";
 
 //	$condition['user_type'] = $user_type;
 //setup the table options
@@ -207,6 +221,8 @@ $fields = array(
 		'header'=>get_string('status', 'local_jra'), //for custom header
 		'align' => 'center',
 		'size' => '5%',
+		'format' => 'lookup',
+		'lookup_list' => $status_list,
 		'show_reference' => true,
 	),	
 	'*' => array(), //action

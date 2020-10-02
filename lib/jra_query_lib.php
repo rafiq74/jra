@@ -152,18 +152,17 @@ function jra_query_is_duplicate($table, $condition, $id)
 function jra_query_delete_cascade($table, $id, $child = array())
 {
 	global $DB;
-	$country = jra_get_country(); //make sure match country
-	jra_query_delete_multiple($id, $child, $country); //cascade delete
-	$DB->delete_records($table, array('id' => $id, 'country' => $country));
+	jra_query_delete_multiple($id, $child); //cascade delete
+	$DB->delete_records($table, array('id' => $id));
 }
 
 //delete multiple table at once. All the table must have same id. Usually for cascading delete
-function jra_query_delete_multiple($id, $child, $country)
+function jra_query_delete_multiple($id, $child)
 {
 	global $DB;
 	foreach($child as $key => $value)
 	{
-		$DB->delete_records($key, array($value => $id, 'country' => $country));
+		$DB->delete_records($key, array($value => $id));
 	}
 }
 

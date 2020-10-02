@@ -71,6 +71,13 @@ function jra_system_explode_string($str)
 	return $arr;
 }
 
+function jra_system_report_name($name)
+{
+	$now = time();
+	$filename = $name . '_' . date('Ymd', $now) . '_' . date('hi', $now);
+	return $filename;
+}
+
 function jra_system_g_to_h_year($gy)
 {
 	return $gy - 579;

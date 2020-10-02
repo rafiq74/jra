@@ -25,29 +25,24 @@
  */
 
 require('../../../config.php');
-//require_once '../lib/sis_lib.php'; //
-//require_once '../lib/sis_lib.php'; //never allow sis_lib to be here because it will cause cyclic redirection for password redirect
-require_once '../lib/sis_ui_lib.php'; 
+//require_once '../lib/jra_lib.php'; //
+//require_once '../lib/jra_lib.php'; //never allow jra_lib to be here because it will cause cyclic redirection for password redirect
+require_once '../lib/jra_ui_lib.php'; 
 require_once($CFG->dirroot.'/user/lib.php');
 require('lib.php');
-require('change_password_form.php');
+require('form_public.php');
 
 $systemcontext = context_system::instance();
 
-//HTTPS is required in this page when $CFG->loginhttps enabled
-$PAGE->https_required();
-
 $urlparams = $_GET;
-$PAGE->set_url('/local/sis/user/reset_password.php', $urlparams);
+$PAGE->set_url('/local/jra/user/reset_password.php', $urlparams);
 
 $PAGE->set_context($systemcontext);
 
-$PAGE->set_pagelayout('maintenance'); //set to maintenance where there is no redirect function to avoid circular redirection
-$course = $DB->get_record('si_course', array('id' => 1));
-$PAGE->set_course($course);
+$PAGE->set_pagelayout('login'); //set to maintenance where there is no redirect function to avoid circular redirection
 
-$PAGE->set_title(get_string('brand_name', 'local_sis'));
-//$PAGE->set_heading(get_string('brand_name', 'local_sis'));
+$PAGE->set_title(get_string('brand_name', 'local_jra'));
+//$PAGE->set_heading(get_string('brand_name', 'local_jra'));
 
 // if you are logged in then you shouldn't be here!
 if (isloggedin() and !isguestuser()) {
@@ -58,7 +53,7 @@ $token = required_param('token', PARAM_TEXT);
 //try to obtain the user
 $now = time();
 $token_expired = false;
-$user = $DB->get_record('si_user', array('token' => $token));
+$user = $DB->get_record('jra_user', array('token' => $token));
 if($user) //valid user
 {
 	//make sure the token not expired
@@ -68,12 +63,12 @@ if($user) //valid user
 else
 {
 	echo $OUTPUT->header();
-	throw new moodle_exception(get_string('invalid_token', 'local_sis'));	
+	throw new moodle_exception(get_string('invalid_token', 'local_jra'));	
 }
 if($token_expired)
 {
 	echo $OUTPUT->header();
-	throw new moodle_exception(get_string('token_expired', 'local_sis'));	
+	throw new moodle_exception(get_string('token_expired', 'local_jra'));	
 }
 
 $mform = new login_reset_password_form(null, array('id' => $user->id, 'token' => $token));
@@ -85,21 +80,26 @@ if ($mform->is_cancelled())
 } 
 else if ($data = $mform->get_data()) 
 {
-	$m_user = $DB->get_record('user', array('idnumber' => $user->id));
-	if($m_user)
-	{
-		sis_user_update_password($m_user, $data->newpassword1);
-		$success = true;
-	}
+	jra_user_update_password($user, $data->newpassword1);
+	$success = true;
 	$form_submit = true;
 }
 
 echo $OUTPUT->header();
 
-echo '<h2>' . get_string('brand_name', 'local_sis') . '</h2>';
-echo '<hr />';
+echo '<div class="row justify-content-center">';
+echo '<div class="col-xl-8 col-sm-10 ">';
 
-sis_ui_page_title(get_string('reset_password','local_sis'));
+echo '<div class="card">';
+echo '    <div class="card-block">';
+
+echo '<h3 class="card-header text-center">
+		<img src="' . $CFG->wwwroot . '/local/jra/images/logo/main_logo.jpg" />
+	</h3>';
+
+echo '<div class="card-body">';
+
+jra_ui_page_title(get_string('reset_password','local_jra'));
 
 if(!$form_submit)
 {
@@ -109,16 +109,21 @@ else
 {
 	if($success)
 	{
-		sis_ui_alert(get_string('password_change_success', 'local_sis'), 'success', get_string('note', 'local_sis'), false, false);
+		jra_ui_alert(get_string('password_change_success', 'local_jra'), 'success', get_string('note', 'local_jra'), false, false);
 	}
 	else
 	{
-		sis_ui_alert(get_string('password_change_failed', 'local_sis'), 'danger', get_string('error'), false, false);
+		jra_ui_alert(get_string('password_change_failed', 'local_jra'), 'danger', get_string('error'), false, false);
 	}
 	$url = new moodle_url($CFG->wwwroot.'/index.php');
-	$str = '<div class="text-center mt-5">' . sis_ui_button(get_string('continue'), $url). '</div>';
+	$str = '<div class="text-center mt-5">' . jra_ui_button(get_string('continue'), $url). '</div>';
 	echo $str;
 }
 
+echo '</div>'; //card-body
+echo '</div>'; //card-block
+echo '</div>'; //end of card
+echo '</div>';
+echo '</div>';
 
 echo $OUTPUT->footer();

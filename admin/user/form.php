@@ -46,16 +46,27 @@ class user_form extends moodleform
 		$mform->addRule('username', get_string('err_email', 'form'), 'email', '', 'client', false, false);
 		
 		$mform->addElement('select', 'user_type', jra_get_string(['user', 'type']), jra_lookup_user_type());
-
-		$mform->addElement('text', 'first_name', get_string('first_name', 'local_jra'), array('size' => 50));
+		$mform->setDefault('user_type', 'employee');
+		$mform->addElement('text', 'first_name', get_string('first_name', 'local_jra'), array('size' => 30));
 		$mform->addRule('first_name', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addElement('text', 'middle_name', get_string('middle_name', 'local_jra'), array('size' => 30));
+		$mform->addElement('text', 'father_name', get_string('father_name', 'local_jra'), array('size' => 30));
+		//$mform->addRule('father_name', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+		$mform->addElement('text', 'grandfather_name', get_string('grandfather_name', 'local_jra'), array('size' => 30));
+		//$mform->addRule('grandfather_name', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addElement('text', 'family_name', get_string('family_name', 'local_jra'), array('size' => 30));
 		$mform->addRule('family_name', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+		$mform->addElement('text', 'national_id', jra_get_string(['national_id']), array('size' => 20, 'maxlength' => 10));
+//		$mform->addRule('national_id', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+		$mform->addRule('national_id', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
+		$d = new stdClass();
+		$d->format = 10;
+		$mform->addRule('national_id', get_string('err_maxlength', 'form', $d), 'maxlength', 10, 'client', false, false);
+		$mform->addRule('national_id', get_string('err_minlength', 'form', $d), 'minlength', 10, 'client', false, false);
+		
 		$mform->addElement('select', 'gender', get_string('gender', 'local_jra'), jra_lookup_gender());
 
-//        $eff_status = jra_lookup_isactive();
-//        $mform->addElement('select', 'eff_status', 'Status', $eff_status, $attributes);
+        $user_status = jra_lookup_user_status();
+        $mform->addElement('select', 'active_status', 'Status', $user_status, $attributes);
 //		$mform->addElement('text', 'idnumber', get_string('idnumber'), array('size' => 30));
 		
 		$this->add_action_buttons($cancel=true);		
@@ -146,7 +157,7 @@ class personal_info_form extends moodleform
 
 //		$mform->addElement('header', 'headergradetemplate', get_string('general'));
 		
-		$mform->addElement('text', 'national_id', jra_get_string(['national', 'id']), array('size' => 20));
+		$mform->addElement('text', 'national_id', jra_get_string(['national_id']), array('size' => 20));
 		
 		$mform->addElement('text', 'passport_id', get_string('passport_no', 'local_jra'), array('size' => 20));		
 		$mform->addElement('date_selector', 'dob', get_string('date_of_birth', 'local_jra'));

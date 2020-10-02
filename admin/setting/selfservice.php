@@ -49,7 +49,7 @@ $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
 jra_set_session('jra_home_tab', 'system');
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
 $PAGE->navbar->add(get_string('self_services', 'local_jra'), new moodle_url('selfservice.php'));
 
 echo $OUTPUT->header();

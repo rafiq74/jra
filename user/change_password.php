@@ -75,14 +75,15 @@ if ($USER->auth != 'db')
 }
 
 $PAGE->set_context(context_user::instance($USER->id));
+//$PAGE->set_pagelayout('jra'); //cannot use jra template. Has to use maintenance template
 $PAGE->set_pagelayout('maintenance'); //set to maintenance where there is no redirect function to avoid circular redirection
 $PAGE->set_course($course);
 
 $PAGE->set_title(get_string('brand_name', 'local_jra'));
 $PAGE->set_heading(get_string('brand_name', 'local_jra'));
 $_SESSION['jra_home_tab'] = 'jra';
-$PAGE->navbar->add(get_string('system', 'local_jra'), new moodle_url($CFG->wwwroot . '/index.php', array('tab' => 'system')));
-$PAGE->navbar->add(get_string('change_password', 'local_jra'), new moodle_url('change_password.php'));
+$PAGE->navbar->add(get_string('change', 'local_jra') . ' ' . get_string('password', 'local_jra'), new moodle_url('change_password.php'));
+
 
 $mform = new login_change_password_form();
 $mform->set_data(array('id'=>$course->id));
@@ -103,7 +104,8 @@ if ($mform->is_cancelled())
 } 
 else if ($data = $mform->get_data()) 
 {	
-	if(jra_user_update_password($USER, $data->newpassword1)) //if successfully change password
+	$jra_user = $DB->get_record('jra_user', array('id' => $USER->idnumber));
+	if(jra_user_update_password($jra_user, $data->newpassword1)) //if successfully change password
 		$_SESSION['jra_change_password'] = false; //cancel the password change session
     if (!empty($CFG->passwordchangelogout)) {
         \core\session\manager::kill_user_sessions($USER->id, session_id());
@@ -115,7 +117,7 @@ else if ($data = $mform->get_data())
     unset_user_preference('auth_forcepasswordchange', $USER);
     unset_user_preference('create_password', $USER);
 
-    $strpasswordchanged = get_string('passwordchanged');
+    $strpasswordchanged = jra_ui_alert(get_string('passwordchanged'), 'success', '', false, true);
 
     $fullname = fullname($USER, true);
 

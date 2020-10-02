@@ -384,7 +384,7 @@ function jra_admin_user_show_personal_info($user_data)
 	$detail_data = array();
 	//one row of data
 	$obj = new stdClass();
-	$obj->title = jra_get_string(['national', 'id']);
+	$obj->title = jra_get_string(['national_id']);
 	$obj->content = $user_data->national_id == '' ? '-' : $user_data->national_id;
 	$detail_data[] = $obj;
 	//end of data row

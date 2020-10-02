@@ -49,6 +49,9 @@ echo $OUTPUT->header();
 //content code starts here
 jra_ui_page_title(jra_get_string(['user', 'profiles']));
 
+$change_password = new moodle_url('change_password.php');
+
+echo jra_ui_button(jra_get_string(['change', 'password']), $change_password);
 
 //for now no need js yet
 //$PAGE->requires->js('/local/rcyci/setting/timetable.js');

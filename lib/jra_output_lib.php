@@ -78,13 +78,15 @@ function jra_output_show_user_name($user, $full = true, $lang = true, $force_alt
 		if(!$force_alternate)
 		{
 			$arr[] = jra_output_show_field_language($user, 'first_name', $lang);
-			$arr[] = jra_output_show_field_language($user, 'middle_name', $lang);
+			$arr[] = jra_output_show_field_language($user, 'father_name', $lang);
+			$arr[] = jra_output_show_field_language($user, 'grandfather_name', $lang);
 			$arr[] = jra_output_show_field_language($user, 'family_name', $lang);
 		}
 		else
 		{
 			$arr[] = jra_output_show_field_force_alternate($user, 'first_name');
-			$arr[] = jra_output_show_field_force_alternate($user, 'middle_name');
+			$arr[] = jra_output_show_field_force_alternate($user, 'father_name');
+			$arr[] = jra_output_show_field_force_alternate($user, 'grandfather_name');
 			$arr[] = jra_output_show_field_force_alternate($user, 'family_name');
 		}
  	}
@@ -93,13 +95,11 @@ function jra_output_show_user_name($user, $full = true, $lang = true, $force_alt
 		if(!$force_alternate)
 		{
 			$arr[] = jra_output_show_field_language($user, 'first_name', $lang);
-			$arr[] = jra_output_show_field_language($user, 'middle_name', $lang);
 			$arr[] = jra_output_show_field_language($user, 'family_name', $lang);
 		}
 		else
 		{
 			$arr[] = jra_output_show_field_force_alternate($user, 'first_name');
-			$arr[] = jra_output_show_field_force_alternate($user, 'middle_name');
 			$arr[] = jra_output_show_field_force_alternate($user, 'family_name');
 		}
 	}
@@ -161,12 +161,27 @@ function jra_output_show_gender($gender)
 
 function jra_output_formal_date($timestamp)
 {
-	return date('d-M-Y', $timestamp);
+	if(current_language() == 'ar') //arabic, we have to flipped it
+		return date('Y-m-d', $timestamp); //arabic, we flipped it
+	else
+		return date('d-M-Y', $timestamp);
 }
 
 function jra_output_formal_datetime($timestamp)
 {
-	return date('d-M-Y, h:i:s', $timestamp);
+	if(current_language() == 'ar') //arabic, we have to flipped it
+		return date('h:i:s, Y-m-d', $timestamp);
+	else
+		return date('d-M-Y, h:i:s', $timestamp);
+}
+
+//with AM and PM
+function jra_output_formal_datetime_12($timestamp)
+{
+	if(current_language() == 'ar') //arabic, we have to flipped it
+		return date('A h:i, Y-m-d', $timestamp);
+	else
+		return date('d-M-Y, h:i A', $timestamp);
 }
 
 //return today, i.e. normalized to time 00

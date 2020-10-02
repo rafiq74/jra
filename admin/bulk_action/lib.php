@@ -30,16 +30,18 @@ defined('MOODLE_INTERNAL') || die();
 function jra_admin_bulk_action_lookup()
 {
 	jra_admin_bulk_action_update_lookup('Islam', 'personal_info', 'religion', 1);
-	jra_admin_bulk_action_update_lookup('Others', 'personal_info', 'religion', 1);
+	jra_admin_bulk_action_update_lookup('Others', 'personal_info', 'religion', 2);
 	
 	jra_admin_bulk_action_update_lookup('primary', 'personal_info', 'address_type', 1);
 	jra_admin_bulk_action_update_lookup('secondary', 'personal_info', 'address_type', 2);
 
+	jra_admin_bulk_action_update_lookup('saudi_national_id', 'personal_info', 'id_type', 1);
+	jra_admin_bulk_action_update_lookup('iqamah', 'personal_info', 'id_type', 2);
 }
 
 function jra_admin_bulk_action_update_lookup($value, $category, $subcategory, $sort_order = 1, $description = '')
 {		
-	$country = jra_get_country();
+	$country = jra_get_institute();
 	$lang = 'en';
 	//one row
 	if(!jra_lookup_duplicate($value, $lang, $category, $subcategory, $country)) //not exist, add it

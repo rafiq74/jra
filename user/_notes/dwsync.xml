@@ -9,4 +9,6 @@
 <file name="reset_password.php" server="ftp.itechjo.com/public_html/sis/" local="132167634108312060" remote="132184288800000000" />
 <file name="eula.php" server="ftp.itechjo.com/public_html/sis/" local="132253045046490675" remote="132252795000000000" />
 <file name="eula_reject.php" server="ftp.itechjo.com/public_html/sis/" local="132252962540452781" remote="132252796200000000" />
+<file name="change_password.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132415475869407731" remote="132415259400000000" />
+<file name="form_public.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132418488734210581" remote="132418274400000000" />
 </dwsync>

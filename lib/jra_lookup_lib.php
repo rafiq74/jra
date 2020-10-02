@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 function jra_lookup_get_list($category, $subcategory = '', $condition = '', $lang = true, $description = false, $empty_text = '')
 {
 	global $DB;	
-	$where = " and country = '" . jra_get_country() . "'"; //initialize a where clause with country
+	$where = " and country = '" . jra_get_institute() . "'"; //initialize a where clause with country
 	if($subcategory != '')
 		$where = $where . " and subcategory = '$subcategory'";
 	if($condition != '')
@@ -149,6 +149,23 @@ function jra_lookup_plan_interval()
 	);
 }
 
+function jra_lookup_per_page()
+{
+	return array(
+		'10' => '10', 
+		'20' => '20', 
+		'30' => '30', 
+		'50' => '50', 
+		'100' => '100', 
+		'200' => '200', 
+		'500' => '500', 
+		'1000' => '1000', 
+		'1500' => '1500', 
+		'2000' => '2000', 
+		'5000' => '5000', 
+	);
+}
+
 //the first year is 1970. If you want to customize, pass the argument to override
 function jra_lookup_get_year_list($start = 1970)
 {
@@ -185,11 +202,18 @@ function jra_lookup_is_active()
 	);
 }
 
+function jra_lookup_admission_type()
+{
+	return array(
+		'regular' => get_string('regular', 'local_jra'), 
+		'crtp' => 'CRTP',
+	);
+}
+
 function jra_lookup_language()
 {
 	return array(
 		'en' => get_string('english', 'local_jra'), 
-		'ms' => get_string('malay', 'local_jra'),
 		'ar' => get_string('arabic', 'local_jra'),
 	);
 }
@@ -207,12 +231,15 @@ function jra_lookup_gender()
 	);
 }
 
-function jra_lookup_user_type()
+function jra_lookup_user_type($blank = '')
 {
-	return array(
+	$arr = array(
 		'public' => get_string('public', 'local_jra'), 
 		'employee' => get_string('employee', 'local_jra'),
 	);
+	if($blank != '')
+		$arr = array_merge(['' => $blank], $arr);
+	return $arr;
 }
 
 function jra_lookup_asset_category($blank = '')
@@ -224,6 +251,20 @@ function jra_lookup_asset_category($blank = '')
 	$arr['vehicle'] = get_string('vehicles', 'local_jra');
 	$arr['service'] = get_string('services', 'local_jra');
 	$arr['facility'] = get_string('facilities', 'local_jra');
+	$arr['others'] = get_string('others', 'local_jra');
+	return $arr;
+}
+
+function jra_lookup_kindship($blank = '')
+{
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	$arr['father'] = get_string('father', 'local_jra');
+	$arr['mother'] = get_string('mother', 'local_jra');
+	$arr['brother'] = get_string('brother', 'local_jra');
+	$arr['grand_father'] = get_string('grandfather', 'local_jra');
+	$arr['uncle'] = get_string('uncle', 'local_jra');
 	$arr['others'] = get_string('others', 'local_jra');
 	return $arr;
 }
@@ -265,7 +306,6 @@ function jra_lookup_marital_status()
 	return array(
 		'S' => get_string('single', 'local_jra'), 
 		'M' => get_string('married', 'local_jra'),  
-		'W' => get_string('widowed', 'local_jra'),
 	);
 
 }
@@ -280,34 +320,186 @@ function jra_lookup_active_status()
 	);
 }
 
-
-function jra_lookup_state($blank = '', $country = 'MY')
+function jra_lookup_user_status($blank = '')
 {
-	global $DB;	
-	$states = jra_get_session('jra_state'); //try to see if the state session is defined
-	if(!is_array($states)) //state not defined
-	{
-		$states = $DB->get_records_menu('jra_state', ['country' => $country], 'sort_order', 'state_code, state');
-		jra_set_session('jra_state', $states);
-	}
+	$arr = array(
+		'A' => get_string('active', 'local_jra'), 
+		'P' => get_string('pending', 'local_jra'),  
+		'I' => get_string('inactive', 'local_jra'),
+	);
 	if($blank != '')
-		$arr = array_merge(['' => $blank], $states);
-	else
-		$arr = $states;
+		$arr = array_merge(['' => $blank], $arr);
 	return $arr;
 }
 
-function jra_lookup_city($state_code = '', $blank = '', $country = 'MY')
+function jra_lookup_admission_status($blank = '')
+{
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	$arr['5'] = get_string('pending', 'local_jra');  
+	$arr['11'] = get_string('approved', 'local_jra');
+	$arr['12'] = jra_get_string(['waiting', 'list']);
+	$arr['13'] = get_string('rejected', 'local_jra');
+	return $arr;
+}
+
+function jra_lookup_admission_confirm_status()
+{
+	$arr = array();
+	$arr['1'] = get_string('accepted', 'local_jra');  
+	$arr['2'] = get_string('declined', 'local_jra');
+	$arr['3'] = get_string('suspended', 'local_jra');
+	$arr[''] = get_string('unconfirmed', 'local_jra');
+	$arr['5'] = get_string('locked', 'local_jra');
+	return $arr;
+}
+
+function jra_lookup_blood_type($blank = '')
+{
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	$arr['A+'] = 'A+';  
+	$arr['A-'] = 'A-';
+	$arr['B+'] = 'B+';
+	$arr['B-'] = 'B-';
+	$arr['O+'] = 'O+';
+	$arr['O-'] = 'O-';
+	$arr['AB+'] = 'AB+';
+	$arr['AB-'] = 'AB-';
+	return $arr;
+
+}
+
+function jra_lookup_state($blank = '', $country = 'SA')
+{
+	global $DB;
+	if(current_language() != 'en')
+		$order = 'state_a';
+	else
+		$order = 'state';
+	$condition = array();
+	$condition['country'] = $country;
+	$cities = $DB->get_records('jra_city', $condition, $order);
+	if($blank != '')
+		$arr[''] = $blank;
+	foreach($cities as $r)
+	{
+		$arr[$r->state] = jra_output_show_field_language($r, 'state');
+	}
+	return $arr;
+}
+
+function jra_lookup_city($state = '', $blank = '', $country = 'SA')
+{
+	global $DB;
+	if(current_language() != 'en')
+		$order = 'city_a';
+	else
+		$order = 'city';
+	$condition = array();
+	$condition['country'] = $country;
+	if($state != '')
+		$condition['state'] = $state;
+	$cities = $DB->get_records('jra_city', $condition, $order);
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	foreach($cities as $r)
+	{
+		$arr[$r->city] = jra_output_show_field_language($r, 'city');
+	}
+	return $arr;
+}
+
+function jra_lookup_city_applicant($blank = '')
+{
+	global $DB;
+	$semester = jra_get_semester();
+	$sql = "select distinct address_city from {si_applicant_contact} a inner join {si_applicant} b on a.applicant_id = b.id where semester = '$semester' order by address_city";
+	$cities = $DB->get_records_sql($sql);
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	foreach($cities as $r)
+	{
+		$arr[$r->address_city] = $r->address_city;
+	}
+	return $arr;
+}
+
+//get a state given a city
+function jra_lookup_get_state($city, $country = 'SA')
 {
 	global $DB;
 	$condition = array();
 	$condition['country'] = $country;
-	if($state_code != '')
-		$condition['state_code'] = $state_code;
-	$cities = $DB->get_records_menu('jra_city', $condition, 'city', 'id, city');
+	$condition['city'] = $city;
+	$city = $DB->get_record('jra_city', $condition);
+	return $city;
+}
+
+//get semester list
+function jra_lookup_semester($blank = '')
+{
+	global $DB;
+	$condition = array(
+		'institute' => jra_get_institute(),
+	);
+	$rec = $DB->get_records('si_semester', $condition, 'start_date desc');
+	$arr = array();
 	if($blank != '')
-		$arr = array_merge(['' => $blank], $cities);
-	else
-		$arr = $cities;
+		$arr['all'] = $blank;
+	foreach($rec as $r)
+	{
+		$arr[$r->semester] = $r->semester;
+	}
+	return $arr;
+}
+
+//get individual semester
+function jra_lookup_get_semester($semester)
+{
+	global $DB;
+	$sem = $DB->get_record('si_semester', array('semester' => $semester, 'institute' => jra_get_institute()));
+	return $sem;
+}
+
+function jra_lookup_document_type($blank = '')
+{
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	$arr['national'] = jra_get_string(['national_id']);
+	$arr['secondary'] = get_string('secondary_school_document', 'local_jra');
+	$arr['tahseli'] = get_string('tahseli', 'local_jra');
+	$arr['qudorat'] = get_string('qudorat', 'local_jra');
+	return $arr;
+}
+
+//hijrah month list in arabic (we don't use translation)
+function jra_lookup_get_hijrah_month()
+{
+	$arr = array();
+	$arr['1'] = get_string('Muharram', 'local_jra');
+	$arr['2'] = get_string('Safar', 'local_jra');
+	$arr['3'] = get_string('Rabea Awwal', 'local_jra');
+	$arr['4'] = get_string('Rabea Thani', 'local_jra');
+	$arr['5'] = get_string('Jumad Awwal', 'local_jra');
+	$arr['6'] = get_string('Jumad Thani', 'local_jra');
+	$arr['7'] = get_string('Rajab', 'local_jra');
+	$arr['8'] = get_string('Shaaban', 'local_jra');
+	$arr['9'] = get_string('Ramadan', 'local_jra');
+	$arr['10'] = get_string('Shawwal', 'local_jra');
+	$arr['11'] = get_string('Thul El-Qiadah', 'local_jra');
+	$arr['12'] = get_string('Thul El-Hijjah', 'local_jra');
+	return $arr;
+}
+
+//hijrah month list in arabic (we don't use translation)
+function jra_lookup_get_hijrah_month_a()
+{
+	$arr = array();
 	return $arr;
 }

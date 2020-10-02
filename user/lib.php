@@ -33,59 +33,19 @@ defined('MOODLE_INTERNAL') || die();
  * @return null|renderable
  */
 
-function jra_user_update_password($m_user, $password)
+function jra_user_update_password($user, $password)
 {
 	global $DB;
-	$user = $DB->get_record('jra_user', array('id' => $m_user->idnumber));
-	if($user)
-	{
-		$user->password = jra_user_password_hash($password);
-		$user->password_change = 'N';
-		$user->token = null;
-		$user->token_date = null;
-		$DB->update_record('jra_user', $user);
-		return true;
-	}
-	return false;
+	$user->password = jra_user_password_hash($password);
+	$user->password_change = 'N';
+	$user->token = null;
+	$user->token_date = null;
+	$DB->update_record('jra_user', $user);
+	return true;
 }
 
 //use function to hash so in future, easy to change
 function jra_user_password_hash($pswd)
 {
 	return md5($pswd);
-}
-
-function jra_user_send_password_change_info($user, $jra_user) {
-    global $CFG, $DB;
-
-	//generate and save the token
-	$now = time();
-	$token_end_time = strtotime(date('d-M-Y', $now) . ' + 2 days'); //2 days for token expiry
-	$token = md5(uniqid($user->username . $token_end_time, true));
-	$jra_user->token = $token;
-	$jra_user->token_date = $token_end_time;
-	$DB->update_record('jra_user', $jra_user);
-	//end of token generation
-	
-    $site = get_site();
-    $supportuser = core_user::get_support_user();
-    $systemcontext = context_system::instance();
-
-    $data = new stdClass();
-    $data->firstname = $user->firstname;
-    $data->lastname  = $user->lastname;
-    $data->username  = $user->username;
-    $data->sitename  = format_string($site->fullname);
-    $data->admin     = generate_email_signoff();
-
-	$url = new moodle_url($CFG->wwwroot . '/local/jra/user/reset_password.php', array('token' => $token));
-	$data->link = $url->out(false);
-
-	$message = get_string('emailpasswordchangeinfo', '', $data);
-	$subject = get_string('emailpasswordchangeinfosubject', '', format_string($site->fullname));
-
-
-    // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
-    return email_to_user($user, $supportuser, $subject, $message);
-
 }

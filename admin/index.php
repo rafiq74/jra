@@ -34,17 +34,13 @@ $PAGE->set_course($SITE);
 $PAGE->set_cacheable(false);
 
 require_login(); //always require login
-$access_rules = array(
-	'system' => ''
-); //super admin role only
-jra_access_control($access_rules);
-	
 //frontpage - for 2 columns with standard menu on the right
 // - 1 column
 $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('index.php', array()));
 //$PAGE->navbar->add(jra_get_string(['main', 'menu']), new moodle_url('index.php', array()));
 
 echo $OUTPUT->header();

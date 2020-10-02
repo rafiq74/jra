@@ -28,8 +28,9 @@ require('../../../config.php');
 //require_once '../lib/jra_lib.php'; //
 //require_once '../lib/jra_lib.php'; //never allow jra_lib to be here because it will cause cyclic redirection for password redirect
 require_once '../lib/jra_ui_lib.php'; 
+require_once '../lib/jra_mail_lib.php'; 
 require('lib.php');
-require('form.php');
+require('form_public.php');
 
 $systemcontext = context_system::instance();
 
@@ -41,7 +42,7 @@ $PAGE->set_url('/local/jra/user/forget_password.php', $urlparams);
 
 $PAGE->set_context($systemcontext);
 
-$PAGE->set_pagelayout('maintenance'); //set to maintenance where there is no redirect function to avoid circular redirection
+$PAGE->set_pagelayout('login'); //set to maintenance where there is no redirect function to avoid circular redirection
 $course = $DB->get_record('course', array('id' => 1));
 $PAGE->set_course($course);
 
@@ -63,23 +64,31 @@ if ($mform->is_cancelled())
 else if ($data = $mform->get_data()) 
 {	
 	//try to get the user
-	$data->username = strtolower($data->username);
-	$m_user = $DB->get_record('user', array('username' => $data->username, 'email' => $data->email, 'deleted' => 0, 'suspended' => 0));
-	if($m_user) //found the user, get the jra user
+	$data->email = strtolower($data->email);
+	$user = $DB->get_record('jra_user', array('email' => $data->email, 'deleted' => 0));
+	if($user) //found the user, get the jra user
 	{
-		//check if user allow to change account			
-		if($m_user->auth == 'db') //only if it is from external user
-		{
-			$user = $DB->get_record('jra_user', array('id' => $m_user->idnumber));
-			$allow_change = true;
-		}
+		if($user->active_status == 'A')
+			$success = true;
 	}
 	$form_submit = true;
 }
 
 echo $OUTPUT->header();
 
-echo '<h2>' . get_string('brand_name', 'local_jra') . '</h2>';
+echo '<div class="row justify-content-center">';
+echo '<div class="col-xl-8 col-sm-10 ">';
+
+echo '<div class="card">';
+echo '    <div class="card-block">';
+
+echo '<h3 class="card-header text-center">
+		<img src="' . $CFG->wwwroot . '/local/jra/images/logo/main_logo.jpg" />
+	</h3>';
+
+echo '<div class="card-body">';
+
+echo '<h2>' . get_string('forgotten_password', 'local_jra') . '</h2>';
 echo '<hr />';
 
 if(!$form_submit)
@@ -92,7 +101,7 @@ else
 {
 	if($success)
 	{
-		jra_user_send_password_change_info($m_user, $user);
+		jra_mail_send_password_change_info($user);
 		jra_ui_alert(get_string('forget_password_reset_sent', 'local_jra'), 'success', get_string('note', 'local_jra'), false, false);
 	}
 	else
@@ -104,5 +113,10 @@ else
 	echo $str;
 }
 
+echo '</div>'; //card-body
+echo '</div>'; //card-block
+echo '</div>'; //end of card
+echo '</div>';
+echo '</div>';
 
 echo $OUTPUT->footer();

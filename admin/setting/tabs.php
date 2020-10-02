@@ -9,8 +9,6 @@ if(jra_access_control($tab_access_rules, false))
 {
 	$url = new moodle_url('index.php', array());
 	$tabs[] = new tabobject('general', $url, get_string('general','local_jra'));
-	$url = new moodle_url('selfservice.php', array());
-	$tabs[] = new tabobject('selfservice', $url, get_string('self_services','local_jra'));
 	if(jra_is_system_admin())
 	{
 		$url = new moodle_url('system.php', array());

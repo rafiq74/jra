@@ -95,7 +95,7 @@ $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
 $PAGE->navbar->add(jra_get_string(['subscription', 'plan']), new moodle_url('index.php'));
 $PAGE->navbar->add(jra_get_string($bc), new moodle_url('add_plan.php', $urlparams));
 

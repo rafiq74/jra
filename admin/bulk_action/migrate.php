@@ -89,53 +89,128 @@ if($action == 1) //for import of iban number. Don't delete
 	));
 //	print_object($info);
 	$arr = array();
-	$state = array();
 	foreach($info as $a)
 	{
 		$data = new stdClass();
-		$data->state = $a->field3;
-		$data->state_code = $a->field4;
-		$data->city = $a->field2;
-		$data->postcode = $a->field1;
-		$data->country = 'MY';
-		$state[$a->field4] = $a->field3;
-//			$DB->insert_record('si_personal_finance', $data);
+		$data->username = $a->field10;
+		$data->email = $a->field10;
+		$data->user_type = 'public';
+		$data->national_id = $a->field9;
+		$data->nationality = 'SA';
+		$data->first_name = $a->field1;	
+		$data->father_name = $a->field2;	
+		$data->grandfather_name = $a->field3;	
+		$data->family_name = $a->field4;	
+		$data->first_name_a = $a->field5;	
+		$data->father_name_a = $a->field16;	
+		$data->grandfather_name_a = $a->field7;	
+		$data->family_name_a = $a->field8;	
+		$data->gender = 'M';	
+		$data->password =  '2097c69fbd54c190cd87c5eb3d1e7caa';
+		$data->enable_login = 'Y';	
+		$data->deleted = '0';	
+		$data->password_change = 'N';
+		$data->active_status = 'A';
+		$data->active_date = '1595489849';
+		$data->date_created = '1595489849';
+		$data->date_updated = '1595489849';
+		$data->country = 'SA';
 		$arr[] = $data;
 	}
-	ksort($state);
-	$brr = array();
-	$count = 1;
-	foreach($state as $code => $s)
-	{
-		$data = new stdClass();
-		$data->state_code = $code;
-		$data->state = $s;
-		$data->sort_order = $count;
-		$data->country = 'MY';
-		$count++;
-		$brr[] = $data;
-	}
-	print_object($brr);
 	print_object($arr);
-//	$DB->insert_records('jra_state', $brr);
-//	$DB->insert_records('jra_city', $arr);
+//	$DB->insert_records('jra_user', $arr);
+
 }
 else if($action == 2) //refactor the moodle course
 {
-	$courses = $DB->get_records('course');
-	foreach($courses as $course)
+	$info = $DB->get_records('jra_user', array(
+		'user_type' => 'public',
+	));
+	$arr = array();
+	$dob = strtotime('1-Jan-2000');	
+	foreach($info as $a)
 	{
-		if($course->idnumber != '')
+		$data = new stdClass();
+		$data->user_id = $a->id;
+		$data->national_id = $a->national_id;
+		$data->id_type = 'iqamah';
+		$data->first_name = $a->first_name;	
+		$data->father_name = $a->father_name;	
+		$data->grandfather_name = $a->grandfather_name;	
+		$data->family_name = $a->family_name;	
+		$data->first_name_a = $a->first_name_a;	
+		$data->father_name_a = $a->father_name_a;	
+		$data->grandfather_name_a = $a->grandfather_name_a;	
+		$data->family_name_a = $a->family_name_a;	
+		$data->gender = 'M';	
+		$data->dob = $dob;	
+		$data->marital_status = 'S';
+		$data->nationality = $a->nationality;
+		$data->nationality_at_birth = $a->nationality;
+		$data->religion = 'Islam';
+		$data->blood_type = 'O';
+		$data->city = '';
+		$data->tahseli = rand(60,100);
+		$data->qudorat = rand(65,100);
+		$data->secondary = rand(75,100);
+		$data->national_id_file = '';	
+		$data->secondary_file = '';	
+		$data->tahseli_file = '';	
+		$data->qudorat_file = '';
+		$data->status = 5;
+		$data->status_date = '1595607507';
+		$data->date_created = '1595489849';
+		$data->date_updated = '1595489849';
+		$data->deleted = 0;
+		$data->institute = 'HIEI';
+		$arr[] = $data;
+	}
+	print_object($arr);
+	
+//	$DB->insert_records('si_applicant', $arr);
+}
+else if($action == 3) //refactor the moodle course
+{
+	$contact = $DB->get_record('si_applicant_contact', array('id' => 4));
+	$contact->id = '';
+	print_object($contact);
+	$info = $DB->get_records('si_applicant', array(
+	));
+	$arr = array();
+	foreach($info as $a)
+	{
+		if($a->id != 1)
 		{
-			$arr = explode(' : ', $course->shortname);
-			print_object($arr);
-			print_object($course->shortname . ' ' . $course->idnumber);
-			$course_code = trim($arr[0]);
-			$course->shortname = $course_code;
-			$course->idnumber = $course_code;
-//			$DB->update_record('course', $course);
+			$x = $DB->get_record('jra_user', array('id' => $a->user_id));
+			$obj = clone $contact;
+			$obj->user_id = $a->user_id;
+			$obj->applicant_id = $a->id;
+			$obj->email_primary = $x->email;
+			$arr[] = $obj;
 		}
 	}
+	print_object($arr);
+	
+//	$DB->insert_records('si_applicant_contact', $arr);
+}
+else if($action == 4)
+{
+	$info = $DB->get_records('jra_data_import', array(
+	));
+//	print_object($info);
+	$arr = array();
+	foreach($info as $a)
+	{
+		$data = new stdClass();
+		$data->state = $a->field1;
+		$data->state_a = $a->field2;
+		$data->city = $a->field3;
+		$data->city_a = $a->field4;
+		$data->country = 'SA';
+		$arr[] = $data;
+	}
+	print_object($arr);
+//	$DB->insert_records('jra_city', $arr);
 }
 echo $OUTPUT->box_end();
 

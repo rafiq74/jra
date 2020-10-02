@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="sis_hdate.php" server="ftp.itechjo.com/public_html/sis/" local="132004795672891282" remote="132269689800000000" />
-<file name="sis_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132330787697599280" remote="132330572400000000" />
-<file name="sis_output_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132260095791948526" remote="132269689800000000" />
-<file name="sis_ui_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132340342459575023" remote="132340203600000000" />
-<file name="sis_ws_lib.php" server="ftp.itechjo.com/public_html/sis/" local="131861536338159379" remote="132269690400000000" />
-<file name="sis_lookup_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132304118150545265" remote="132303973800000000" />
-<file name="sis_query_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132225460262578686" remote="132269689800000000" />
-<file name="sis_system_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132215722111828410" remote="132269689800000000" />
-<file name="sis_timetable_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132305868206108097" remote="132305653200000000" />
-<file name="sis_attendance_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132277978687230071" remote="132277726800000000" />
-<file name="sis_app_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132345835361793664" remote="132345619200000000" />
-<file name="sis_print_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132258080910813227" remote="132269689800000000" />
-<file name="sis_moodle_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132241494617838587" remote="132269689800000000" />
-<file name="sis_examination_lib.php" server="ftp.itechjo.com/public_html/sis/" local="132335322176359723" remote="132335134800000000" />
-<file name="sis_app_lib.php" server="D:/root/public/sis/" local="132345626990206960" remote="132345626990000000" />
+<file name="jra_mail_lib.php" server="D:/root/public/moodle/" local="132398855682684391" remote="132398855680000000" />
+<file name="jra_theme_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132437747720252938" remote="132437531400000000" />
+<file name="jra_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132417272864498268" remote="132417061200000000" />
+<file name="jra_output_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132415077191143101" remote="132428233800000000" />
+<file name="jra_lookup_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132430391922618742" remote="132430188000000000" />
+<file name="jra_mail_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132429224845442062" remote="132429009000000000" />
+<file name="jra_app_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132437080394006000" remote="132436879800000000" />
+<file name="jra_system_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132425882897555994" remote="132425674800000000" />
+<file name="jra_ui_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132436119826368740" remote="132435903600000000" />
+<file name="jra_exdb_lib.php" server="ftp.itechjo.com/estudentprogram.com/admission/" local="132434225016956123" remote="132434009400000000" />
+<file name="jra_theme_lib.php" server="ftp.itechjo.com/admission2/" local="132460159237334904" remote="132459943200000000" />
+<file name="jra_ui_lib.php" server="ftp.itechjo.com/admission2/" local="132460348832846245" remote="132460132800000000" />
 </dwsync>

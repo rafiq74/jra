@@ -25,6 +25,7 @@
 require_once '../../../../config.php';
 require_once '../../lib/jra_lib.php'; 
 require_once '../../lib/jra_ui_lib.php';
+require_once '../../lib/jra_app_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
 require_once '../../lib/jra_query_lib.php';
 require_once '../../user/lib.php';
@@ -47,7 +48,7 @@ $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
 $PAGE->navbar->add(jra_get_string(['bulk', 'action']), new moodle_url('index.php'));
 
 echo $OUTPUT->header();
@@ -66,8 +67,13 @@ $output .= jra_ui_button(get_string('update_lookup_values', 'local_jra'), $url, 
 //end of one button
 $output .= '&nbsp;&nbsp;&nbsp;';
 //one button
-$url = new moodle_url('backup.php', array('action' => 4)); //1 for lookup
-$output .= jra_ui_button('Backup', $url, 'primary', '', '', true);
+$url = new moodle_url('index.php', array('action' => 2)); //1 for lookup
+$output .= jra_ui_button('Update App Ref #', $url, 'primary', '', '', true);
+//end of one button
+$output .= '&nbsp;&nbsp;&nbsp;';
+//one button
+$url = new moodle_url('index.php', array('action' => 3)); //1 for lookup
+$output .= jra_ui_button('Update Aggregate Computation', $url, 'primary', '', '', true);
 //end of one button
 
 $output .= '</div>';
@@ -77,16 +83,21 @@ $action = optional_param('action', 0, PARAM_INT);
 
 if($action == 1)
 	jra_admin_bulk_action_lookup();
-else if($action == 2) //update course code separator
+else if($action == 2)
 {
-	$var_name = 'admin_course_separator';
-	$separator = jra_get_config($var_name);
-	$courses = $DB->get_records('si_course');
-	foreach($courses as $data)
+	$semester = jra_get_semester();
+	$applicants = $DB->get_records('si_applicant', array('semester' => $semester));
+	foreach($applicants as $applicant)
 	{
-		$data->course_code = $data->code . $separator . $data->course_num;
-		$DB->update_record('si_course', $data);	
+		$obj = new stdClass();
+		$obj->id = $applicant->id;
+		$obj->appid = jra_app_ref_number($obj);
+		$DB->update_record('si_applicant', $obj);	
 	}
+}
+else if($action == 3) //update aggregation
+{
+	jra_app_recompute_aggregate();
 }
 
 echo $OUTPUT->box_end();

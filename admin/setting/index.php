@@ -48,11 +48,10 @@ $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
 $PAGE->navbar->add(get_string('general', 'local_jra'), new moodle_url('index.php'));
 
 echo $OUTPUT->header();
-
 if(isset($_POST['button_save']))
 {
 	foreach($_POST as $key => $value)
@@ -62,9 +61,6 @@ if(isset($_POST['button_save']))
 			$subfield = '';
 			jra_update_config($key, $subfield, $value);
 		}
-		//if need to reset the session
-//		if($key == 'default_semester')
-//			jra_set_session('default_semester', $value);
 	}
 	jra_ui_alert(get_string('setting_saved', 'local_jra'), 'success');
 }
@@ -85,8 +81,8 @@ $data = array();
 $obj = new stdClass();
 $obj->column = 2;
 $obj->left_content = jra_admin_setting_general();
-$obj->left_content .= '<br />' . jra_admin_setting_security();
-$obj->right_content = '';
+$obj->left_content .= '';
+$obj->right_content = jra_admin_setting_security();
 $data[] = $obj;
 //end of data row
 

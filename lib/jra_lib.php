@@ -152,6 +152,68 @@ function jra_set_session($name, $value)
 	$_SESSION[$name] = $value;
 }
 
+//get a setting and save it as session
+function jra_get_config_session($setting_name)
+{
+	$var_name = 'jra_var_' . $setting_name; //prepend with jra_var to avoid duplicate
+	$var = jra_get_session($var_name);
+	if($var == '')
+	{
+		$var = jra_get_config($setting_name);
+		jra_set_session($var_name, $var);
+	}
+	return $var;
+}
+
+//reset the config variable session
+function jra_kill_config_session($setting_name)
+{
+	$var_name = 'jra_var_' . $setting_name; //prepend with jra_var to avoid duplicate
+	jra_set_session($var_name, ''); //set empty
+}
+
+//truth indicates if we need to return true or false. Otherwise, empty string if not closed and the closed message if closed
+//close is determined by start and end date. The current date must be in between them
+//if it is opened, if show_open_message is true, it will return the open message
+function jra_is_closed($truth = false, $show_open_message = false)
+{
+	global $DB;
+	
+//	$is_close = jra_get_session('jra_is_closed');
+//	if($is_close == '')
+	{
+		$semester = jra_get_semester();
+		$rec = $DB->get_record('si_semester', array('semester' => $semester));
+		$start_date = $rec->start_date;
+		$end_date = strtotime(date('d-M-Y', $rec->end_date) . '+ 1 day') - 1; //end time has to add 24 hour minus one to get the final minute
+		$now = time();
+		if($now >= $start_date && $now <= $end_date)
+			$is_closed = false;
+		else
+			$is_closed = true;
+		jra_set_session('jra_is_closed', $is_closed);
+	}
+	if($truth)
+		return $is_closed;
+	else
+	{
+		$a = new stdClass();
+		$a->start_date = jra_output_formal_datetime_12($start_date);
+		$a->end_date = jra_output_formal_datetime_12($end_date);
+		if(!$is_closed)
+		{
+			if($show_open_message)
+				return jra_ui_alert(get_string('admission_open_period', 'local_jra', $a), 'success', '', false, true);			
+			else
+				return '';
+		}
+		else
+		{
+			return jra_ui_alert(get_string('application_closed', 'local_jra') . '<br />' . get_string('admission_open_period', 'local_jra', $a), 'danger', '', false, true);
+		}
+	}
+}
+
 function jra_include_jquery()
 {
 	global $PAGE;
@@ -160,12 +222,29 @@ function jra_include_jquery()
 	$PAGE->requires->jquery_plugin('ui-css'); 
 }
 
+function jra_allow_application()
+{
+	global $USER;
+	if((isset($USER->jra_user) && $USER->jra_user->active_status != 'A') || jra_get_user_type() != 'public')
+		throw new moodle_exception('Error!!! User not active to perform this action');
+}
+
+//get the default institute. Pass the field like country to get the country of the institute
+function jra_get_institute()
+{
+	return jra_get_config_session('default_institute');
+}
+
+function jra_get_semester()
+{
+	return jra_get_config_session('default_semester');
+}
 //get the default country. Pass the field like country to get the country of the country
 function jra_get_country()
 {
 	global $DB, $USER;
 	//for now we just return MY
-	return 'MY';
+	return 'SA';
 	
 	/////next time
 	if(!jra_is_system_admin())
@@ -506,13 +585,17 @@ function jra_has_access($roles, $permitted_roles)
 //do not use the role admin as it is reserved for site administrator
 function jra_get_roles()
 {
-	$arr['admin'] = 'JRA ' . get_string('administrator');
+	$arr['admin'] = get_string('system', 'local_jra') . ' ' . get_string('administrator');
+	$arr['admission'] = get_string('admission', 'local_jra') . ' ' . get_string('administrator');
 	return $arr;
 }
 
 function jra_get_subroles($role)
 {	
 	$arr['admin'] = array(
+		'all' => jra_get_string(['all', 'operations']),
+		);
+	$arr['admission'] = array(
 		'all' => jra_get_string(['all', 'operations']),
 		);
 	
@@ -556,13 +639,15 @@ function jra_bootstraper($redir = true)
 	if($USER->auth == 'db' && !isset($USER->jra_user))
 	{
 		$u = $DB->get_record('jra_user', array('id' => $USER->idnumber));
-		$USER->jra_user = $u; //remember the session
+		if($u)
+			$USER->jra_user = $u; //remember the session
 	}
 	if (isloggedin()) //this part only for logged in user
 	{
 		jra_eula(); //end user licence agreement
 		jra_need_change_password();
-	}
+	}	
+	jra_reset_session();
 	//check if user is suspended
 //	jra_is_suspended();
 	//for course page bootstraper
@@ -573,6 +658,13 @@ function jra_bootstraper($redir = true)
 //			redirect($survey_url);
 //		}		
 	return false;
+}
+
+//some sessions need to be reset on every page
+function jra_reset_session()
+{
+	jra_kill_config_session('default_semester');
+	jra_set_session('jra_is_closed', ''); //also kill the is_closed session
 }
 
 function jra_need_change_password($redir = true)
@@ -675,10 +767,11 @@ function jra_allow_password_change($m_user)
 }
 
 //convert date to hijrah given a date in the format d-M-Y
-function jra_to_hijrah($aDate, $format = "d/m/Y")
+function jra_to_hijrah($aDate)
 {
 	global $CFG;
-	require_once $CFG->dirroot . '/local/rcyci/lib/jra_hdate.php'; //The main RCYCI functions include. This will include the dblib. So no need to include anymore
+	$format = "d/m/Y";
+	require_once $CFG->dirroot . '/local/jra/lib/jra_hdate.php'; //The main RCYCI functions include. This will include the dblib. So no need to include anymore
 	$hdate = new HijriDateTime();
 	return $hdate->gregorianToHijrah($aDate, $format);	
 }

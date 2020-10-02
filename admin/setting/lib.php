@@ -31,11 +31,24 @@ function jra_admin_setting_general()
 	$data = array();
 	//one row of data
 	$obj = new stdClass();
-	$obj->column = 1;
-	$update_all_url = new moodle_url('update_semester.php');
-	$obj->left_content = html_writer::link($update_all_url, get_string('update_all_semester', 'local_jra'), array());	
+	$obj->column = 2;
+	$obj->left_content = get_string('default') . ' ' . get_string('semester', 'local_jra');
+	$var_name = 'default_semester';
+	$var_value = jra_get_config($var_name);
+	$semester_list = jra_lookup_semester();
+	$right_content = jra_ui_select($var_name, $semester_list, $var_value);
+	$obj->right_content = $right_content;	
 	$data[] = $obj;
-	//end of data row	
+	//end of data row		
+	//one row of data
+	$obj = new stdClass();
+	$obj->column = 2;
+	$obj->left_content = jra_get_string(['institute']);
+	$var_name = 'default_institute';
+	$var_value = jra_get_config($var_name);
+	$obj->right_content = jra_ui_input_fluid($var_name, '20', $var_value, '', 20);
+	$data[] = $obj;
+	//end of data row		
 	$str = jra_ui_multi_column($data, 4, 4);	
 	return jra_ui_box($str, get_string('general', 'local_jra'), '', true);
 }
@@ -65,6 +78,7 @@ function jra_admin_setting_security()
 	$data[] = $obj;
 	//end of data row	
 	$yesno = jra_lookup_yes_no();
+	/*
 	//one row of data
 	$obj = new stdClass();
 	$obj->column = 2;
@@ -74,7 +88,7 @@ function jra_admin_setting_security()
 	$obj->right_content = jra_ui_select($var_name, $yesno, $var_value);
 	$data[] = $obj;
 	//end of data row	
-	
+	*/
 	$str = jra_ui_multi_column($data, 4, 4);	
 	return jra_ui_box($str, get_string('security', 'local_jra'), '', true);
 }
@@ -183,19 +197,86 @@ function jra_admin_setting_system_eula()
 	return jra_ui_box($str, get_string('eula', 'local_jra'), '', true);
 }
 
-function jra_admin_setting_system_login()
+function jra_admin_setting_sis_config($test_connection)
 {
 	$data = array();
-	$yesno = jra_lookup_yes_no();
+	$dbtypes = array(
+		'mysqli' => 'mysqli', 
+		);
 	//one row of data
 	$obj = new stdClass();
 	$obj->column = 2;
-	$obj->left_content = jra_get_string(['enable', 'student']) . ' ' . get_string('login');
-	$var_name = 'enable_student_login';
+	$obj->left_content = 'DB Type';
+	$var_name = 'sis_dbtype';
 	$var_value = jra_get_config($var_name);
-	$obj->right_content = jra_ui_radio($var_name, $yesno, $var_value);
+	$obj->right_content = jra_ui_select($var_name, $dbtypes, $var_value);
 	$data[] = $obj;
 	//end of data row	
+	//one row of data
+	$obj = new stdClass();
+	$obj->column = 2;
+	$obj->left_content = 'DB Host';
+	$var_name = 'sis_dbhost';
+	$var_value = jra_get_config($var_name);
+	$obj->right_content = jra_ui_input_fluid($var_name, '30', $var_value, '', 100);
+	$data[] = $obj;
+	//end of data row	
+	//one row of data
+	$obj = new stdClass();
+	$obj->column = 2;
+	$obj->left_content = 'DB Name';
+	$var_name = 'sis_dbname';
+	$var_value = jra_get_config($var_name);
+	$obj->right_content = jra_ui_input_fluid($var_name, '30', $var_value, '', 100);
+	$data[] = $obj;
+	//end of data row	
+	//one row of data
+	$obj = new stdClass();
+	$obj->column = 2;
+	$obj->left_content = 'DB User';
+	$var_name = 'sis_dbuser';
+	$var_value = jra_get_config($var_name);
+	$obj->right_content = jra_ui_input_fluid($var_name, '30', $var_value, '', 100);
+	$data[] = $obj;
+	//end of data row	
+	//one row of data
+	$obj = new stdClass();
+	$obj->column = 2;
+	$obj->left_content = 'DB Password';
+	$var_name = 'sis_dbpassword';
+	$var_value = jra_get_config($var_name);
+	if($var_value != '')
+		$var_value = jra_decrypt($var_value);
+	$obj->right_content = jra_ui_input_password($var_name, '30', $var_value, '', 100);
+	$data[] = $obj;
+	//end of data row	
+	//one row of data
+	$obj = new stdClass();
+	$obj->column = 2;
+	$obj->left_content = '';
+	$var_name = 'sis_testconnection';
+	$obj->right_content = jra_ui_checkbox($var_name, false, $value = '1') . ' Test connection';
+	$data[] = $obj;
+	//end of data row	
+	
+	if($test_connection)
+	{
+		$db = jra_exdb_init();
+		$msg = $db->is_error();
+		if($msg == '')
+			$msg = jra_ui_alert('Connection Successful', 'success', '', false, true);
+		else
+			$msg = jra_ui_alert($msg, 'danger', '', false, true);
+		
+		//one row of data
+		$obj = new stdClass();
+		$obj->column = 2;
+		$obj->left_content = '';
+		$obj->right_content = $msg;
+		$data[] = $obj;
+		//end of data row	
+	}
+
 	$str = jra_ui_multi_column($data, 5, 5);	
 	return jra_ui_box($str, get_string('login'), '', true);
 }

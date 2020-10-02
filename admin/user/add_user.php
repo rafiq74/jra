@@ -58,7 +58,7 @@ else
 $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
 $PAGE->navbar->add(jra_get_string(['user', 'management']), new moodle_url('index.php'));
 $PAGE->navbar->add(jra_get_string($bc), new moodle_url('add_user.php'));
 
@@ -70,7 +70,7 @@ $return_url = new moodle_url('index.php', $return_params);
 $mform = new user_form();
 if ($mform->is_cancelled()) 
 {
-    redirect('index.php');
+    redirect($return_url);
 } 
 else if ($data = $mform->get_data()) 
 {		

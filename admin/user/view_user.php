@@ -83,7 +83,7 @@ jra_set_session('jra_view_user_tab', $tab);
 $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
-$PAGE->navbar->add('JRA ' . strtolower(get_string('administration')), new moodle_url('../index.php', array()));
+$PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
 $PAGE->navbar->add(jra_get_string(['user', 'management']), new moodle_url('index.php'));
 $PAGE->navbar->add(jra_get_string(['view', 'user']), new moodle_url('view_user.php', $urlparams));
 $PAGE->navbar->add(jra_output_show_user_name($user) . ' : ' . $bc);

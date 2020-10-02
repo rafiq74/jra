@@ -308,6 +308,17 @@ function jra_ui_input_fluid($name, $size, $value = '', $onkeypress='', $maxlengt
 	return $str;
 }
 
+//size can be changed
+function jra_ui_input_password($name, $size, $value = '', $onkeypress='', $maxlength = '100', $label = '')
+{
+	if($onkeypress != '')
+		$okp = 'onkeypress="'.$onkeypress.'"';
+	else
+		$okp = '';
+	$str = '<span class="form-inline">' . $label . '<input name="'.$name.'" type="password" class="form-control" id="'.$name.'" size="'.$size.'" value="'.$value.'" maxlength="'.$maxlength.'" '.$okp.'/></span>';
+	return $str;
+}
+
 function jra_ui_textarea($name, $rows, $cols, $value = '', $onkeypress='')
 {
 	if($onkeypress != '')
@@ -331,8 +342,10 @@ function jra_ui_select($name, $options, $value = '', $onchange = '', $styles = '
 	$str = '<select class="custom-select" name="'.$name.'" id="'.$name.'" '.$oc.' '.$st.'>';
 	foreach($options as $key => $label)
 	{
-		if($key == $value)
+		if(strcmp($key, $value) === 0)
+		{
 			$selected = 'selected';
+		}
 		else
 			$selected = '';
 		$str = $str . '<option value="'.$key.'" '.$selected.'>'.$label.'</option>';
@@ -469,7 +482,7 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 		//reconstruct a count sql
 		$count_sql = "select count($count_field) as total from " . $arr[1]; //join with the 2nd part
 
-		if($search != '' && $field != '')
+		if($search != '' && $field != '' && isset($fields[$field]))
 		{
 			if($conditionWhere != '')
 				$actualCondition = ' and ' . $conditionWhere;
@@ -486,10 +499,19 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 				$count_sql = $count_sql . ' WHERE ' . $conditionWhere;
 		}
 		$totalrecord = $DB->count_records_sql($count_sql, $search_param);
+		$limit = '';
+		if(isset($options['limit']) && $options['limit'] != '')
+		{
+			if($totalrecord > $options['limit'])
+			{
+				$totalrecord = $options['limit'];
+				$limit = ' limit 0, ' . $totalrecord;
+			}
+		}
 	}
 	else //use table name
 	{		
-		if($search != '' && isset($fields[$field]))
+		if($search != '' && $field != '' && isset($fields[$field]))
 		{
 			if($conditionWhere != '')
 				$actualCondition = ' and ' . $conditionWhere;
@@ -505,19 +527,32 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 		{
 			$totalrecord = $DB->count_records($name, $condition) ;
 		}
+		$limit = '';
+		if(isset($options['limit']) && $options['limit'] != '')
+		{
+			if($totalrecord > $options['limit'])
+			{
+				$totalrecord = $options['limit'];
+				$limit = ' limit 0, ' . $totalrecord;
+			}
+		}
 	}
 	
+	if($limit != '') //has limit
+	{
+		if($perpage > $options['limit'])
+			$perpage = $options['limit'];
+	}
 	$start = ($page * $perpage);
 	if ($start > $totalrecord) {
 		$page = 0;
 		$start = 0;
 	}
-
 	//now get the proper query
 	if(isset($options['sql']) && $options['sql'] != '')
 	{
 		$sql = $options['sql'];
-		if($search != '' && $field != '')
+		if($search != '' && $field != '' && isset($fields[$field]))
 		{
 			if($conditionWhere != '')
 				$actualCondition = ' and ' . $conditionWhere;
@@ -537,11 +572,12 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 		}
 		if($sort_text != '')
 			$sql = $sql . " order by $sort_text";
+		$sql = $sql;
 		$records = $DB->get_records_sql($sql, $search_param, $start, $perpage); // Start at result '$start' and return '$perpage'
 	}
 	else //use table name
 	{		
-		if($search != '' && $field != '')
+		if($search != '' && $field != '' && isset($fields[$field]))
 		{
 			if($conditionWhere != '')
 				$actualCondition = ' and ' . $conditionWhere;
@@ -665,7 +701,7 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 		}
 		else
 		{
-			if(isset($options['sortable']) && $options['sortable'])
+			if(!isset($field['sortable']) || $field['sortable'])
 			{
 				$order = optional_param('order', $initial_sort, PARAM_TEXT);
 				if($order == 'desc')
@@ -706,6 +742,11 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 	$prevData = false;
 	foreach($records as $rec)
 	{		
+		if(isset($options['limit']) && $options['limit'] != '')
+		{
+			if($count > $options['limit'])
+				break;
+		}
 		if(isset($options['detail_page']))
 			$detail_url = new moodle_url($options['detail_page'], array($detail_var => $rec->$detail_field));
 		else
@@ -952,14 +993,9 @@ function jra_ui_dump_table($name, $options = array(), $fields = array(), $lang_n
 						$text = jra_output_show_campus($rec->$key);
 					else if($field['format'] == 'iban')
 						$text = jra_output_iban($rec);
-					else if($field['format'] == 'grade_lock')
+					else if($field['format'] == 'app_ref')
 					{
-						$ob = new stdClass();
-						$ob->level1 = $rec->level1;
-						$ob->level2 = $rec->level2;
-						$ob->level3 = $rec->level3;
-						$grade_status = jra_course_grade_final_grade_status($ob);
-						$text = get_string($grade_status, 'local_jra');
+						$text = jra_app_ref_number($rec);
 					}
 					else if($field['format'] == 'combine')
 					{
@@ -1620,4 +1656,29 @@ function jra_ui_treeview($data, $session_name, $always_expanded = false, $ret = 
 		return $str;
 	else
 		echo $str;
+}
+
+//var_list if needs to make sure that the value is in the list
+function jra_ui_filter_value($variable, $default_value, $session_name, $var_list = null, $allow_empty)
+{
+	//for status
+	$val = $default_value;
+	if(isset($_GET[$variable])) //if there is a status from query string, get it
+	{
+		$val = $_GET[$variable];
+		if(var_list != null)
+		{
+			if(!isset($var_list[$val])) //validate that it is a valid country
+				$status = $default_value;
+			else
+				jra_set_session('jra_' . $session_name . '_' . $variable, $val);	
+		}
+	}
+	else //if not, try to get it from the session
+	{
+		$val = jra_get_session('jra_' . $session_name . '_' . $variable);	
+		if($val == '' && !$allow_empty)
+			$val = $default_value;
+	}
+	return $val;
 }

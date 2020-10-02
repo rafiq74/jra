@@ -1,6 +1,6 @@
 <?php
 
-// This file is part of Moodle - http://moodle.org/
+// This file is part of the Certificate module for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,12 +16,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains language strings used in the settings navigation block
+ * Certificate module internal API,
+ * this is in separate file to reduce memory use on non-certificate pages.
  *
- * @since Moodle 2.0
- * @package block_settings
- * @copyright 2009 Sam Hemelryk
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_certificate
+ * @copyright  Mark Nelson <markn@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['jra'] = 'Just Rent Anything';
+defined('MOODLE_INTERNAL') || die();
+
+
+function jra_semester_search_form($data)
+{
+}
