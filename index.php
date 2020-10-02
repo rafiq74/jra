@@ -37,7 +37,7 @@ $urlparams = $_GET;
 $PAGE->set_url('/local/jra/index.php', $urlparams);
 $PAGE->set_course($SITE);
 $PAGE->set_cacheable(false);
-ko
+
 $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
