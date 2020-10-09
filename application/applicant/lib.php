@@ -102,23 +102,40 @@ function jra_application_applicant_format_contact($user_data)
 
 function jra_application_completed_document($applicant, $check = true)
 {
+	global $DB;
+	$semester = $DB->get_record('si_semester', array('semester' => $applicant->semester));
+	
 	$arr = array();
 	$arr['national'] = $applicant->national_id_file;
-	$arr['secondary'] = $applicant->secondary_file;
-	$arr['tahseli'] = $applicant->tahseli_file;
-	$arr['qudorat'] = $applicant->qudorat_file;
-	$count = 0;
+	$count = 0;	
 	if($applicant->national_id_file != '')
 		$count++;
-	if($applicant->secondary_file != '')
-		$count++;
-	if($applicant->tahseli_file != '')
-		$count++;
-	if($applicant->qudorat_file != '')
-		$count++;
+	if($semester->admission_type == 'crtp')
+	{
+		$total_file = 3;
+		$arr['transcript'] = $applicant->transcript_file;
+		$arr['university'] = $applicant->uni_approval_file;
+		if($applicant->transcript_file != '')
+			$count++;
+		if($applicant->uni_approval_file != '')
+			$count++;
+	}
+	else
+	{
+		$total_file = 4;
+		$arr['secondary'] = $applicant->secondary_file;
+		$arr['tahseli'] = $applicant->tahseli_file;
+		$arr['qudorat'] = $applicant->qudorat_file;
+		if($applicant->secondary_file != '')
+			$count++;
+		if($applicant->tahseli_file != '')
+			$count++;
+		if($applicant->qudorat_file != '')
+			$count++;
+	}
 	if($check) //only want to know if it is completed
 	{
-		if($count == 4)
+		if($count == $total_file)
 			return true;
 		else
 			return false;

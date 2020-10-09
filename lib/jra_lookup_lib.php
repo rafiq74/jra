@@ -484,9 +484,6 @@ function jra_lookup_document_type_crtp($blank = '')
 	if($blank != '')
 		$arr[''] = $blank;
 	$arr['national'] = jra_get_string(['national_id']);
-	$arr['secondary'] = get_string('secondary_school_document', 'local_jra');
-	$arr['tahseli'] = get_string('tahseli', 'local_jra');
-	$arr['qudorat'] = get_string('qudorat', 'local_jra');
 	$arr['transcript'] = get_string('transcript', 'local_jra');
 	$arr['uni_approval'] = get_string('university_approval', 'local_jra');
 	return $arr;

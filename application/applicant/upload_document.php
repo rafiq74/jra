@@ -96,12 +96,12 @@ if(isset($_POST['delete_id']))
 		$obj->qudorat_file = '';
 		$a = get_string('qudorat', 'local_jra');
 	}
-  else if($delete_module == 'transcript')
+	else if($delete_module == 'transcript')
 	{
 		$obj->transcript_file = '';
 		$a = get_string('transcript', 'local_jra');
 	}
-  else if($delete_module == 'uni_approval')
+	else if($delete_module == 'uni_approval')
 	{
 		$obj->uni_approval_file = '';
 		$a = get_string('uni_approval', 'local_jra');
@@ -120,11 +120,7 @@ if(isset($_POST['delete_id']))
 //	redirect($upload_url); //we redirect to kill the post session
 }
 
-//put before header so we can redirect
-if($semester->admission_type == 'regular')
-$mform = new document_upload_form();
-else
-  $mform = new document_upload_form_crtp();
+$mform = new document_upload_form(null, array('semester' => $semester));
 
 if ($mform->is_cancelled())
 {
@@ -133,7 +129,6 @@ if ($mform->is_cancelled())
 
 else if ($data = $mform->get_data())
 {
-
 	$now = time();
 
 	//make sure the option is default to the submitted module
@@ -165,10 +160,10 @@ else if ($data = $mform->get_data())
 			$obj->tahseli_file = $data->filename;
 		else if($data->module == 'qudorat')
 			$obj->qudorat_file = $data->filename;
-    else if($data->module == 'transcript')
-  		$obj->transcript_file = $data->filename;
-    else if($data->module == 'uni_approval')
-      $obj->uni_approval_file = $data->filename;
+		else if($data->module == 'transcript')
+			$obj->transcript_file = $data->filename;
+		else if($data->module == 'uni_approval')
+		$obj->uni_approval_file = $data->filename;
 
 		$obj->date_updated = $now;
 		$DB->update_record('si_applicant', $obj);
