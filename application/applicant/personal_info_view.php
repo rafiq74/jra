@@ -23,10 +23,10 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
-require_once '../../lib/jra_ui_lib.php'; 
-require_once '../../lib/jra_app_lib.php'; 
-require_once '../../lib/jra_output_lib.php'; 
+require_once '../../lib/jra_lib.php';
+require_once '../../lib/jra_ui_lib.php';
+require_once '../../lib/jra_app_lib.php';
+require_once '../../lib/jra_output_lib.php';
 require_once 'lib.php'; //local library
 require_once 'form.php';
 
@@ -99,6 +99,13 @@ $detail_data[] = $obj;
 $obj = new stdClass();
 $obj->title = get_string('age', 'local_jra');
 $obj->content = $applicant->dob_hijri == '' ? '-' : jra_app_get_age_hijri($applicant->dob_hijri);
+$detail_data[] = $obj;
+//end of data row
+//one row of data
+$gender = jra_lookup_gender();
+$obj = new stdClass();
+$obj->title = get_string('gender', 'local_jra');
+$obj->content = $applicant->gender == '' ? '-' : $gender[$applicant->gender];
 $detail_data[] = $obj;
 //end of data row
 //one row of data

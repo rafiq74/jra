@@ -56,13 +56,13 @@ function xmldb_local_jra_upgrade($oldversion) {
     global $CFG, $DB;
 
     $dbman = $DB->get_manager(); //this is new in moodle 3.0
-    
+
     // Put any upgrade step following this.
-    $newversion = 2016062481; //put the new version number here
+    $newversion = 2016062483; //put the new version number here
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
-		
-/*		
+
+/*
         // Define field suspended to be added to jra_user.
         $table = new xmldb_table('jra_user');
         $field = new xmldb_field('suspended', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'institute');
@@ -81,7 +81,7 @@ function xmldb_local_jra_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-		
+
         // Define field temp_grade_num to be added to jra_section_student.
         $table = new xmldb_table('jra_section_student');
         $field = new xmldb_field('temp_grade_num', XMLDB_TYPE_NUMBER, '20, 2', null, null, null, null, 'temp_grade');
@@ -90,14 +90,14 @@ function xmldb_local_jra_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-		
+
         // Changing precision of field description on table jra_lookup to (255).
         $table = new xmldb_table('jra_course');
         $field = new xmldb_field('course_code', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'course_num');
 
         // Launch change of precision for field description.
         $dbman->change_field_precision($table, $field);
-		
+
 
         // Rename field sort_order on table jra_plan to NEWNAMEGOESHERE.
         $table = new xmldb_table('jra_plan');
@@ -122,6 +122,35 @@ function xmldb_local_jra_upgrade($oldversion) {
         $field = new xmldb_field('admission_type', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'semester_year');
 
         // Conditionally launch add field suspended.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('si_applicant');
+        $field = new xmldb_field('graduated_from', XMLDB_TYPE_CHAR, '225', null, null, null, null, 'institute');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $field = new xmldb_field('graduated_year', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'graduated_from');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $field = new xmldb_field('graduated_major', XMLDB_TYPE_CHAR, '225', null, null, null, null, 'graduated_year');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('graduated_gpa', XMLDB_TYPE_NUMBER, '20', null, null, null, null, 'graduated_major');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('transcript_file', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'graduated_gpa');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('uni_approval_file', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'transcript_file');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }

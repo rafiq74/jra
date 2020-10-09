@@ -23,10 +23,10 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
-require_once '../../lib/jra_ui_lib.php'; 
-require_once '../../lib/jra_app_lib.php'; 
-require_once '../../lib/jra_file_lib.php'; 
+require_once '../../lib/jra_lib.php';
+require_once '../../lib/jra_ui_lib.php';
+require_once '../../lib/jra_app_lib.php';
+require_once '../../lib/jra_file_lib.php';
 require_once 'lib.php'; //local library
 require_once 'form.php';
 
@@ -43,7 +43,8 @@ $upload_url = new moodle_url('/local/jra/application/applicant/upload_document.p
 
 $jra_user = $USER->jra_user;
 $applicant = jra_app_get_applicant();
-$semester = jra_get_semester();
+$semester = $DB->get_record('si_semester', array('semester' => $applicant->semester));
+
 
 if(!$applicant || $applicant->status < 3)
     redirect($return_url);
@@ -55,7 +56,7 @@ if($applicant->status >= jra_app_read_only_stage())
 
 if(jra_is_closed(true))
 	$read_only = true;
-	
+
 $id = $applicant->id;
 
 $bc = ['upload', 'supporting_documents'];
@@ -69,9 +70,9 @@ $PAGE->navbar->add(jra_get_string($bc), new moodle_url('document_upload.php', $u
 
 if(isset($_POST['delete_id']))
 {
-	$delete_module = $_POST['delete_module'];	
-	$delete_file = $_POST['delete_file'];	
-	
+	$delete_module = $_POST['delete_module'];
+	$delete_file = $_POST['delete_file'];
+
 	//update the applicant
 	$obj = new stdClass();
 	$obj->id = $applicant->id;
@@ -95,37 +96,52 @@ if(isset($_POST['delete_id']))
 		$obj->qudorat_file = '';
 		$a = get_string('qudorat', 'local_jra');
 	}
+  else if($delete_module == 'transcript')
+	{
+		$obj->transcript_file = '';
+		$a = get_string('transcript', 'local_jra');
+	}
+  else if($delete_module == 'uni_approval')
+	{
+		$obj->uni_approval_file = '';
+		$a = get_string('uni_approval', 'local_jra');
+	}
 	$obj->status = 3; //reduce the status to 3
 	$obj->date_updated = time();
 	$DB->update_record('si_applicant', $obj);
 	$applicant = jra_app_get_applicant(); //after update we need to retrieve the data again
 	//now delete the file
-	$file_path = jra_file_supporting_document_path($semester) . $delete_file;
+	$file_path = jra_file_supporting_document_path($semester->semester) . $delete_file;
 	jra_file_delete_file($file_path);
 	$text = jra_ui_alert(get_string('file_deleted_successful', 'local_jra', $a), 'success', '', true, true);
 	jra_ui_set_flash_message($text, 'jra_information_updated');
 	redirect($upload_url); //we redirect to kill the post session
-	
+
 //	redirect($upload_url); //we redirect to kill the post session
 }
 
 //put before header so we can redirect
+if($semester->admission_type == 'regular')
 $mform = new document_upload_form();
-if ($mform->is_cancelled()) 
+else
+  $mform = new document_upload_form_crtp();
+
+if ($mform->is_cancelled())
 {
     redirect($return_url);
-} 
- 
-else if ($data = $mform->get_data()) 
-{	
+}
+
+else if ($data = $mform->get_data())
+{
+
 	$now = time();
-	
+
 	//make sure the option is default to the submitted module
 	jra_set_session('jra_document_upload_module', $data->module);
-	
+
 	$name = $mform->get_new_filename('userfile');
 	$ext = jra_file_get_extension($name);
-	$data->filepath = jra_file_supporting_document_path($semester);
+	$data->filepath = jra_file_supporting_document_path($semester->semester);
 	$data->filename = $data->module . '_' . $applicant->id . '.' . $ext;
 
 	if($data->module == 'national')
@@ -149,6 +165,11 @@ else if ($data = $mform->get_data())
 			$obj->tahseli_file = $data->filename;
 		else if($data->module == 'qudorat')
 			$obj->qudorat_file = $data->filename;
+    else if($data->module == 'transcript')
+  		$obj->transcript_file = $data->filename;
+    else if($data->module == 'uni_approval')
+      $obj->uni_approval_file = $data->filename;
+
 		$obj->date_updated = $now;
 		$DB->update_record('si_applicant', $obj);
 		$applicant = jra_app_get_applicant(); //after update we need to retrieve the data again
@@ -175,7 +196,7 @@ echo $OUTPUT->header();
 
 //content code starts here
 jra_ui_page_title(jra_get_string($bc));
-	
+
 if(!$read_only)
 	$mform->display();
 
@@ -189,7 +210,7 @@ $btn = '
 <div class="card-header mt-5">
 	<div class="text-center">
 		<a href="' . $url . '"><button type="button" class="btn btn-primary mw-100" style="text-overflow: ellipsis;overflow: hidden;">' . jra_get_string(['back']) . '</button></a>
-	</div>		
+	</div>
 </div>
 ';
 

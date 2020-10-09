@@ -23,7 +23,7 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_query_lib.php';
@@ -52,7 +52,7 @@ $PAGE->navbar->add(jra_get_string(['semester']), new moodle_url('index.php'));
 if(isset($_POST['delete_id'])) //only allow site admin to delete
 {
 	$cascade = array(
-		'si_semester_detail' => 'semester_id',		
+		'si_semester' => 'id',		
 	);
 	jra_query_delete_cascade('si_semester', $_POST['delete_id'], $cascade);
 }
@@ -123,19 +123,19 @@ $fields = array(
 		'size' => '10%',
 		'format' => 'date',
 		'disable_search' => true,
-	),	
+	),
 	'end_date' => array(
 		'header'=>jra_get_string(['date', 'close']), //for custom header
 		'align' => 'center',
 		'size' => '10%',
 		'format' => 'date',
 		'disable_search' => true,
-	),	
+	),
 	'secondary_weight' => array(
 		'header'=>jra_get_string(['secondary', 'weight']), //for custom header
 		'align' => 'center',
 		'size' => '10%',
-	),	
+	),
 	'tahseli_weight' => array(
 		'header'=>jra_get_string(['tahseli', 'weight']), //for custom header
 		'align' => 'center',
@@ -152,7 +152,7 @@ $fields = array(
 		'size' => '10%',
 		'format' => 'date',
 		'disable_search' => true,
-	),	
+	),
 	'display' => array(
 		'header'=>jra_get_string(['display', 'result']), //for custom header
 		'align' => 'center',

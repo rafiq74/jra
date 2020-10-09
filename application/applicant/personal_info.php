@@ -23,10 +23,10 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
-require_once '../../lib/jra_ui_lib.php'; 
-require_once '../../lib/jra_app_lib.php'; 
-require_once '../../lib/jra_hdate.php'; 
+require_once '../../lib/jra_lib.php';
+require_once '../../lib/jra_ui_lib.php';
+require_once '../../lib/jra_app_lib.php';
+require_once '../../lib/jra_hdate.php';
 require_once 'lib.php'; //local library
 require_once 'form.php';
 
@@ -56,7 +56,9 @@ else
 	$bc = ['add', 'personal_information'];
 }
 
-$semester = $DB->get_record('si_semester', array('semester' => $semester));
+
+//$semester = $DB->get_record('si_semester', array('semester' => $semester));
+
 $return_url = new moodle_url($CFG->wwwroot, $return_params);
 
 //check if it is read only
@@ -75,18 +77,23 @@ $PAGE->navbar->add(jra_get_string($bc), new moodle_url('personal_info.php', $url
 
 //put before header so we can redirect
 $mform = new applicant_form(null, array('admission_type' => $semester->admission_type));
-if ($mform->is_cancelled()) 
+if ($mform->is_cancelled())
 {
     redirect($return_url);
-} 
- 
-else if ($data = $mform->get_data()) 
-{	
+}
+
+
+else if ($data = $mform->get_data())
+{
+
+
 	$now = time();
 	$data->dob_hijri = $data->h_y . '/' . $data->h_m . '/' . $data->h_d;
+
 	if($data->id != '') //updating
 	{
-		$DB->update_record('si_applicant', $data);	
+	
+		$DB->update_record('si_applicant', $data);
 	}
 	else //insert new
 	{
@@ -98,11 +105,18 @@ else if ($data = $mform->get_data())
 		$data->date_created = $now;
 		$data->date_updated = $now;
 		$data->deleted = 0;
-		$appid = $DB->insert_record('si_applicant', $data);	
+
+		print_object($data);
+		die;
+
+		$appid = $DB->insert_record('si_applicant', $data);
 		$obj = new stdClass();
 		$obj->id = $appid;
 		$obj->appid = jra_app_ref_number($obj);
-		$DB->update_record('si_applicant', $obj);	
+		$DB->update_record('si_applicant', $obj);
+
+
+
 	}
 	$text = jra_ui_alert(get_string('applicant_information_update', 'local_jra'), 'success', '', true, true);
 	jra_ui_set_flash_message($text, 'jra_information_updated');

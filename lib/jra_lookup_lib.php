@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
 //if description is true, use description as the value. Key remain the same
 function jra_lookup_get_list($category, $subcategory = '', $condition = '', $lang = true, $description = false, $empty_text = '')
 {
-	global $DB;	
+	global $DB;
 	$where = " and country = '" . jra_get_institute() . "'"; //initialize a where clause with country
 	if($subcategory != '')
 		$where = $where . " and subcategory = '$subcategory'";
@@ -76,7 +76,7 @@ function jra_lookup_insert($value, $lang, $category, $subcategory, $country, $so
 	$data->sort_order = $sort_order;
 	$data->description = $description;
 	$data->country = $country;
-	$DB->insert_record('jra_lookup', $data);	
+	$DB->insert_record('jra_lookup', $data);
 }
 
 function jra_lookup_update($id, $value, $lang = '', $category = '', $subcategory = '', $country = '', $sort_order = '')
@@ -93,7 +93,7 @@ function jra_lookup_update($id, $value, $lang = '', $category = '', $subcategory
 		$data->subcategory = $subcategory;
 	if($sort_order != '')
 		$data->sort_order = $sort_order;
-	$DB->update_record('jra_lookup', $data);	
+	$DB->update_record('jra_lookup', $data);
 }
 
 //check if the value of lookup duplicate
@@ -116,7 +116,7 @@ function jra_lookup_duplicate($value, $lang, $category, $subcategory, $country, 
 		else
 			$isDuplicate = true;
 	}
-	return $isDuplicate;	
+	return $isDuplicate;
 }
 
 function jra_lookup_currencies() {
@@ -144,7 +144,7 @@ function jra_lookup_get_num_list($start, $end)
 function jra_lookup_plan_interval()
 {
 	return array(
-		'month' => get_string('monthly', 'local_jra'), 
+		'month' => get_string('monthly', 'local_jra'),
 		'year' => get_string('yearly', 'local_jra'),
 	);
 }
@@ -152,17 +152,17 @@ function jra_lookup_plan_interval()
 function jra_lookup_per_page()
 {
 	return array(
-		'10' => '10', 
-		'20' => '20', 
-		'30' => '30', 
-		'50' => '50', 
-		'100' => '100', 
-		'200' => '200', 
-		'500' => '500', 
-		'1000' => '1000', 
-		'1500' => '1500', 
-		'2000' => '2000', 
-		'5000' => '5000', 
+		'10' => '10',
+		'20' => '20',
+		'30' => '30',
+		'50' => '50',
+		'100' => '100',
+		'200' => '200',
+		'500' => '500',
+		'1000' => '1000',
+		'1500' => '1500',
+		'2000' => '2000',
+		'5000' => '5000',
 	);
 }
 
@@ -197,7 +197,7 @@ function jra_lookup_countries($code = '')
 function jra_lookup_is_active()
 {
 	return array(
-		'A' => get_string('active', 'local_jra'), 
+		'A' => get_string('active', 'local_jra'),
 		'I' => get_string('inactive', 'local_jra'),
 	);
 }
@@ -205,7 +205,7 @@ function jra_lookup_is_active()
 function jra_lookup_admission_type()
 {
 	return array(
-		'regular' => get_string('regular', 'local_jra'), 
+		'regular' => get_string('regular', 'local_jra'),
 		'crtp' => 'CRTP',
 	);
 }
@@ -213,7 +213,7 @@ function jra_lookup_admission_type()
 function jra_lookup_language()
 {
 	return array(
-		'en' => get_string('english', 'local_jra'), 
+		'en' => get_string('english', 'local_jra'),
 		'ar' => get_string('arabic', 'local_jra'),
 	);
 }
@@ -226,7 +226,7 @@ function jra_lookup_yes_no()
 function jra_lookup_gender()
 {
 	return array(
-		'M' => get_string('male', 'local_jra'), 
+		'M' => get_string('male', 'local_jra'),
 		'F' => get_string('female', 'local_jra'),
 	);
 }
@@ -234,7 +234,7 @@ function jra_lookup_gender()
 function jra_lookup_user_type($blank = '')
 {
 	$arr = array(
-		'public' => get_string('public', 'local_jra'), 
+		'public' => get_string('public', 'local_jra'),
 		'employee' => get_string('employee', 'local_jra'),
 	);
 	if($blank != '')
@@ -272,7 +272,7 @@ function jra_lookup_kindship($blank = '')
 function jra_lookup_user_title()
 {
 	return array(
-		'Mr' => 'Mr.', 
+		'Mr' => 'Mr.',
 		'Mrs' => 'Mrs.',
 		'Miss' => 'Miss',
 		'Dr' => 'Dr.',
@@ -304,8 +304,8 @@ function jra_lookup_month_list()
 function jra_lookup_marital_status()
 {
 	return array(
-		'S' => get_string('single', 'local_jra'), 
-		'M' => get_string('married', 'local_jra'),  
+		'S' => get_string('single', 'local_jra'),
+		'M' => get_string('married', 'local_jra'),
 	);
 
 }
@@ -313,9 +313,9 @@ function jra_lookup_marital_status()
 function jra_lookup_active_status()
 {
    return array(
-		'A' => get_string('active', 'local_jra'), 
-		'S' => get_string('suspended', 'local_jra') ,  
-		'B' => get_string('barred', 'local_jra'), 
+		'A' => get_string('active', 'local_jra'),
+		'S' => get_string('suspended', 'local_jra') ,
+		'B' => get_string('barred', 'local_jra'),
 		'O' => get_string('on', 'local_jra'),
 	);
 }
@@ -323,8 +323,8 @@ function jra_lookup_active_status()
 function jra_lookup_user_status($blank = '')
 {
 	$arr = array(
-		'A' => get_string('active', 'local_jra'), 
-		'P' => get_string('pending', 'local_jra'),  
+		'A' => get_string('active', 'local_jra'),
+		'P' => get_string('pending', 'local_jra'),
 		'I' => get_string('inactive', 'local_jra'),
 	);
 	if($blank != '')
@@ -337,7 +337,7 @@ function jra_lookup_admission_status($blank = '')
 	$arr = array();
 	if($blank != '')
 		$arr[''] = $blank;
-	$arr['5'] = get_string('pending', 'local_jra');  
+	$arr['5'] = get_string('pending', 'local_jra');
 	$arr['11'] = get_string('approved', 'local_jra');
 	$arr['12'] = jra_get_string(['waiting', 'list']);
 	$arr['13'] = get_string('rejected', 'local_jra');
@@ -347,7 +347,7 @@ function jra_lookup_admission_status($blank = '')
 function jra_lookup_admission_confirm_status()
 {
 	$arr = array();
-	$arr['1'] = get_string('accepted', 'local_jra');  
+	$arr['1'] = get_string('accepted', 'local_jra');
 	$arr['2'] = get_string('declined', 'local_jra');
 	$arr['3'] = get_string('suspended', 'local_jra');
 	$arr[''] = get_string('unconfirmed', 'local_jra');
@@ -360,7 +360,7 @@ function jra_lookup_blood_type($blank = '')
 	$arr = array();
 	if($blank != '')
 		$arr[''] = $blank;
-	$arr['A+'] = 'A+';  
+	$arr['A+'] = 'A+';
 	$arr['A-'] = 'A-';
 	$arr['B+'] = 'B+';
 	$arr['B-'] = 'B-';
@@ -477,6 +477,21 @@ function jra_lookup_document_type($blank = '')
 	$arr['qudorat'] = get_string('qudorat', 'local_jra');
 	return $arr;
 }
+
+function jra_lookup_document_type_crtp($blank = '')
+{
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+	$arr['national'] = jra_get_string(['national_id']);
+	$arr['secondary'] = get_string('secondary_school_document', 'local_jra');
+	$arr['tahseli'] = get_string('tahseli', 'local_jra');
+	$arr['qudorat'] = get_string('qudorat', 'local_jra');
+	$arr['transcript'] = get_string('transcript', 'local_jra');
+	$arr['uni_approval'] = get_string('university_approval', 'local_jra');
+	return $arr;
+}
+
 
 //hijrah month list in arabic (we don't use translation)
 function jra_lookup_get_hijrah_month()
