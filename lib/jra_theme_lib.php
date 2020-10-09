@@ -883,7 +883,8 @@ function jra_theme_slider()
 
 function jra_theme_icon_grid()
 {
-	$str = '
+	$str = '';
+	$str = $str . '
 	<div class="mb-5">
 	<div class="row text-center justify-content-center m-auto hidden-md-down">';
 	
@@ -941,49 +942,35 @@ function jra_theme_icon_grid()
 				</div>';
 	}
 	$str = $str . '</div>'; //end of row
-/*			
+	$str = $str .'</div>';
 	//2nd row
-	$str = $str . '<div class="row text-center justify-content-center m-auto hidden-md-down">
-				<div class="col-lg-3 py-10 ">
+	$str = $str . '
+	<div class="row text-center justify-content-center m-auto hidden-md-down">';
+	
+	$access_rules = array(
+		'role' => 'admin',
+		'subrole' => 'all',
+	);
+	if(jra_access_control($access_rules, false))
+	{
+		$url = new moodle_url('/local/jra/admin/university/index.php');
+		$str = $str . '<div class="col-lg-3 py-10 ">
 					<div>
+						<a href="'.$url->out(false).'">
 							<p>
-								<i class="fa fa-university fa-3x" aria-hidden="true" style="color:#92756f;"></i>
+								<i class="fa fa-graduation-cap fa-3x" aria-hidden="true" style="color:#4f1ebe;"></i>
 							</p>
-						<h7 style="color: #555555;"><strong>Nam eget</strong></h7>
-						<p class="font-size-12" style="color: #908b8b;">Holisticly harness just in timetechnologies are viarsus nunc, quis gravida magna mi a libero.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 py-10 ">
-					<div>
-							<p>
-								<i class="fa fa-magic fa-3x" aria-hidden="true" style="color:#523773;"></i>
-							</p>
-						<h7 style="color: #555555;"><strong>Nam eget</strong></h7>
-						<p class="font-size-12" style="color: #908b8b;">Holisticly harness just in timetechnologies are viarsus nunc, quis gravida magna mi a libero.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 py-10 ">
-					<div>
-							<p>
-								<i class="fa fa-snowflake-o fa-3x" aria-hidden="true" style="color:#d8b008;"></i>
-							</p>
-						<h7 style="color: #555555;"><strong>Nam eget</strong></h7>
-						<p class="font-size-12" style="color: #908b8b;">Holisticly harness just in timetechnologies are viarsus nunc, quis gravida magna mi a libero.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 py-10 ">
-					<div>
-							<p>
-								<i class="fa fa-street-view fa-3x" aria-hidden="true" style="color:#6670d1;"></i>
-							</p>
-						<h7 style="color: #555555;"><strong>Nam eget</strong></h7>
-						<p class="font-size-12" style="color: #908b8b;">Holisticly harness just in timetechnologies are viarsus nunc, quis gravida magna mi a libero.</p>
+						</a>
+							<h7 style="color: #555555;"><strong>' . jra_get_string(['university']) . '</strong></h7>
 					</div>
 				</div>';
-	*/
-	$str = $str .'</div>			
-		</div>
-	';
+				
+		$url = new moodle_url('/local/jra/admin/index.php');
+	}
+	$str = $str . '</div>'; //end of row
+	$str = $str .'</div>'; //end of span
+	$str = $str .'</div>'; //end of mb-5
+	
 	return $str;
 }
 

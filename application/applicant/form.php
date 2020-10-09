@@ -298,12 +298,14 @@ class document_upload_form extends moodleform
 		$mform = $this->_form; // Don't forget the underscore!
 		$attributes = array();
 		$institute = jra_get_institute();
-		$id = $this->_customdata['id'];
-		$mform->addElement('hidden', 'id', $id);
+		$semester = $this->_customdata['semester'];
+		$mform->addElement('hidden', 'id', '');
 		$mform->addElement('hidden', 'institute', $institute);
-
 //		$mform->addElement('text', 'title', get_string('title', 'local_cur'), array('size' => 60));
-		$type_list = jra_lookup_document_type();
+		if($semester->admission_type == 'crtp')
+			$type_list = jra_lookup_document_type_crtp();
+		else
+			$type_list = jra_lookup_document_type();
 		$mform->addElement('select', 'module', jra_get_string(['upload', 'document', 'type']), $type_list, $attributes);
 		$mform->setDefault('module', $module);
 		$mform->addElement('static', 'must_be', '', '(' . get_string('must_be_image_or_pdf', 'local_jra') . ')');
@@ -330,7 +332,7 @@ class document_upload_form_crtp extends moodleform
 		$attributes = array();
 		$institute = jra_get_institute();
 		$id = $this->_customdata['id'];
-		$mform->addElement('hidden', 'id', $id);
+		$mform->addElement('hidden', 'id', '');
 		$mform->addElement('hidden', 'institute', $institute);
 
 //		$mform->addElement('text', 'title', get_string('title', 'local_cur'), array('size' => 60));
