@@ -652,11 +652,3 @@ On behalf our the college, we welcome you onboard and hope you will gain benefic
 Thank you.
 
 ';
-
-//new translate
-$string['university'] = 'University';
-$string['major'] = 'Major';
-$string['transcript'] = 'Transcript';
-$string['uni_approval'] = 'University Approval';
-
-
