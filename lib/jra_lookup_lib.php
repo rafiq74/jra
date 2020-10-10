@@ -515,3 +515,38 @@ function jra_lookup_get_hijrah_month_a()
 	$arr = array();
 	return $arr;
 }
+
+function jra_lookup_university($blank = '')
+{
+	global $DB;
+	if(current_language() != 'en')
+		$order = 'name_a';
+	else
+		$order = 'name';
+	$records = $DB->get_records('si_university', array(), $order);
+	if($blank != '')
+		$arr[''] = $blank;
+	foreach($records as $r)
+	{
+		$arr[$r->id] = jra_output_show_field_language($r, 'name');
+	}
+	return $arr;
+}
+
+function jra_lookup_major($blank = '')
+{
+	global $DB;
+	if(current_language() != 'en')
+		$order = 'name_a';
+	else
+		$order = 'name';
+	$records = $DB->get_records('si_major', array(), $order);
+	if($blank != '')
+		$arr[''] = $blank;
+	foreach($records as $r)
+	{
+		$arr[$r->id] = jra_output_show_field_language($r, 'name');
+	}
+	return $arr;
+}
+

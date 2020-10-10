@@ -51,10 +51,12 @@ $PAGE->navbar->add(jra_get_string(['university']), new moodle_url('major.php'));
 //Any form processing code
 if(isset($_POST['delete_id'])) //only allow site admin to delete
 {
-	$cascade = array(
-		'si_university' => 'id',
-	);
-	jra_query_delete_cascade('si_university', $_POST['delete_id'], $cascade);
+	if(jra_is_system_admin())
+	{
+		$cascade = array(
+		);
+		jra_query_delete_cascade('si_university', $_POST['delete_id'], $cascade);
+	}
 }
 
 echo $OUTPUT->header();
@@ -106,8 +108,17 @@ $options = array(
 $fields = array(
 	'#' => array(), //# for numbering
 	'name' => array(
-		'align' => 'center',
-		'size' => '10%',
+		'header' => get_string('name', 'local_jra') . ' (' . get_string('english', 'local_jra') . ')', //for custom header
+		'align' => 'left',
+		'size' => '40%',
+//		'sort' => 'code,course_num', //indicates that these must be sorted together
+//		'format' => 'date',
+//		'disable_search' => true,
+	),
+	'name_a' => array(
+		'header' => get_string('name', 'local_jra') . ' (' . get_string('arabic', 'local_jra') . ')', //for custom header
+		'align' => 'right',
+		'size' => '35%',
 //		'sort' => 'code,course_num', //indicates that these must be sorted together
 //		'format' => 'date',
 //		'disable_search' => true,

@@ -74,7 +74,7 @@ $semester = $DB->get_record('si_semester', array('semester' => $applicant->semes
 
 //put before header so we can redirect
 
-	$mform = new applicant_academic_form();
+$mform = new applicant_academic_form(null, array('semester' => $semester));
 
 if ($mform->is_cancelled())
 {
@@ -84,10 +84,13 @@ if ($mform->is_cancelled())
 else if ($data = $mform->get_data())
 {
 	$now = time();
-	$data->secondary_weight = $semester->secondary_weight;
-	$data->tahseli_weight = $semester->tahseli_weight;
-	$data->qudorat_weight = $semester->qudorat_weight;
-	$data->aggregation = jra_app_compute_aggregate($data, $semester);
+	if($semester->admission_type == 'regular')
+	{
+		$data->secondary_weight = $semester->secondary_weight;
+		$data->tahseli_weight = $semester->tahseli_weight;
+		$data->qudorat_weight = $semester->qudorat_weight;
+		$data->aggregation = jra_app_compute_aggregate($data, $semester);
+	}
 	$data->date_updated = $now;
 	if($applicant->status < 3) //only update if the status is less
 		$data->status = 3;
