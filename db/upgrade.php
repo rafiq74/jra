@@ -58,7 +58,7 @@ function xmldb_local_jra_upgrade($oldversion) {
     $dbman = $DB->get_manager(); //this is new in moodle 3.0
 
     // Put any upgrade step following this.
-    $newversion = 2016062483; //put the new version number here
+    $newversion = 2016062484; //put the new version number here
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
 
@@ -154,6 +154,29 @@ function xmldb_local_jra_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+
+
+        $table1 = new xmldb_table('si_university');
+
+        $table1->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table1->add_field('name', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'id_uni');
+        $table1->add_field('name_a', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, null, 'name_uni_a');
+
+        $table1->add_key('primary', XMLDB_KEY_PRIMARY, array('id_uni'), null, null);
+        $status = $dbman->create_table($table1);
+
+
+
+        $table2 = new xmldb_table('si_major');
+
+        $table2->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table2->add_field('name', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'id_uni');
+        $table2->add_field('name_a', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, null, 'name_uni_a');
+
+        $table2->add_key('primary', XMLDB_KEY_PRIMARY, array('id_major'), null, null);
+        $status = $dbman->create_table($table2);
+
+
 
 
 		// upgrade code ends here

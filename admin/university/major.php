@@ -52,9 +52,9 @@ $PAGE->navbar->add(jra_get_string(['major']), new moodle_url('major.php'));
 if(isset($_POST['delete_id'])) //only allow site admin to delete
 {
 	$cascade = array(
-		'si_semester' => 'id',		
+		'si_major' => 'id',
 	);
-	jra_query_delete_cascade('si_semester', $_POST['delete_id'], $cascade);
+	jra_query_delete_cascade('si_major', $_POST['delete_id'], $cascade);
 }
 
 echo $OUTPUT->header();
@@ -68,19 +68,19 @@ echo $OUTPUT->box_start('jra_tabbox');
 
 $action_item = array();
 $action_item[] = array(
-	'title' => jra_get_string(['add', 'semester']), // - for divider
-	'url' => 'add_semester.php',
+	'title' => jra_get_string(['add', 'major']), // - for divider
+	'url' => 'add_univerity.php',
 	'target' => '', //_blank
 	'icon' => 'plus-circle',
 );
 $action_menu = '<div class="row pull-right pr-3">' . jra_ui_dropdown_menu($action_item, get_string('action', 'local_jra')) . '</div><br /><br />';
-echo $action_menu;
+//echo $action_menu;
 
-$condition = array('institute' => jra_get_institute());
+//$condition = array('institute' => jra_get_institute());
 //setup the table options
 $options = array(
 	'sql' => '', //incase if we need to use sql
-	'condition' => $condition, //and sql condition
+	//'condition' => $condition, //and sql condition
 	'table_class' => 'generaltable', //table class is either generaltable (moodle standard table), or table for plain
 	'responsive' => false, //responsive table
 	'border-table' => false, //make the table bordered
@@ -88,15 +88,15 @@ $options = array(
 	'hover-table' => false, //make the table hover (not applicable under generaltable)
 	'action' => true, //automatic add form and javascript for action edit and delete
 	'sortable' => true, //enable clicking of heading to sort
-	'default_sort_field' => 'semester',
+	'default_sort_field' => 'name',
 	'desc' => true, //indicates that the initial sort state is descending
 	'detail_link' => false, //provide javascript to link to detail page
 	'detail_field' => 'id', //the field to pick up as the id (reference) when going for detail view
 	'detail_var' => 'id', //variable name in query string for id. var=id
 	'search' => true, //allow search
-	'default_search_field' => 'semester', //default field choose for search
+	'default_search_field' => 'name', //default field choose for search
 	'view_page' => '',
-	'edit_page' => 'add_semester.php',
+	//'edit_page' => 'add_university.php',
 	'perpage' => jra_global_var('PER_PAGE'), //use large number to remove pagination
 	'delete_admin' => true, //only allow to delete if it is siteadmin
 //	'debug' => true,
@@ -105,70 +105,18 @@ $options = array(
 //setup the table fields
 $fields = array(
 	'#' => array(), //# for numbering
-	'semester' => array(
+	'name' => array(
 		'align' => 'center',
 		'size' => '10%',
 //		'sort' => 'code,course_num', //indicates that these must be sorted together
 //		'format' => 'date',
 //		'disable_search' => true,
 	),
-	'semester_num' => array(
-		'header'=>get_string('number', 'local_jra'), //for custom header
-		'align' => 'center',
-		'size' => '5%',
-	),
-	'semester_year' => array(
-		'header'=>ucfirst(get_string('year')), //for custom header
-		'align' => 'left',
-		'size' => '5%',
-	),
-	'start_date' => array(
-		'header'=>jra_get_string(['date', 'open']), //for custom header
-		'align' => 'center',
-		'size' => '10%',
-		'format' => 'date',
-		'disable_search' => true,
-	),
-	'end_date' => array(
-		'header'=>jra_get_string(['date', 'close']), //for custom header
-		'align' => 'center',
-		'size' => '10%',
-		'format' => 'date',
-		'disable_search' => true,
-	),
-	'secondary_weight' => array(
-		'header'=>jra_get_string(['secondary', 'weight']), //for custom header
-		'align' => 'center',
-		'size' => '10%',
-	),
-	'tahseli_weight' => array(
-		'header'=>jra_get_string(['tahseli', 'weight']), //for custom header
-		'align' => 'center',
-		'size' => '10%',
-	),
-	'qudorat_weight' => array(
-		'header'=>jra_get_string(['qudorat', 'weight']), //for custom header
-		'align' => 'center',
-		'size' => '10%',
-	),
-	'confirm_end_date' => array(
-		'header'=>jra_get_string(['last_date_confirm']), //for custom header
-		'align' => 'center',
-		'size' => '10%',
-		'format' => 'date',
-		'disable_search' => true,
-	),
-	'display' => array(
-		'header'=>jra_get_string(['display', 'result']), //for custom header
-		'align' => 'center',
-		'size' => '5%',
-		'format' => 'yesno',
-	),
 	'*' => array(), //action
 );
 
 //output the table
-echo jra_ui_dump_table('si_semester', $options, $fields, 'local_jra');
+echo jra_ui_dump_table('si_major', $options, $fields, 'local_jra');
 
 echo $OUTPUT->box_end();
 

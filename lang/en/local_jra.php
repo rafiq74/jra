@@ -31,7 +31,7 @@ $string['access_error'] = 'Access denied. You do not have the access right to ac
 $string['access_role'] = 'Access Role';
 $string['account'] = 'Account';
 $string['accounts'] = 'Accounts';
-$string['action'] = 'Action'; 
+$string['action'] = 'Action';
 $string['action_date'] ='Action Date';
 $string['action_user'] = 'Action User';
 $string['activate'] = 'Activate';
@@ -237,7 +237,7 @@ $string['number'] = 'Number';
 $string['occupied'] = 'Occupied';
 $string['october'] = 'October';
 $string['of'] = 'of';
-$string['office'] = 'Office'; 
+$string['office'] = 'Office';
 $string['on'] = 'ON';
 $string['open'] = 'Open';
 $string['operation'] = 'Operation';
@@ -577,7 +577,7 @@ Congratulations on your admission offer to High Institute of Elastomer Industire
 <li>Verification of authenticity of documents as submitted in online application.</li>
 <li>Completed medical examination by approved medical institution.</li>
 </ol>
-To confirm your admission to our program, you must accept the offer by clicking the Accept Offer button below. 
+To confirm your admission to our program, you must accept the offer by clicking the Accept Offer button below.
 ';
 $string['national_id'] = 'National ID';
 $string['your_application_reference_number'] = 'Your Application Reference Number';
@@ -658,5 +658,6 @@ $string['university'] = 'University';
 $string['major'] = 'Major';
 $string['transcript'] = 'Transcript';
 $string['uni_approval'] = 'University Approval';
-
-
+$string['graduate_from'] = 'Graduate From';
+$string['year_graduation'] = 'Year Of Graduation';
+$string['cgpa'] = 'CGPA';

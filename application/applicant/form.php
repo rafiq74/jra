@@ -173,18 +173,44 @@ class applicant_academic_form extends moodleform
 
 		$mform->addElement('hidden', 'id', '');
 
-		$mform->addElement('text', 'secondary', get_string('secondary_school_result', 'local_jra'), array('size' => 15));
-		$mform->addRule('secondary', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('secondary', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
+		if($semester->admission_type == 'regular') {
+			$mform->addElement('text', 'secondary', get_string('secondary_school_result', 'local_jra'), array('size' => 15));
+			$mform->addRule('secondary', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+			$mform->addRule('secondary', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
 
-		$mform->addElement('text', 'tahseli', get_string('tahseli', 'local_jra'), array('size' => 15));
-		$mform->addRule('tahseli', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('tahseli', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
+			$mform->addElement('text', 'tahseli', get_string('tahseli', 'local_jra'), array('size' => 15));
+			$mform->addRule('tahseli', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+			$mform->addRule('tahseli', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
 
-		$mform->addElement('text', 'qudorat', get_string('qudorat', 'local_jra'), array('size' => 15));
-		$mform->addRule('qudorat', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('qudorat', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
+			$mform->addElement('text', 'qudorat', get_string('qudorat', 'local_jra'), array('size' => 15));
+			$mform->addRule('qudorat', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+			$mform->addRule('qudorat', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
+		}
+		else {
+			$graduated = jra_lookup_marital_status();
+			$mform->addElement('select', 'graduated_from', get_string('graduate_from', 'local_jra'), $graduated);
+			$mform->addRule('graduated_from', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 
+
+
+			$h_year = array();
+			for($i = 1440; $i >= 1415; $i--)
+			$h_year[$i] = $i;
+			$add_array[] =& $mform->createElement('select', 'graduated_year', 'h_y', $h_year, $attributes);
+			$mform->addGroup($add_array, 'graduated_year', get_string('year_graduation', 'local_jra'), array(''),  false);
+			$mform->addRule('group1', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+
+
+
+			$majors = jra_lookup_marital_status();
+			$mform->addElement('select', 'graduated_major', get_string('major', 'local_jra'), $majors);
+			$mform->addRule('graduated_major', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+
+			$mform->addElement('text', 'graduated_gpa', get_string('cgpa', 'local_jra'), array('size' => 5));
+			$mform->addRule('graduated_gpa', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+			$mform->addRule('graduated_gpa', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
+
+		}
 
 		$this->add_action_buttons($cancel=true);
 	}
@@ -196,6 +222,7 @@ class applicant_academic_form extends moodleform
 		$a = new stdClass();
 		$a->min = 0;
 		$a->max = 100;
+
         if ($data['secondary'] < 0 || $data['secondary'] > 100) {
             $errors['secondary'] = get_string('secondary_school_result', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
             return $errors;
@@ -208,6 +235,12 @@ class applicant_academic_form extends moodleform
             $errors['qudorat'] = get_string('qudorat', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
             return $errors;
         }
+
+
+
+				else {
+
+				}
 
 		return $errors;
 	}
@@ -322,35 +355,7 @@ class document_upload_form extends moodleform
 }
 
 
-class document_upload_form_crtp extends moodleform
-{
-	//Add elements to form
-	public function definition()
-	{
-		$module = jra_get_session('jra_document_upload_module');
-		$mform = $this->_form; // Don't forget the underscore!
-		$attributes = array();
-		$institute = jra_get_institute();
-		$id = $this->_customdata['id'];
-		$mform->addElement('hidden', 'id', '');
-		$mform->addElement('hidden', 'institute', $institute);
 
-//		$mform->addElement('text', 'title', get_string('title', 'local_cur'), array('size' => 60));
-		$type_list = jra_lookup_document_type_crtp();
-		$mform->addElement('select', 'module', jra_get_string(['upload', 'document', 'type']), $type_list, $attributes);
-		$mform->setDefault('module', $module);
-		$mform->addElement('static', 'must_be', '', '(' . get_string('must_be_image_or_pdf', 'local_jra') . ')');
-		$max_size = 1024 * 10000;
-		$mform->addElement('filepicker', 'userfile', get_string('file'), null, array('maxbytes' => $max_size, 'accepted_types' => jra_file_accepted_document_type()));
-
-		$this->add_action_buttons($cancel=true);
-	}
-
-	function validation($data, $files)
-	{
-		return array();
-	}
-}
 
 class applicant_finance_form extends moodleform
 {

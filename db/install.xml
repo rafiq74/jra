@@ -515,5 +515,25 @@
         <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="si_university" COMMENT="University List">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id_uni"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="si_major" COMMENT="University List">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id_major"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>

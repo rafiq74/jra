@@ -92,7 +92,7 @@ else if ($data = $mform->get_data())
 
 	if($data->id != '') //updating
 	{
-	
+		
 		$DB->update_record('si_applicant', $data);
 	}
 	else //insert new
@@ -106,8 +106,7 @@ else if ($data = $mform->get_data())
 		$data->date_updated = $now;
 		$data->deleted = 0;
 
-		print_object($data);
-		die;
+
 
 		$appid = $DB->insert_record('si_applicant', $data);
 		$obj = new stdClass();
