@@ -28,17 +28,17 @@ defined('MOODLE_INTERNAL') || die();
 require_once '../../lib/jra_lookup_lib.php';
 require_once $CFG->libdir.'/formslib.php';
 
-class semester_form extends moodleform 
+class semester_form extends moodleform
 {
 	//Add elements to form
 	public function definition() {
 		global $CFG, $USER;
-		$mform = $this->_form; // Don't forget the underscore! 
+		$mform = $this->_form; // Don't forget the underscore!
  		$attributes = array();
 
-		$mform->addElement('hidden', 'id', '');	
-		$mform->addElement('hidden', 'institute', jra_get_institute());	
-		
+		$mform->addElement('hidden', 'id', '');
+		$mform->addElement('hidden', 'institute', jra_get_institute());
+
         $mform->addElement('text', 'semester', get_string('semester', 'local_jra'), array('size' => 50)); // Add elements to your form
 		$mform->addRule('semester', 'Semester cannot be empty', 'required', '', 'client', false, false);
 		$mform->addRule('semester', get_string('no_space_input', 'local_jra'), 'regex', '/^[a-zA-Z0-9-_]*$/', 'client', false, false);
@@ -54,53 +54,53 @@ class semester_form extends moodleform
 		$mform->addElement('date_selector', 'start_date', jra_get_string(['date', 'open']));
 		$mform->addElement('date_selector', 'end_date', jra_get_string(['date', 'close']));
 		$mform->addElement('text', 'secondary_weight', jra_get_string(['secondary_school_result', 'weight']), array('size' => 15));
-		$mform->addRule('secondary_weight', get_string('err_required', 'form'), 'required', '', 'client', false, false);		
-		$mform->addRule('secondary_weight', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);		
+		$mform->addRule('secondary_weight', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+		$mform->addRule('secondary_weight', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
 
 		$mform->addElement('text', 'tahseli_weight', jra_get_string(['tahseli', 'weight']), array('size' => 15));
-		$mform->addRule('tahseli_weight', get_string('err_required', 'form'), 'required', '', 'client', false, false);		
-		$mform->addRule('tahseli_weight', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);		
+		$mform->addRule('tahseli_weight', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+		$mform->addRule('tahseli_weight', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
 
 		$mform->addElement('text', 'qudorat_weight', jra_get_string(['qudorat', 'weight']), array('size' => 15));
-		$mform->addRule('qudorat_weight', get_string('err_required', 'form'), 'required', '', 'client', false, false);		
-		$mform->addRule('qudorat_weight', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);		
+		$mform->addRule('qudorat_weight', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+		$mform->addRule('qudorat_weight', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
         $yes_no = jra_lookup_yes_no();
         $mform->addElement('select', 'display', jra_get_string(['display', 'result']), $yes_no, $attributes);
 		$mform->addElement('date_selector', 'confirm_end_date', jra_get_string(['last_date_confirm']));
 //		$mform->addElement('date_selector', 'placement_test_date', jra_get_string(['placement', 'test', 'date']));
 //        $mform->addElement('text', 'placement_test_venue', jra_get_string(['message_if_approve']), array('size' => 80)); // Add elements to your form
 		$mform->addElement('textarea', 'placement_test_venue', jra_get_string(['message_if_approve']), 'wrap="virtual" rows="5" cols="50"');
-		$mform->addElement('hidden', 'campus', '');	
-		$this->add_action_buttons($cancel=true);		
+		$mform->addElement('hidden', 'campus', '');
+		$this->add_action_buttons($cancel=true);
 	}
-	
+
 	//Custom validation should be added here
 	function validation($data, $files) {
 		return array();
 	}
 }
 
-class semester_detail_form extends moodleform 
+class semester_detail_form extends moodleform
 {
 	//Add elements to form
 	public function definition() {
 		global $DB;
-		$mform = $this->_form; // Don't forget the underscore! 
+		$mform = $this->_form; // Don't forget the underscore!
  		$attributes = array();
 		$semester_id = $this->_customdata['sid'];
 		$week = $this->_customdata['week'];
 		$sem = $DB->get_record('si_semester', array('id' => $semester_id));
 		if(!$sem)
-			throw new moodle_exception(get_string('wrong_parameter', 'local_jra'));	
-			
-		$mform->addElement('hidden', 'id', '');	
-		$mform->addElement('hidden', 'sid', $semester_id);	
-		$mform->addElement('hidden', 'semester_id', $sem->id);	
-		$mform->addElement('hidden', 'semester', $sem->semester);	
-		$mform->addElement('hidden', 'week', $week);	
-		$mform->addElement('hidden', 'detail_week', $week);	
-		$mform->addElement('hidden', 'institute', jra_get_institute());	
-		
+			throw new moodle_exception(get_string('wrong_parameter', 'local_jra'));
+
+		$mform->addElement('hidden', 'id', '');
+		$mform->addElement('hidden', 'sid', $semester_id);
+		$mform->addElement('hidden', 'semester_id', $sem->id);
+		$mform->addElement('hidden', 'semester', $sem->semester);
+		$mform->addElement('hidden', 'week', $week);
+		$mform->addElement('hidden', 'detail_week', $week);
+		$mform->addElement('hidden', 'institute', jra_get_institute());
+
 //		$mform->addElement('checkbox', 'is_break', get_string('vacation_week', 'local_jra'), get_string('yes'));
 
 		$radioarray=array();
@@ -110,15 +110,61 @@ class semester_detail_form extends moodleform
 		$mform->setDefault('is_break', 'N');
         $mform->addElement('text', 'label', get_string('reason', 'local_jra'), array('size' => 50)); // Add elements to your form
 	    $mform->addElement('textarea', 'description', get_string('week_information', 'local_jra'),'wrap="virtual" rows="5" cols="80"');
-		$this->add_action_buttons($cancel=true);		
+		$this->add_action_buttons($cancel=true);
 	}
-	
+
 	//Custom validation should be added here
 	function validation($data, $files) {
 		return array();
 	}
 }
 
-    
+class university_form extends moodleform
+{
+	//Add elements to form
+	public function definition() {
+		global $CFG, $USER;
+		$mform = $this->_form; // Don't forget the underscore!
+ 		$attributes = array();
+
+		$mform->addElement('hidden', 'id', '');
+
+    $mform->addElement('text', 'name', get_string('name', 'local_jra') . ' (' . get_string('english', 'local_jra') . ')', array('size' => 50)); // Add elements to your form
+		$mform->addRule('name', 'Name cannot be empty', 'required', '', 'client', false, false);
+		$mform->addElement('text', 'name_a', get_string('name', 'local_jra') . ' (' . get_string('arabic', 'local_jra') . ')', array('size' => 50)); // Add elements to your form
+		$mform->addRule('name_a', 'Name cannot be empty', 'required', '', 'client', false, false);
+
+		$this->add_action_buttons($cancel=true);
+	}
+
+	//Custom validation should be added here
+	function validation($data, $files) {
+		return array();
+	}
+}
+
+
+class major_form extends moodleform
+{
+	//Add elements to form
+	public function definition() {
+		global $CFG, $USER;
+		$mform = $this->_form; // Don't forget the underscore!
+ 		$attributes = array();
+
+		$mform->addElement('hidden', 'id', '');
+    $mform->addElement('text', 'name', get_string('name', 'local_jra') . ' (' . get_string('english', 'local_jra') . ')', array('size' => 50)); // Add elements to your form
+		$mform->addRule('name', 'Name cannot be empty', 'required', '', 'client', false, false);
+		$mform->addElement('text', 'name_a', get_string('name', 'local_jra') . ' (' . get_string('arabic', 'local_jra') . ')', array('size' => 50)); // Add elements to your form
+		$mform->addRule('name_a', 'Name cannot be empty', 'required', '', 'client', false, false);
+
+		$this->add_action_buttons($cancel=true);
+	}
+
+	//Custom validation should be added here
+	function validation($data, $files) {
+		return array();
+	}
+}
 
 ?>

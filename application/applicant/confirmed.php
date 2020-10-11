@@ -23,7 +23,7 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
@@ -78,7 +78,7 @@ if(isset($_POST['delete_id'])) //only allow site admin to delete
 			jra_file_delete_file($file_path);
 		}
 		$cascade = array(
-			'si_applicant_contact' => 'applicant_id',		
+			'si_applicant_contact' => 'applicant_id',
 		);
 		jra_query_delete_cascade('si_applicant', $_POST['delete_id'], $cascade);
 	}
@@ -96,7 +96,7 @@ echo $OUTPUT->box_start('jra_tabbox');
 $semester = $DB->get_record('si_semester', array('semester' => jra_get_semester()));
 if(!$semester)
 	throw new moodle_exception('Error!!! No semester defined');
-	
+
 $status_list = jra_lookup_admission_confirm_status();
 $per_page_list = jra_lookup_per_page();
 $city_list = jra_lookup_city_applicant(get_string('all', 'local_jra'));
@@ -173,7 +173,7 @@ if($is_closed != '') //application already close, then we allow processing
 	$action_menu = $action_menu . jra_ui_dropdown_menu($action_item, get_string('action', 'local_jra'));
 	$action_menu = $action_menu . '</div><br /><br />';
 	echo $action_menu;
-	
+
 }
 else
 {
@@ -181,7 +181,7 @@ else
 	$a->start_date = date('d-M-Y, h:i A', $semester->start_date);
 	$end_date = strtotime(date('d-M-Y', $semester->end_date) . '+ 1 day') - 1; //end time has to add 24 hour minus one to get the final minute
 	$a->end_date = date('d-M-Y, h:i A', $end_date);
-	$action_msg = get_string('admission_open_period', 'local_jra', $a) . ' ' . get_string('cannot_process_admission', 'local_jra');	
+	$action_msg = get_string('admission_open_period', 'local_jra', $a) . ' ' . get_string('cannot_process_admission', 'local_jra');
 	jra_ui_alert($action_msg, 'warning', '', false);
 }
 
@@ -284,7 +284,7 @@ $fields = array(
 		'format' => 'lookup',
 		'lookup_list' => $status_list,
 		'show_reference' => true,
-	),	
+	),
 	'acceptance_date' => array(
 		'header'=>jra_get_string(['date']), //for custom header
 		'align' => 'center',
@@ -328,7 +328,7 @@ echo $OUTPUT->box_end();
         </button>
 		<?php
 			$btn_url = "javascript:update_filter('" . $PAGE->url->out(false) . "')";
-			echo jra_ui_button(jra_ui_space(5) . get_string('ok') . jra_ui_space(5), $btn_url);		
+			echo jra_ui_button(jra_ui_space(5) . get_string('ok') . jra_ui_space(5), $btn_url);
 		?>
       </div>
 

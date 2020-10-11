@@ -23,7 +23,7 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
@@ -77,12 +77,23 @@ if(isset($_POST['delete_id'])) //only allow site admin to delete
 			$file_path = jra_file_supporting_document_path(jra_get_semester()) . $del_applicant->qudorat_file;
 			jra_file_delete_file($file_path);
 		}
+		if($del_applicant->transcript_file != '')
+		{
+			$file_path = jra_file_supporting_document_path(jra_get_semester()) . $del_applicant->transcript_file;
+			jra_file_delete_file($file_path);
+		}
+		if($del_applicant->uni_approval_file != '')
+		{
+			$file_path = jra_file_supporting_document_path(jra_get_semester()) . $del_applicant->uni_approval_file;
+			jra_file_delete_file($file_path);
+		}
+
 		//delete from moodle
 		$DB->delete_records('user', array('idnumber' => $del_applicant->user_id));
 		//delete from jra_user
 		$DB->delete_records('jra_user', array('id' => $del_applicant->user_id));
 		$cascade = array(
-			'si_applicant_contact' => 'applicant_id',		
+			'si_applicant_contact' => 'applicant_id',
 		);
 		jra_query_delete_cascade('si_applicant', $_POST['delete_id'], $cascade);
 	}
@@ -98,10 +109,13 @@ jra_set_session('jra_applicant_tab', 'index');
 echo $OUTPUT->box_start('jra_tabbox');
 
 $semester = $DB->get_record('si_semester', array('semester' => jra_get_semester()));
+
 if(!$semester)
 	throw new moodle_exception('Error!!! No semester defined');
-	
+
 $status_list = jra_lookup_admission_status(get_string('all', 'local_jra'));
+$university_list = jra_lookup_university();
+$major_list = jra_lookup_major();
 $per_page_list = jra_lookup_per_page();
 //$city_list = jra_lookup_city_applicant(get_string('all', 'local_jra'));
 
@@ -163,7 +177,7 @@ if($is_closed != '')
 	$action_menu = $action_menu . jra_ui_dropdown_menu($action_item, get_string('action', 'local_jra'));
 	$action_menu = $action_menu . '</div><br /><br />';
 	echo $action_menu;
-	
+
 }
 else
 {
@@ -171,7 +185,7 @@ else
 	$a->start_date = date('d-M-Y, h:i A', $semester->start_date);
 	$end_date = strtotime(date('d-M-Y', $semester->end_date) . '+ 1 day') - 1; //end time has to add 24 hour minus one to get the final minute
 	$a->end_date = date('d-M-Y, h:i A', $end_date);
-	$action_msg = get_string('admission_open_period', 'local_jra', $a) . ' ' . get_string('cannot_process_admission', 'local_jra');	
+	$action_msg = get_string('admission_open_period', 'local_jra', $a) . ' ' . get_string('cannot_process_admission', 'local_jra');
 	jra_ui_alert($action_msg, 'warning', '', false);
 	//only show the per page
 	$action_menu = '<div class="row pull-right pr-3">';
@@ -207,20 +221,25 @@ else
 //	$city_filter = " and address_city = '$city'";
 
 $aggregate_filter = '';
-if($semester->min_aggregate != '')
-	$aggregate_filter = " and aggregation >= '$semester->min_aggregate'";
-
 $city_filter = '';
-if($semester->city_filter != '')
-	$city_filter = " and address_city >= '$semester->city_filter'";
+
+if($semester->admission_type == "regular"){
+		if($semester->min_aggregate != '')
+			$aggregate_filter = " and aggregation >= '$semester->min_aggregate'";
+
+		if($semester->city_filter != '')
+			$city_filter = " and address_city >= '$semester->city_filter'";
+		}
 
 if($semester->num_applicant != '' && $semester->num_applicant != 0)
 	$limit = $semester->num_applicant;
 else
 	$limit = '';
 
+
 $sql = "select * from v_si_applicant";
 $conditionWhere = " institute = '" . jra_get_institute() . "' and semester = '" . $semester->semester . "' and deleted = 0 and acceptance is null $status_filter $aggregate_filter $city_filter";
+
 
 //	$condition['aggregate'] = $aggregate;
 //setup the table options
@@ -251,6 +270,91 @@ $options = array(
 	'limit' => $limit,
 //	'debug' => true,
 );
+
+
+if($semester->admission_type =='regular'){
+	$academic = array(
+		'tahseli' => array(
+		'header'=>jra_get_string(['tahseli']), //for custom header
+		'align' => 'center',
+		'size' => '5%',
+		'sortable' => false,
+	),
+	'qudorat' => array(
+		'header'=>jra_get_string(['qudorat']), //for custom header
+		'align' => 'center',
+		'size' => '5%',
+		'sortable' => false,
+	),
+	'secondary' => array(
+		'header'=>jra_get_string(['secondary']), //for custom header
+		'align' => 'center',
+		'size' => '5%',
+		'sortable' => false,
+	),
+	'aggregation' => array(
+		'header'=>jra_get_string(['aggregate']), //for custom header
+		'align' => 'center',
+		'size' => '5%',
+		'sortable' => false,
+	),
+	'status' => array(
+		'header'=>get_string('status', 'local_jra'), //for custom header
+		'align' => 'center',
+		'size' => '10%',
+		'format' => 'lookup',
+		'lookup_list' => $status_list,
+		'show_reference' => true,
+		'sortable' => false,
+	),
+	'*' => array(), //action
+);
+}
+else{
+	$academic = array(
+		'graduated_from' => array(
+		'header'=>jra_get_string(['graduate_from']), //for custom header
+		'align' => 'center',
+		'size' => '13%',
+		'format' => 'lookup',
+		'lookup_list' => $university_list,
+		'sortable' => false,
+	),
+
+	'graduated_major' => array(
+		'header'=>jra_get_string(['major']), //for custom header
+		'align' => 'center',
+		'size' => '7%',
+		'format' => 'lookup',
+		'lookup_list' => $major_list,
+		'sortable' => false,
+	),
+	'graduated_year' => array(
+		'header'=>jra_get_string(['year_graduation']), //for custom header
+		'align' => 'center',
+		'size' => '7%',
+		'sortable' => false,
+	),
+	'graduated_gpa' => array(
+		'header'=>jra_get_string(['cgpa']), //for custom header
+		'align' => 'center',
+		'size' => '5%',
+		'sortable' => false,
+	),
+	'status' => array(
+		'header'=>get_string('status', 'local_jra'), //for custom header
+		'align' => 'center',
+		'size' => '10%',
+		'format' => 'lookup',
+		'lookup_list' => $status_list,
+		'show_reference' => true,
+		'sortable' => false,
+	),
+	'*' => array(), //action
+);
+}
+
+
 //setup the table fields
 $fields = array(
 	'#' => array(), //# for numbering
@@ -292,44 +396,14 @@ $fields = array(
 		'size' => '10%',
 		'sortable' => false,
 	),
-	'tahseli' => array(
-		'header'=>jra_get_string(['tahseli']), //for custom header
-		'align' => 'center',
-		'size' => '5%',
-		'sortable' => false,
-	),
-	'qudorat' => array(
-		'header'=>jra_get_string(['qudorat']), //for custom header
-		'align' => 'center',
-		'size' => '5%',
-		'sortable' => false,
-	),
-	'secondary' => array(
-		'header'=>jra_get_string(['secondary']), //for custom header
-		'align' => 'center',
-		'size' => '5%',
-		'sortable' => false,
-	),
-	'aggregation' => array(
-		'header'=>jra_get_string(['aggregate']), //for custom header
-		'align' => 'center',
-		'size' => '5%',
-		'sortable' => false,
-	),
-	'status' => array(
-		'header'=>get_string('status', 'local_jra'), //for custom header
-		'align' => 'center',
-		'size' => '10%',
-		'format' => 'lookup',
-		'lookup_list' => $status_list,
-		'show_reference' => true,
-		'sortable' => false,
-	),	
-	'*' => array(), //action
 );
 
+
+$mergearr = array_merge($fields, $academic);
+
+
 //output the table
-echo jra_ui_dump_table('si_applicant', $options, $fields, 'local_jra');
+echo jra_ui_dump_table('si_applicant', $options, $mergearr, 'local_jra');
 
 echo $OUTPUT->box_end();
 
@@ -362,7 +436,7 @@ echo $OUTPUT->box_end();
         </button>
 		<?php
 			$btn_url = "javascript:update_filter('" . $PAGE->url->out(false) . "')";
-			echo jra_ui_button(jra_ui_space(5) . get_string('ok') . jra_ui_space(5), $btn_url);		
+			echo jra_ui_button(jra_ui_space(5) . get_string('ok') . jra_ui_space(5), $btn_url);
 		?>
       </div>
 

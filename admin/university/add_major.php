@@ -31,7 +31,7 @@ require_once 'lib.php'; //local library
 require_once 'form.php';
 
 $urlparams = $_GET;
-$PAGE->set_url('/local/jra/admin/semester/add_university.php', $urlparams);
+$PAGE->set_url('/local/jra/admin/semester/add_major.php', $urlparams);
 $PAGE->set_course($SITE);
 $PAGE->set_cacheable(false);
 
@@ -46,12 +46,12 @@ $id = optional_param('id', false, PARAM_INT);
 if($id)
 {
 	$qs = '?id=' . $id;
-	$bc = ['update', 'university'];
+	$bc = ['update', 'major'];
 }
 else
 {
 	$qs = '';
-	$bc = ['add', 'university'];
+	$bc = ['add', 'major'];
 }
 
 //frontpage - for 2 columns with standard menu on the right
@@ -60,8 +60,8 @@ $PAGE->set_pagelayout('jra');
 $PAGE->set_title(jra_site_fullname());
 $PAGE->set_heading(jra_site_fullname());
 $PAGE->navbar->add(get_string('system', 'local_jra') . ' '  . get_string('administration'), new moodle_url('../index.php', array()));
-$PAGE->navbar->add(jra_get_string(['university']), new moodle_url('index.php'));
-$PAGE->navbar->add(jra_get_string($bc), new moodle_url('add_university.php', $urlparams));
+$PAGE->navbar->add(jra_get_string(['major']), new moodle_url('index.php'));
+$PAGE->navbar->add(jra_get_string($bc), new moodle_url('add_major.php', $urlparams));
 
 
 //put before header so we can redirect
@@ -81,13 +81,13 @@ else if ($data = $mform->get_data())
 	);
 
 
-	$isDuplicate = jra_query_is_duplicate('si_university', $duplicate_condition, $data->id);
+	$isDuplicate = jra_query_is_duplicate('si_major', $duplicate_condition, $data->id);
 	if(!$isDuplicate) //no duplicate, update it
 	{
 		if($data->id == '') //create new
-			$DB->insert_record('si_university', $data);
+			$DB->insert_record('si_major', $data);
 		else
-			$DB->update_record('si_university', $data);
+			$DB->update_record('si_major', $data);
 
 		redirect($return_url);
 	}
@@ -97,7 +97,7 @@ else if ($data = $mform->get_data())
 echo $OUTPUT->header();
 
 if($isDuplicate)
-	jra_ui_alert(get_string('duplicate_university', 'local_jra'), 'danger');
+	jra_ui_alert(get_string('duplicate_major', 'local_jra'), 'danger');
 
 //content code starts here
 jra_ui_page_title(jra_get_string($bc));
@@ -105,7 +105,7 @@ jra_ui_page_title(jra_get_string($bc));
 if(isset($_GET['id']))
 {
 	$id = $_GET['id'];
-	$toform = $DB->get_record('si_university', array('id' => $id));
+	$toform = $DB->get_record('si_major', array('id' => $id));
 	if($toform)
 		$mform->set_data($toform);
 }

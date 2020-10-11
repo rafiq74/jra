@@ -661,3 +661,6 @@ $string['uni_approval'] = 'University Approval';
 $string['graduate_from'] = 'Graduate From';
 $string['year_graduation'] = 'Year Of Graduation';
 $string['cgpa'] = 'CGPA';
+$string['admission_type'] = "Admission Type";
+$string['duplicate_university'] = "Duplicate University";
+$string['duplicate_major'] = "Duplicate Major";

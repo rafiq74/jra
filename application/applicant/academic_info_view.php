@@ -82,21 +82,20 @@ if($semester->admission_type == 'regular'){
   $detail_data[] = $obj;
 }
 else {
-  $university = $DB->get_record('si_university', array('id' => $applicant->graduated_from));
-  $university = jra_output_show_field_language($university,'name');
 
-  $major = $DB->get_record('si_major', array('id' => $applicant->graduated_major));
-  $major = jra_output_show_field_language($major,'name');
 
+
+  $graduated_from = jra_lookup_university();
   $obj = new stdClass();
   $obj->title = get_string('graduate_from', 'local_jra');
-  $obj->content = $university;
+  $obj->content = $applicant->graduated_from == '' ? '-' : $graduated_from[$applicant->graduated_from];;
   $detail_data[] = $obj;
   //end of data row
   //one row of data
+  $graduated_major = jra_lookup_university();
   $obj = new stdClass();
   $obj->title = get_string('major', 'local_jra');
-  $obj->content = $major;
+  $obj->content = $applicant->graduated_major == '' ? '-' : $graduated_major[$applicant->graduated_major];;
   $detail_data[] = $obj;
   //end of data row
   //one row of data

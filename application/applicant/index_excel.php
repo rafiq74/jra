@@ -23,13 +23,13 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_query_lib.php';
 require_once '../../lib/jra_app_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
-require_once '../../lib/jra_system_lib.php'; 
+require_once '../../lib/jra_system_lib.php';
 require_once 'lib.php'; //local library
 require_once $CFG->libdir.'/phpexcel/PHPExcel.php'; //beware of case sensitive as in linux server, file name is case sensitive
 
@@ -51,7 +51,7 @@ jra_access_control($access_rules);
 $semester = $DB->get_record('si_semester', array('semester' => jra_get_semester()));
 if(!$semester)
 	throw new moodle_exception('Error!!! No semester defined');
-	
+
 $status_list = jra_lookup_admission_status(get_string('all', 'local_jra'));
 $per_page_list = jra_lookup_per_page();
 //$city_list = jra_lookup_city_applicant(get_string('all', 'local_jra'));
@@ -97,8 +97,13 @@ if(is_array($params))
 
 $like = jra_query_like_query($search, $field, $search_params);
 
+if($semester->admission_type != 'crtp'){
+	$sql = "select appid, semester, national_id, id_type, nationality, fullname, fullname_a, gender, dob_hijri, marital_status, blood_type, tahseli, qudorat, secondary, aggregation, status, acceptance, address1, address2, address_state, address_city, phone_mobile, email, contact_name, contact_relationship, contact_mobile from v_si_applicant";
+}
+else {
+	$sql = "select appid, semester, national_id, id_type, nationality, fullname, fullname_a, gender, dob_hijri, marital_status, blood_type,graduated_from,graduated_major,graduated_year,graduated_gpa, status, acceptance, address1, address2, address_state, address_city, phone_mobile, email, contact_name, contact_relationship, contact_mobile from v_si_applicant";
+}
 
-$sql = "select appid, semester, national_id, id_type, nationality, fullname, fullname_a, gender, dob_hijri, marital_status, blood_type, tahseli, qudorat, secondary, aggregation, status, acceptance, address1, address2, address_state, address_city, phone_mobile, email, contact_name, contact_relationship, contact_mobile from v_si_applicant";
 $conditionText = " semester = '" . $semester->semester . "' and deleted = 0 and acceptance is null $status_filter $aggregate_filter $city_filter " . $like;
 
 $sort = "aggregation desc";
@@ -106,6 +111,8 @@ $sort = "aggregation desc";
 $records = $DB->get_records_sql($sql . ' where ' . $conditionText . ' order by ' . $sort . $limit, $search_params);
 
 $marital_status = jra_lookup_marital_status();
+$graduated_from = jra_lookup_university();
+$graduated_major = jra_lookup_major();
 
 //preprocess it into make it in human readable format
 $data = array();
@@ -113,11 +120,14 @@ foreach($records as $r)
 {
 	$r->marital_status = $marital_status[$r->marital_status];
 	$r->status = $status_list[$r->status];
+	if($semester->admission_type == 'crtp'){
+		$r->graduated_from = $graduated_from[$r->graduated_from];
+		$r->graduated_major =$graduated_major[$r->graduated_major];
+	}
 	$data[] = $r;
 }
 //$data = jra_student_operation_master_detail_status($records);
-//print_object($data);
-//die;
+
 if(count($data) > 0)
 {
 	//construct the file name
@@ -164,12 +174,12 @@ if(count($data) > 0)
 			$row++;
 		$count++;
 	}
-	
+
 	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 	header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
 	header('Cache-Control: max-age=0');
 	$objWriter->save('php://output');
-	
+
 	exit;
 
 }

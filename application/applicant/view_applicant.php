@@ -23,7 +23,7 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_file_lib.php';
@@ -80,7 +80,7 @@ else if($return_page == 'confirmed')
 	$return_params = jra_get_session('si_applicant_confirmed_return_params');
 else if($return_page == 'admitted')
 	$return_params = jra_get_session('si_applicant_admitted_return_params');
-	
+
 if($return_params == '')
 	$return_params = array();
 
@@ -110,7 +110,7 @@ if($is_closed != '')
 		$url = "javascript:update_status('" . $applicant->id . "', 13, '" . $PAGE->url->out(false) . "')";
 		$btn = $btn . jra_ui_space(3);
 		$btn = $btn . jra_ui_button(get_string('rejected', 'local_jra'), $url, $btn_reject, '', '', true);
-		
+
 		echo '<div class="row mb-3">';
 			echo '<div class="col-md-12">';
 				echo '<div class="pull-right">';
@@ -135,7 +135,7 @@ if($is_closed != '')
 			$btn = $btn . jra_ui_space(3);
 			$url = "javascript:update_confirm_status('" . $applicant->id . "', 3, '" . $PAGE->url->out(false) . "')";
 			$btn = $btn . jra_ui_button(get_string('suspended', 'local_jra'), $url, $btn_suspended, '', '', true);
-			
+
 			echo '<div class="row mb-3">';
 				echo '<div class="col-md-12">';
 					echo '<div class="pull-right">';
@@ -161,7 +161,7 @@ if($is_closed != '')
 			//for final admission
 			$url = "javascript:show_final_admission('$applicant->id')";
 			$btn = $btn . jra_ui_button(jra_get_string(['final_admission']), $url, 'warning', '', '', true);
-			
+
 			echo '<div class="row mb-3">';
 				echo '<div class="col-md-12">';
 					echo '<div class="pull-right">';
@@ -245,30 +245,61 @@ jra_ui_box($str, '<strong>' . jra_get_string(['personal_information']) . '</stro
 //ACADEMIC INFORMATION
 
 $detail_data = array();
-//one row of data
-$obj = new stdClass();
-$obj->title = get_string('secondary_school_result', 'local_jra');
-$obj->content = $applicant->secondary . ' (' . get_string('weight', 'local_jra') . ': ' . $semester->secondary_weight. ')';
-$detail_data[] = $obj;
-//end of data row
-//one row of data
-$obj = new stdClass();
-$obj->title = get_string('tahseli', 'local_jra');
-$obj->content = $applicant->tahseli . ' (' . get_string('weight', 'local_jra') . ': ' . $semester->tahseli_weight. ')';
-$detail_data[] = $obj;
-//end of data row
-//one row of data
-$obj = new stdClass();
-$obj->title = get_string('qudorat', 'local_jra');
-$obj->content = $applicant->qudorat . ' (' . get_string('weight', 'local_jra') . ': ' . $semester->qudorat_weight. ')';
-$detail_data[] = $obj;
-//end of data row
-//one row of data
-$obj = new stdClass();
-$obj->title = jra_get_string(['aggregation', 'points']);
-$obj->content = $applicant->aggregation;
-$detail_data[] = $obj;
-//end of data row
+
+if($semester->admission_type == "regular"){
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = get_string('secondary_school_result', 'local_jra');
+	$obj->content = $applicant->secondary . ' (' . get_string('weight', 'local_jra') . ': ' . $semester->secondary_weight. ')';
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = get_string('tahseli', 'local_jra');
+	$obj->content = $applicant->tahseli . ' (' . get_string('weight', 'local_jra') . ': ' . $semester->tahseli_weight. ')';
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = get_string('qudorat', 'local_jra');
+	$obj->content = $applicant->qudorat . ' (' . get_string('weight', 'local_jra') . ': ' . $semester->qudorat_weight. ')';
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = jra_get_string(['aggregation', 'points']);
+	$obj->content = $applicant->aggregation;
+	$detail_data[] = $obj;
+	//end of data row
+}
+else {
+
+	$graduated_from = jra_lookup_university();
+	$obj = new stdClass();
+	$obj->title = get_string('graduate_from', 'local_jra');
+	$obj->content = $applicant->graduated_from == '' ? '-' : $graduated_from[$applicant->graduated_from];
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$graduated_major = jra_lookup_major();
+	$obj = new stdClass();
+	$obj->title = get_string('major', 'local_jra');
+	$obj->content = $applicant->graduated_major == '' ? '-' : $graduated_major[$applicant->graduated_major];
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = get_string('year_graduation', 'local_jra');
+	$obj->content = $applicant->graduated_year;
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
+	$obj = new stdClass();
+	$obj->title = jra_get_string(['cgpa', 'points']);
+	$obj->content = $applicant->graduated_gpa;
+	$detail_data[] = $obj;
+}
+
 $str = jra_ui_data_detail($detail_data, 2);
 echo '<br />';
 jra_ui_box($str, '<strong>' . jra_get_string(['academic_information']) . '</strong>');
@@ -361,7 +392,7 @@ jra_ui_box($str, '<strong>' . jra_get_string(['uploaded', 'supporting', 'documen
         </button>
 		<?php
 			$btn_url = "javascript:update_admit('" . $PAGE->url->out(false) . "')";
-			echo jra_ui_button(jra_ui_space(5) . get_string('ok') . jra_ui_space(5), $btn_url);		
+			echo jra_ui_button(jra_ui_space(5) . get_string('ok') . jra_ui_space(5), $btn_url);
 		?>
       </div>
 
