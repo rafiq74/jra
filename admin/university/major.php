@@ -86,7 +86,7 @@ $options = array(
 	'action' => true, //automatic add form and javascript for action edit and delete
 	'sortable' => true, //enable clicking of heading to sort
 	'default_sort_field' => 'name',
-	'desc' => true, //indicates that the initial sort state is descending
+	'desc' => false, //indicates that the initial sort state is descending
 	'detail_link' => false, //provide javascript to link to detail page
 	'detail_field' => 'id', //the field to pick up as the id (reference) when going for detail view
 	'detail_var' => 'id', //variable name in query string for id. var=id
@@ -103,15 +103,15 @@ $options = array(
 $fields = array(
 	'#' => array(), //# for numbering
 	'name' => array(
-		'header' => get_string('name','local_jra').'('.get_string('english','local_jra').')',
-		'align' => 'center',
+		'header' => get_string('major', 'local_jra') . ' (' . get_string('english', 'local_jra') . ')', //for custom header
+		'align' => 'left',
 		'size' => '40%',
 //		'sort' => 'code,course_num', //indicates that these must be sorted together
 //		'format' => 'date',
 //		'disable_search' => true,
 	),
 	'name_a' => array(
-		'header' => get_string('name', 'local_jra') . ' (' . get_string('arabic', 'local_jra') . ')', //for custom header
+		'header' => get_string('major', 'local_jra') . ' (' . get_string('arabic', 'local_jra') . ')', //for custom header
 		'align' => 'right',
 		'size' => '35%',
 //		'sort' => 'code,course_num', //indicates that these must be sorted together

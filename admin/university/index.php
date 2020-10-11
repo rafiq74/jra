@@ -71,12 +71,12 @@ echo $OUTPUT->box_start('jra_tabbox');
 $action_item = array();
 $action_item[] = array(
 	'title' => jra_get_string(['add', 'university']), // - for divider
-	'url' => 'add_univerity.php',
+	'url' => 'add_university.php',
 	'target' => '', //_blank
 	'icon' => 'plus-circle',
 );
 $action_menu = '<div class="row pull-right pr-3">' . jra_ui_dropdown_menu($action_item, get_string('action', 'local_jra')) . '</div><br /><br />';
-//echo $action_menu;
+echo $action_menu;
 
 //$condition = array('institute' => jra_get_institute());
 //setup the table options
@@ -91,14 +91,14 @@ $options = array(
 	'action' => true, //automatic add form and javascript for action edit and delete
 	'sortable' => true, //enable clicking of heading to sort
 	'default_sort_field' => 'name',
-	'desc' => true, //indicates that the initial sort state is descending
+	'desc' => false, //indicates that the initial sort state is descending
 	'detail_link' => false, //provide javascript to link to detail page
 	'detail_field' => 'id', //the field to pick up as the id (reference) when going for detail view
 	'detail_var' => 'id', //variable name in query string for id. var=id
 	'search' => true, //allow search
 	'default_search_field' => 'name', //default field choose for search
 	'view_page' => '',
-	//'edit_page' => 'add_university.php',
+	'edit_page' => 'add_university.php',
 	'perpage' => jra_global_var('PER_PAGE'), //use large number to remove pagination
 	'delete_admin' => true, //only allow to delete if it is siteadmin
 //	'debug' => true,

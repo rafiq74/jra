@@ -1541,3 +1541,13 @@ $string['admit_student_message'] = '
 <br /><br /> 
 شكرا
 ';
+$string['university'] = 'الجامعة';
+$string['major'] = 'التخصص';
+$string['transcript'] = 'السجل الأكاديمي';
+$string['uni_approval'] = 'موافقة الجامعة';
+$string['graduate_from'] = 'متخرج من ';
+$string['year_graduation'] = 'تاريخ التخرج';
+$string['cgpa'] = 'المعدل التراكمي';
+$string['admission_type'] = "نوع القبول";
+$string['duplicate_university'] = "الجامعة المكررة";
+$string['duplicate_major'] = "التخصص المكرر";

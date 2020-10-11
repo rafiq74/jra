@@ -64,6 +64,7 @@ $PAGE->navbar->add(jra_get_string(['major']), new moodle_url('index.php'));
 $PAGE->navbar->add(jra_get_string($bc), new moodle_url('add_major.php', $urlparams));
 
 
+$return_url = new moodle_url('major.php');
 //put before header so we can redirect
 $mform = new university_form();
 if ($mform->is_cancelled())

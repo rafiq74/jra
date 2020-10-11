@@ -64,6 +64,15 @@ function jra_admin_menu()
 		$str = $str . html_writer::link($icon_url, $url_text, array());
 		$str = $str . '</div>';
 		//end of one icon
+		
+		//one icon
+		$str = $str . '<div class="col-md-2 pt-' . $padding . '">';
+		$icon_url = new moodle_url('university/index.php');
+		$url_text = '<div>' . jra_ui_icon('graduation-cap', '3', true) . '</div>';
+		$url_text = $url_text . '<div class="pt-2 pb-3"><strong>' . jra_get_string(['university']) . '</strong></div>';
+		$str = $str . html_writer::link($icon_url, $url_text, array());
+		$str = $str . '</div>';
+		//end of one icon
 	}
 	$access_rules = array(
 		'system' => ''

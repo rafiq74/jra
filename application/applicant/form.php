@@ -206,6 +206,7 @@ class applicant_academic_form extends moodleform
 			$add_array[] =& $mform->createElement('select', 'graduated_year', 'h_y', $h_year, $attributes);
 			$mform->addGroup($add_array, 'graduated_year', get_string('year_graduation', 'local_jra'), array(''),  false);
 			$mform->addRule('group1', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+			$mform->addRule('graduated_year', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 
 			$majors = jra_lookup_major();
 			$mform->addElement('select', 'graduated_major', get_string('major', 'local_jra'), $majors);

@@ -57,7 +57,7 @@ else
 }
 
 
-//$semester = $DB->get_record('si_semester', array('semester' => $semester));
+$semester = $DB->get_record('si_semester', array('semester' => $semester));
 
 $return_url = new moodle_url($CFG->wwwroot, $return_params);
 
@@ -98,7 +98,7 @@ else if ($data = $mform->get_data())
 	else //insert new
 	{
 		$data->user_id = $jra_user->id;
-		$data->semester = $semester;
+		$data->semester = $semester->semester;
 		$data->religion = 'Islam';
 		$data->status = '1'; //1 indicates completed step 1
 		$data->status_date = $now;
