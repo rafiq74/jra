@@ -377,6 +377,7 @@ function jra_theme_marketing($applicant)
 	/******************* 
 	**** STAGE 3 *******
 	********************/
+	$semester = $DB->get_record('si_semester', array('semester' => jra_get_semester()));
 	$url = new moodle_url('/local/jra/application/applicant/academic_info.php');
 	$url_view = new moodle_url('/local/jra/application/applicant/academic_info_view.php');
 	//show edit and view button
@@ -406,6 +407,10 @@ function jra_theme_marketing($applicant)
 	}
 	else
 		$complete_status = jra_theme_get_complete_status(false);
+	if($semester->admission_type == 'regular')
+		$information = 'academic_information_description';
+	else
+		$information = 'academic_information_graduate';
 	$btn = $btn . '</div>';
 	$str = $str . '
 	<br />
@@ -432,7 +437,7 @@ function jra_theme_marketing($applicant)
 							</div>
 							<div class="card-body content-holder">
 								<h5 class="card-title text-center" style="color:#555555;">' . jra_get_string(['academic_information']) . '</h5>
-								<p class="card-desc" style="color:#908b8b;">' . get_string('academic_information_description', 'local_jra') . '</p>
+								<p class="card-desc" style="color:#908b8b;">' . get_string($information, 'local_jra') . '</p>
 								' . $btn . '
 							</div>
 							<div class="card-footer text-center">
@@ -621,7 +626,6 @@ function jra_theme_marketing($applicant)
 	/******************* 
 	**** STAGE 6 *******
 	********************/
-	$semester = $DB->get_record('si_semester', array('semester' => jra_get_semester()));
 	$btn = '';
 	$instruction = '';
 	if($stage > 5 && $semester->display == 'Y') //completed stage 3

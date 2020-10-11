@@ -1551,3 +1551,4 @@ $string['cgpa'] = 'المعدل التراكمي';
 $string['admission_type'] = "نوع القبول";
 $string['duplicate_university'] = "الجامعة المكررة";
 $string['duplicate_major'] = "التخصص المكرر";
+$string['academic_information_graduate'] = 'في هذا القسم ، سوف تملأ بياناتك الأكاديمية.';
