@@ -114,7 +114,7 @@ function jra_application_completed_document($applicant, $check = true)
 	{
 		$total_file = 3;
 		$arr['transcript'] = $applicant->transcript_file;
-		$arr['university'] = $applicant->uni_approval_file;
+		$arr['uni_approval'] = $applicant->uni_approval_file;
 		if($applicant->transcript_file != '')
 			$count++;
 		if($applicant->uni_approval_file != '')
