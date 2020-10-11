@@ -243,7 +243,7 @@ class applicant_academic_form extends moodleform
         }
         if ($data['graduated_gpa'] < 0 || $data['graduated_gpa'] > 5) 
 		{
-			$a->max = 4;
+			$a->max = 5;
             $errors['graduated_gpa'] = get_string('cgpa', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
             return $errors;
         }
