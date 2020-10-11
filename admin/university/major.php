@@ -51,10 +51,7 @@ $PAGE->navbar->add(jra_get_string(['major']), new moodle_url('major.php'));
 //Any form processing code
 if(isset($_POST['delete_id'])) //only allow site admin to delete
 {
-	$cascade = array(
-		'si_major' => 'id',
-	);
-	jra_query_delete_cascade('si_major', $_POST['delete_id'], $cascade);
+	jra_query_delete_cascade('si_major', $_POST['delete_id']);
 }
 
 echo $OUTPUT->header();
@@ -69,12 +66,12 @@ echo $OUTPUT->box_start('jra_tabbox');
 $action_item = array();
 $action_item[] = array(
 	'title' => jra_get_string(['add', 'major']), // - for divider
-	'url' => 'add_univerity.php',
+	'url' => 'add_major.php',
 	'target' => '', //_blank
 	'icon' => 'plus-circle',
 );
 $action_menu = '<div class="row pull-right pr-3">' . jra_ui_dropdown_menu($action_item, get_string('action', 'local_jra')) . '</div><br /><br />';
-//echo $action_menu;
+echo $action_menu;
 
 //$condition = array('institute' => jra_get_institute());
 //setup the table options
@@ -96,7 +93,7 @@ $options = array(
 	'search' => true, //allow search
 	'default_search_field' => 'name', //default field choose for search
 	'view_page' => '',
-	//'edit_page' => 'add_university.php',
+	'edit_page' => 'add_major.php',
 	'perpage' => jra_global_var('PER_PAGE'), //use large number to remove pagination
 	'delete_admin' => true, //only allow to delete if it is siteadmin
 //	'debug' => true,
@@ -106,8 +103,17 @@ $options = array(
 $fields = array(
 	'#' => array(), //# for numbering
 	'name' => array(
+		'header' => get_string('name','local_jra').'('.get_string('english','local_jra').')',
 		'align' => 'center',
-		'size' => '10%',
+		'size' => '40%',
+//		'sort' => 'code,course_num', //indicates that these must be sorted together
+//		'format' => 'date',
+//		'disable_search' => true,
+	),
+	'name_a' => array(
+		'header' => get_string('name', 'local_jra') . ' (' . get_string('arabic', 'local_jra') . ')', //for custom header
+		'align' => 'right',
+		'size' => '35%',
 //		'sort' => 'code,course_num', //indicates that these must be sorted together
 //		'format' => 'date',
 //		'disable_search' => true,
