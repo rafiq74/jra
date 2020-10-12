@@ -117,10 +117,12 @@ function jra_application_completed_document($applicant, $check = true)
 		$total_file = 4;
 		$arr['transcript'] = $applicant->transcript_file;
 		$arr['uni_approval'] = $applicant->uni_approval_file;
-		$arr['document'] = $document_file;
+		$arr['tabeiah'] = $applicant->$tabeiah_file;
 		if($applicant->transcript_file != '')
 			$count++;
 		if($applicant->uni_approval_file != '')
+			$count++;
+		if($applicant->tabeiah_file != '')
 			$count++;
 	}
 	else

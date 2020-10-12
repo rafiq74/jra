@@ -23,7 +23,7 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_app_lib.php';
 require_once '../../lib/jra_system_lib.php';
@@ -61,19 +61,19 @@ if($action == 1)
 	//create an alternate jra_user that join english and arabic name for search purpose
 	$sql = "
 		CREATE OR REPLACE VIEW v_jra_user AS
-		select 
+		select
 			id, username, email, user_type, user_category, password, idnumber, national_id, passport_id, nationality, title, first_name, father_name, grandfather_name, family_name, first_name_a, father_name_a, grandfather_name_a, family_name_a, CONCAT(IFNULL(first_name, ''), IFNULL(IF(father_name = '', '', CONCAT(' ', father_name)), ''), IFNULL(IF(grandfather_name = '', '', CONCAT(' ', grandfather_name)), ''), IFNULL(IF(family_name = '', '', CONCAT(' ', family_name)), '')) as fullname, CONCAT(IFNULL(first_name_a, ''), IFNULL(IF(father_name_a = '', '', CONCAT(' ', father_name_a)), ''), IFNULL(IF(grandfather_name_a = '', '', CONCAT(' ', grandfather_name_a)), ''), IFNULL(IF(family_name_a = '', '', CONCAT(' ', family_name_a)), '')) as fullname_a, gender, dob, marital_status, active_status, enable_login, deleted, suspended, country
-		from 
-			m_jra_user 
-		where 
+		from
+			m_jra_user
+		where
 			deleted <= 1
-		order by 
+		order by
 			first_name, middle_name, family_name
 	";
 	if($DB->execute($sql))
 	{
 		echo '<br /><br />';
-		$msg = jra_ui_alert('View v_jra_user created', 'success', '', true, true);			
+		$msg = jra_ui_alert('View v_jra_user created', 'success', '', true, true);
 		jra_ui_set_flash_message($msg, 'jra_create_view');
 		redirect($redirect_url); //redirect to avoid reexecution if press refresh
 	}
@@ -82,21 +82,21 @@ else if($action == 2)
 {
 	$sql = "
 		CREATE OR REPLACE VIEW v_jra_userlogin AS
-		select 
+		select
 			id, username, email, user_type, user_category, password, idnumber, national_id, passport_id, nationality, title, first_name, father_name, grandfather_name, family_name, first_name_a, father_name_a, grandfather_name_a, family_name_a, CONCAT(IFNULL(first_name, ''), IFNULL(IF(father_name = '', '', CONCAT(' ', father_name)), ''), IFNULL(IF(grandfather_name = '', '', CONCAT(' ', grandfather_name)), ''), IFNULL(IF(family_name = '', '', CONCAT(' ', family_name)), '')) as fullname, CONCAT(IFNULL(first_name_a, ''), IFNULL(IF(father_name_a = '', '', CONCAT(' ', father_name_a)), ''), IFNULL(IF(grandfather_name = '', '', CONCAT(' ', grandfather_name)), ''), IFNULL(IF(family_name_a = '', '', CONCAT(' ', family_name_a)), '')) as fullname_a, gender, dob, marital_status, active_status, enable_login, deleted, suspended, country
-		from 
-			m_jra_user 
-		where 
-			deleted = 0 
-			and (active_status = 'A' or active_status = 'P') 
-			and enable_login = 'Y' 
-		order by 
-			first_name, middle_name, family_name 		
+		from
+			m_jra_user
+		where
+			deleted = 0
+			and (active_status = 'A' or active_status = 'P')
+			and enable_login = 'Y'
+		order by
+			first_name, middle_name, family_name
 	";
 	if($DB->execute($sql))
 	{
 		echo '<br /><br />';
-		$msg = jra_ui_alert('View v_jra_userlogin created', 'success', '', true, true);			
+		$msg = jra_ui_alert('View v_jra_userlogin created', 'success', '', true, true);
 		jra_ui_set_flash_message($msg, 'jra_create_view');
 		redirect($redirect_url); //redirect to avoid reexecution if press refresh
 	}
@@ -106,18 +106,18 @@ else if($action == 3)
 	//create an alternate jra_user that join english and arabic name for search purpose
 	$sql = "
 		CREATE OR REPLACE VIEW v_si_applicant AS
-		select 
-			a.id, appid, a.user_id, semester, idnumber, national_id, id_type, nationality, nationality_at_birth, title, first_name, father_name, grandfather_name, family_name, first_name_a, father_name_a, grandfather_name_a, family_name_a, CONCAT(IFNULL(first_name, ''), IFNULL(IF(father_name = '', '', CONCAT(' ', father_name)), ''), IFNULL(IF(grandfather_name = '', '', CONCAT(' ', grandfather_name)), ''), IFNULL(IF(family_name = '', '', CONCAT(' ', family_name)), '')) as fullname, CONCAT(IFNULL(first_name_a, ''), IFNULL(IF(father_name_a = '', '', CONCAT(' ', father_name_a)), ''), IFNULL(IF(grandfather_name_a = '', '', CONCAT(' ', grandfather_name_a)), ''), IFNULL(IF(family_name_a = '', '', CONCAT(' ', family_name_a)), '')) as fullname_a, gender, dob, dob_hijri, marital_status, city, religion, blood_type, tahseli, tahseli_weight, qudorat, qudorat_weight, secondary, secondary_weight, aggregation, graduated_from, graduated_year, graduated_gpa, graduated_major, national_id_file, tahseli_file, qudorat_file, secondary_file, transcript_file, uni_approval_file, study_stream, program_apply, status, status_date, status_user, admit_status, admit_status_date, placement_test_score, ranking, acceptance, acceptance_date, student_id, a.date_created, a.date_updated, deleted, a.institute, address1, address2, address_state, b.address_city, b.phone_mobile, email_primary as email, contact_name, contact_relationship, contact_mobile
-		from 
+		select
+			a.id, appid, a.user_id, semester, idnumber, national_id, id_type, nationality, nationality_at_birth, title, first_name, father_name, grandfather_name, family_name, first_name_a, father_name_a, grandfather_name_a, family_name_a, CONCAT(IFNULL(first_name, ''), IFNULL(IF(father_name = '', '', CONCAT(' ', father_name)), ''), IFNULL(IF(grandfather_name = '', '', CONCAT(' ', grandfather_name)), ''), IFNULL(IF(family_name = '', '', CONCAT(' ', family_name)), '')) as fullname, CONCAT(IFNULL(first_name_a, ''), IFNULL(IF(father_name_a = '', '', CONCAT(' ', father_name_a)), ''), IFNULL(IF(grandfather_name_a = '', '', CONCAT(' ', grandfather_name_a)), ''), IFNULL(IF(family_name_a = '', '', CONCAT(' ', family_name_a)), '')) as fullname_a, gender, dob, dob_hijri, marital_status, city, religion, blood_type, tahseli, tahseli_weight, qudorat, qudorat_weight, secondary, secondary_weight, aggregation, graduated_from, graduated_year, graduated_gpa, graduated_major, national_id_file, tahseli_file, qudorat_file, secondary_file, transcript_file, uni_approval_file, tabeiah_file, study_stream, program_apply, status, status_date, status_user, admit_status, admit_status_date, placement_test_score, ranking, acceptance, acceptance_date, student_id, a.date_created, a.date_updated, deleted, a.institute, address1, address2, address_state, b.address_city, b.phone_mobile, email_primary as email, contact_name, contact_relationship, contact_mobile
+		from
 			m_si_applicant a inner join m_si_applicant_contact b on a.id = b.applicant_id and a.institute = b.institute and a.user_id = b.user_id
-		order by 
+		order by
 			semester, a.id
 	";
-	
+
 	if($DB->execute($sql))
 	{
 		echo '<br /><br />';
-		$msg = jra_ui_alert('View v_si_applicant created', 'success', '', true, true);			
+		$msg = jra_ui_alert('View v_si_applicant created', 'success', '', true, true);
 		jra_ui_set_flash_message($msg, 'jra_create_view');
 		redirect($redirect_url); //redirect to avoid reexecution if press refresh
 	}
