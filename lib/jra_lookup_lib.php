@@ -486,6 +486,7 @@ function jra_lookup_document_type_crtp($blank = '')
 	$arr['national'] = jra_get_string(['national_id']);
 	$arr['transcript'] = get_string('transcript', 'local_jra');
 	$arr['uni_approval'] = get_string('uni_approval', 'local_jra');
+	$arr['document'] = get_string('document', 'local_jra');
 	return $arr;
 }
 
@@ -515,3 +516,40 @@ function jra_lookup_get_hijrah_month_a()
 	$arr = array();
 	return $arr;
 }
+<<<<<<< Updated upstream
+=======
+
+function jra_lookup_university($blank = '')
+{
+	global $DB;
+	if(current_language() != 'en')
+		$order = 'name_a';
+	else
+		$order = 'name';
+	$records = $DB->get_records('si_university', array(), $order);
+	if($blank != '')
+		$arr[''] = $blank;
+	foreach($records as $r)
+	{
+		$arr[$r->id] = jra_output_show_field_language($r, 'name');
+	}
+	return $arr;
+}
+
+function jra_lookup_major($blank = '')
+{
+	global $DB;
+	if(current_language() != 'en')
+		$order = 'name_a';
+	else
+		$order = 'name';
+	$records = $DB->get_records('si_major', array(), $order);
+	if($blank != '')
+		$arr[''] = $blank;
+	foreach($records as $r)
+	{
+		$arr[$r->id] = jra_output_show_field_language($r, 'name');
+	}
+	return $arr;
+}
+>>>>>>> Stashed changes

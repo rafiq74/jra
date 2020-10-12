@@ -24,7 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+<<<<<<< Updated upstream
 $plugin->version   = 2016062484;        // The current plugin version (Date: YYYYMMDDXX)
+=======
+$plugin->version   = 2016062486;        // The current plugin version (Date: YYYYMMDDXX)
+>>>>>>> Stashed changes
 $plugin->requires  = 2015111600;        // Requires this Moodle version
 $plugin->component = 'local_jra'; // Full name of the plugin (used for diagnostics)
 $plugin->cron = 300;

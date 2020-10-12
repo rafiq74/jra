@@ -58,7 +58,11 @@ function xmldb_local_jra_upgrade($oldversion) {
     $dbman = $DB->get_manager(); //this is new in moodle 3.0
 
     // Put any upgrade step following this.
+<<<<<<< Updated upstream
     $newversion = 2016062484; //put the new version number here
+=======
+    $newversion = 2016062486; //put the new version number here
+>>>>>>> Stashed changes
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
 
@@ -175,6 +179,15 @@ function xmldb_local_jra_upgrade($oldversion) {
 
         $table2->add_key('primary', XMLDB_KEY_PRIMARY, array('id_major'), null, null);
         $status = $dbman->create_table($table2);
+
+        $table = new xmldb_table('si_applicant');
+        $field = new xmldb_field('document_file', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'uni_approval_file');
+
+        // Conditionally launch add field document_file.
+        if (!$dbman->field_exists($table, $field)) {
+          $dbman->add_field($table, $field);
+        }
+
 
 
 

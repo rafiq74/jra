@@ -664,3 +664,8 @@ $string['cgpa'] = 'CGPA';
 $string['admission_type'] = "Admission Type";
 $string['duplicate_university'] = "Duplicate University";
 $string['duplicate_major'] = "Duplicate Major";
+<<<<<<< Updated upstream
+=======
+$string['academic_information_graduate'] = 'In this section, you will fill in your academic information.';
+$string['tabeiah'] = 'Tabeiah';
+>>>>>>> Stashed changes
