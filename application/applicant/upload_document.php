@@ -106,11 +106,6 @@ if(isset($_POST['delete_id']))
 		$obj->uni_approval_file = '';
 		$a = get_string('uni_approval', 'local_jra');
 	}
-  else if($delete_module == 'document')
-	{
-		$obj->document_file = '';
-		$a = get_string('document', 'local_jra');
-	}
 	$obj->status = 3; //reduce the status to 3
 	$obj->date_updated = time();
 	$DB->update_record('si_applicant', $obj);
@@ -168,9 +163,7 @@ else if ($data = $mform->get_data())
 		else if($data->module == 'transcript')
 			$obj->transcript_file = $data->filename;
 		else if($data->module == 'uni_approval')
-		  $obj->uni_approval_file = $data->filename;
-    else if($data->module == 'document')
-		  $obj->document_file = $data->filename;
+		$obj->uni_approval_file = $data->filename;
 
 		$obj->date_updated = $now;
 		$DB->update_record('si_applicant', $obj);

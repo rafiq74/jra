@@ -43,7 +43,7 @@ function jra_application_applicant_show_contact($id)
 
 
 		$params = array('id' => $id, 'tab' => 'contact', 'op' => 'edit', 'dataid' => $user_data->id);
-		$edit_url = new moodle_url('view_user.php', $params);			
+		$edit_url = new moodle_url('view_user.php', $params);
 		$obj->edit = '<span class="pull-right">' . html_writer::link($edit_url, jra_ui_icon('pencil', '1', true), array('title' => get_string('edit', 'local_jra'))) . '</span>';
 		$detail_data[$user_data->address_type] = $obj;
 		//end of data row
@@ -121,8 +121,6 @@ function jra_application_completed_document($applicant, $check = true)
 		if($applicant->transcript_file != '')
 			$count++;
 		if($applicant->uni_approval_file != '')
-			$count++;
-		if($applicant->document_file != '')
 			$count++;
 	}
 	else
