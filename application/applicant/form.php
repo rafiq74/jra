@@ -173,7 +173,7 @@ class applicant_academic_form extends moodleform
 
 		$mform->addElement('hidden', 'id', '');
 		$semester = $this->_customdata['semester'];
-		if($semester->admission_type == 'regular') 
+		if($semester->admission_type == 'regular')
 		{
 			$mform->addElement('text', 'secondary', get_string('secondary_school_result', 'local_jra'), array('size' => 15));
 			$mform->addRule('secondary', get_string('err_required', 'form'), 'required', '', 'client', false, false);
@@ -187,7 +187,7 @@ class applicant_academic_form extends moodleform
 			$mform->addRule('qudorat', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 			$mform->addRule('qudorat', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
 		}
-		else 
+		else
 		{
 			$graduated = jra_lookup_university();
 			$mform->addElement('select', 'graduated_from', get_string('graduate_from', 'local_jra'), $graduated);
@@ -202,7 +202,7 @@ class applicant_academic_form extends moodleform
 			$min_year = $max_year - 10;
 			for($i = $max_year; $i >= $min_year; $i--)
 				$h_year[$i] = $i;
-				
+
 			$add_array[] =& $mform->createElement('select', 'graduated_year', 'h_y', $h_year, $attributes);
 			$mform->addGroup($add_array, 'graduated_year', get_string('year_graduation', 'local_jra'), array(''),  false);
 			$mform->addRule('group1', get_string('err_required', 'form'), 'required', '', 'client', false, false);
@@ -241,7 +241,7 @@ class applicant_academic_form extends moodleform
             $errors['qudorat'] = get_string('qudorat', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
             return $errors;
         }
-        if ($data['graduated_gpa'] < 0 || $data['graduated_gpa'] > 5) 
+        if ($data['graduated_gpa'] < 0 || $data['graduated_gpa'] > 5)
 		{
 			$a->max = 5;
             $errors['graduated_gpa'] = get_string('cgpa', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
@@ -249,7 +249,7 @@ class applicant_academic_form extends moodleform
         }
 		else
 		{
-			
+
 		}
 		return $errors;
 	}
