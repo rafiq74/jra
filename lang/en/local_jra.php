@@ -665,4 +665,4 @@ $string['admission_type'] = "Admission Type";
 $string['duplicate_university'] = "Duplicate University";
 $string['duplicate_major'] = "Duplicate Major";
 $string['academic_information_graduate'] = 'In this section, you will fill in your academic information.';
-$string['tabeiah'] = 'Document';
+$string['tabeiah'] = 'Document (Tabeiah)';
