@@ -58,7 +58,9 @@ function xmldb_local_jra_upgrade($oldversion) {
     $dbman = $DB->get_manager(); //this is new in moodle 3.0
 
     // Put any upgrade step following this.
-    $newversion = 2016062485; //put the new version number here
+
+    $newversion = 2016062486; //put the new version number here
+
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
 
@@ -191,6 +193,15 @@ function xmldb_local_jra_upgrade($oldversion) {
 
         // Launch change of precision for field graduated_gpa.
         $dbman->change_field_precision($table, $field);
+
+        $table = new xmldb_table('si_applicant');
+        $field = new xmldb_field('document_file', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'uni_approval_file');
+
+        // Conditionally launch add field document_file.
+        if (!$dbman->field_exists($table, $field)) {
+          $dbman->add_field($table, $field);
+        }
+
 
 
 

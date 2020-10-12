@@ -31,11 +31,8 @@ function jra_application_applicant_show_contact($id)
 {
 	global $DB;
 	$records = $DB->get_records('jra_user_contact', array('user_id' => $id));
-<<<<<<< Updated upstream
-		
-=======
 
->>>>>>> Stashed changes
+
 	$detail_data = array();
 	foreach($records as $user_data)
 	{
@@ -43,15 +40,10 @@ function jra_application_applicant_show_contact($id)
 		$obj = new stdClass();
 		$obj->title = get_string($user_data->address_type, 'local_jra');
 		$obj->content = jra_admin_user_format_contact($user_data);
-<<<<<<< Updated upstream
-		
-		$params = array('id' => $id, 'tab' => 'contact', 'op' => 'edit', 'dataid' => $user_data->id);
-		$edit_url = new moodle_url('view_user.php', $params);			
-=======
+
 
 		$params = array('id' => $id, 'tab' => 'contact', 'op' => 'edit', 'dataid' => $user_data->id);
-		$edit_url = new moodle_url('view_user.php', $params);
->>>>>>> Stashed changes
+		$edit_url = new moodle_url('view_user.php', $params);			
 		$obj->edit = '<span class="pull-right">' . html_writer::link($edit_url, jra_ui_icon('pencil', '1', true), array('title' => get_string('edit', 'local_jra'))) . '</span>';
 		$detail_data[$user_data->address_type] = $obj;
 		//end of data row
@@ -122,12 +114,15 @@ function jra_application_completed_document($applicant, $check = true)
 		$count++;
 	if($semester->admission_type == 'crtp')
 	{
-		$total_file = 3;
+		$total_file = 4;
 		$arr['transcript'] = $applicant->transcript_file;
 		$arr['uni_approval'] = $applicant->uni_approval_file;
+		$arr['document'] = $document_file;
 		if($applicant->transcript_file != '')
 			$count++;
 		if($applicant->uni_approval_file != '')
+			$count++;
+		if($applicant->document_file != '')
 			$count++;
 	}
 	else
@@ -206,7 +201,7 @@ function jra_application_list_supporting_document($applicant, $read_only, $table
 				$view_link = '-';
 				$delete_link = '-';
 			}
-			
+
 			$table = $table . '<tr>
 							<td>' . $count . '.</td>
 							<td>' . $doc . '</td>
@@ -216,7 +211,7 @@ function jra_application_list_supporting_document($applicant, $read_only, $table
 			$table = $table . '</tr>';
 			$count++;
 		}
-					  
+
 		$table = $table . '</tbody>
 				  </table>';
 		if($table_only)
