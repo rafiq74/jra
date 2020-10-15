@@ -106,7 +106,6 @@ function jra_application_completed_document($applicant, $check = true)
 {
 	global $DB;
 	$semester = $DB->get_record('si_semester', array('semester' => $applicant->semester));
-
 	$arr = array();
 	$arr['national'] = $applicant->national_id_file;
 	$count = 0;
