@@ -92,7 +92,7 @@ else {
   $detail_data[] = $obj;
   //end of data row
   //one row of data
-  $graduated_major = jra_lookup_university();
+  $graduated_major = jra_lookup_major();
   $obj = new stdClass();
   $obj->title = get_string('major', 'local_jra');
   $obj->content = $applicant->graduated_major == '' ? '-' : $graduated_major[$applicant->graduated_major];;
