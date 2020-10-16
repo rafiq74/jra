@@ -652,8 +652,6 @@ On behalf our the college, we welcome you onboard and hope you will gain benefic
 Thank you.
 
 ';
-
-//new translate
 $string['university'] = 'University';
 $string['major'] = 'Major';
 $string['transcript'] = 'Transcript';
@@ -666,4 +664,5 @@ $string['duplicate_university'] = "Duplicate University";
 $string['duplicate_major'] = "Duplicate Major";
 $string['academic_information_graduate'] = 'In this section, you will fill in your academic information.';
 $string['tabeiah'] = 'Document (Tabeiah)';
+//new translate
 $string['max_cgpa'] = 'Max CGPA';
