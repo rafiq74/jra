@@ -246,11 +246,11 @@ class applicant_academic_form extends moodleform
             return $errors;
         }
 
-				if($data['graduated_max_gpa'] == "5"){
-					$a->max = 5;
+				if($data['graduated_max_gpa'] == 5.00){
+					$a->max = 5.00;
 				}
 				else{
-					$a->max = 4;
+					$a->max = 4.00;
 				}
 
         if ($data['graduated_gpa'] < 0 || $data['graduated_gpa'] > $a->max)

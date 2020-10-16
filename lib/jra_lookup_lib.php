@@ -557,8 +557,9 @@ function jra_lookup_maxgpa($blank = '')
 	$arr = array();
 	if($blank != '')
 		$arr[''] = $blank;
-		$arr['5'] = '5';
-		$arr['4'] = '4';
+		$arr['4.00'] = '4.00';
+		$arr['5.00'] = '5.00';
+
 	return $arr;
 
 }
