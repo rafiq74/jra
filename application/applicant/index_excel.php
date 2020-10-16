@@ -101,7 +101,7 @@ if($semester->admission_type != 'crtp'){
 	$sql = "select appid, semester, national_id, id_type, nationality, fullname, fullname_a, gender, dob_hijri, marital_status, blood_type, tahseli, qudorat, secondary, aggregation, status, acceptance, address1, address2, address_state, address_city, phone_mobile, email, contact_name, contact_relationship, contact_mobile from v_si_applicant";
 }
 else {
-	$sql = "select appid, semester, national_id, id_type, nationality, fullname, fullname_a, gender, dob_hijri, marital_status, blood_type,graduated_from,graduated_major,graduated_year,graduated_gpa, status, acceptance, address1, address2, address_state, address_city, phone_mobile, email, contact_name, contact_relationship, contact_mobile from v_si_applicant";
+	$sql = "select appid, semester, national_id, id_type, nationality, fullname, fullname_a, gender, dob_hijri, marital_status, blood_type,graduated_from,graduated_major,graduated_year,graduated_max_gpa, graduated_gpa, status, acceptance, address1, address2, address_state, address_city, phone_mobile, email, contact_name, contact_relationship, contact_mobile from v_si_applicant";
 }
 
 $conditionText = " semester = '" . $semester->semester . "' and deleted = 0 and acceptance is null $status_filter $aggregate_filter $city_filter " . $like;

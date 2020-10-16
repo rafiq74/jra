@@ -104,6 +104,12 @@ else {
   $obj->content = $applicant->graduated_year;
   $detail_data[] = $obj;
 
+  $graduated_maxgpa = jra_lookup_maxgpa();
+  $obj = new stdClass();
+  $obj->title = get_string('max_cgpa', 'local_jra');
+  $obj->content = $applicant->graduated_max_gpa == '' ? '-' : $graduated_maxgpa[$applicant->graduated_max_gpa];
+  $detail_data[] = $obj;
+
   $obj = new stdClass();
   $obj->title = get_string('cgpa', 'local_jra');
   $obj->content = $applicant->graduated_gpa;

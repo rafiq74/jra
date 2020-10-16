@@ -666,3 +666,4 @@ $string['duplicate_university'] = "Duplicate University";
 $string['duplicate_major'] = "Duplicate Major";
 $string['academic_information_graduate'] = 'In this section, you will fill in your academic information.';
 $string['tabeiah'] = 'Document (Tabeiah)';
+$string['max_cgpa'] = 'Max CGPA';

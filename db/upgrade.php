@@ -59,7 +59,7 @@ function xmldb_local_jra_upgrade($oldversion) {
 
     // Put any upgrade step following this.
 
-    $newversion = 2016062487; //put the new version number here
+    $newversion = 2016062488; //put the new version number here
 
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
@@ -201,6 +201,14 @@ function xmldb_local_jra_upgrade($oldversion) {
         // Conditionally launch add field tabeiah_file.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('si_applicant');
+        $field = new xmldb_field('graduated_max_gpa', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'graduated_major');
+
+        // Conditionally launch add field graduated_max_gpa.
+        if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
         }
 
 		// upgrade code ends here

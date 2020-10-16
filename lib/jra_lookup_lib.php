@@ -550,3 +550,15 @@ function jra_lookup_major($blank = '')
 	}
 	return $arr;
 }
+
+
+function jra_lookup_maxgpa($blank = '')
+{
+	$arr = array();
+	if($blank != '')
+		$arr[''] = $blank;
+		$arr['5'] = '5';
+		$arr['4'] = '4';
+	return $arr;
+
+}

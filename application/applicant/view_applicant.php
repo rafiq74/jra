@@ -294,6 +294,13 @@ else {
 	$detail_data[] = $obj;
 	//end of data row
 	//one row of data
+	$graduated_maxgpa = jra_lookup_maxgpa();
+	$obj = new stdClass();
+	$obj->title = get_string('max_cgpa', 'local_jra');
+	$obj->content = $applicant->graduated_max_gpa == '' ? '-' : $graduated_maxgpa[$applicant->graduated_max_gpa];
+	$detail_data[] = $obj;
+	//end of data row
+	//one row of data
 	$obj = new stdClass();
 	$obj->title = jra_get_string(['cgpa', 'points']);
 	$obj->content = $applicant->graduated_gpa;

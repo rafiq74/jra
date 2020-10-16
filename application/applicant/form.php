@@ -212,6 +212,10 @@ class applicant_academic_form extends moodleform
 			$mform->addElement('select', 'graduated_major', get_string('major', 'local_jra'), $majors);
 			$mform->addRule('graduated_major', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 
+			$maxgpa = jra_lookup_maxgpa();
+			$mform->addElement('select', 'graduated_max_gpa', get_string('max_cgpa', 'local_jra'), $maxgpa);
+			$mform->addRule('graduated_max_gpa', get_string('err_required', 'form'), 'required', '', 'client', false, false);
+
 			$mform->addElement('text', 'graduated_gpa', get_string('cgpa', 'local_jra'), array('size' => 5));
 			$mform->addRule('graduated_gpa', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 			$mform->addRule('graduated_gpa', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
@@ -241,92 +245,23 @@ class applicant_academic_form extends moodleform
             $errors['qudorat'] = get_string('qudorat', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
             return $errors;
         }
-        if ($data['graduated_gpa'] < 0 || $data['graduated_gpa'] > 5)
-		{
-			$a->max = 5;
+
+				if($data['graduated_max_gpa'] == "5"){
+					$a->max = 5;
+				}
+				else{
+					$a->max = 4;
+				}
+
+        if ($data['graduated_gpa'] < 0 || $data['graduated_gpa'] > $a->max)
+				{
+
             $errors['graduated_gpa'] = get_string('cgpa', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
             return $errors;
         }
-		else
-		{
+				else{
 
-		}
-		return $errors;
-	}
-}
-
-class applicant_academic_form_crtp extends moodleform
-{
-	//Add elements to form
-	public function definition()
-	{
-		global $DB;
-		$mform = $this->_form; // Don't forget the underscore!
- 		$attributes = array();
-
-		$mform->addElement('hidden', 'id', '');
-
-		$mform->addElement('text', 'secondary', get_string('secondary_school_result', 'local_jra'), array('size' => 15));
-		$mform->addRule('secondary', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('secondary', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
-
-		$mform->addElement('text', 'tahseli', get_string('tahseli', 'local_jra'), array('size' => 15));
-		$mform->addRule('tahseli', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('tahseli', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
-
-		$mform->addElement('text', 'qudorat', get_string('qudorat', 'local_jra'), array('size' => 15));
-		$mform->addRule('qudorat', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('qudorat', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
-
-
-		$graduated = jra_lookup_marital_status();
-		$mform->addElement('select', 'graduate_from', get_string('graduate_from', 'local_jra'), $graduated);
-		$mform->addRule('tahseli', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('tahseli', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
-
-
-		$year_graduations = jra_lookup_marital_status();
-		$mform->addElement('select', 'year_graduation', get_string('year_graduation', 'local_jra'), $year_graduations);
-		$mform->addRule('tahseli', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('tahseli', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
-
-
-		$majors = jra_lookup_marital_status();
-		$mform->addElement('select', 'major_grad', get_string('major', 'local_jra'), $majors);
-		$mform->addRule('tahseli', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('tahseli', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
-
-
-
-		$mform->addElement('text', 'graduate_gpa', get_string('gpa', 'local_jra'), array('size' => 15));
-		$mform->addRule('secondary', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addRule('secondary', get_string('err_numeric', 'form'), 'numeric', '', 'client', false, false);
-
-
-		$this->add_action_buttons($cancel=true);
-	}
-
-	//Custom validation should be added here
-	function validation($data, $files) {
-        $errors = parent::validation($data, $files);
-
-		$a = new stdClass();
-		$a->min = 0;
-		$a->max = 100;
-        if ($data['secondary'] < 0 || $data['secondary'] > 100) {
-            $errors['secondary'] = get_string('secondary_school_result', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
-            return $errors;
-        }
-        if ($data['tahseli'] < 0 || $data['tahseli'] > 100) {
-            $errors['tahseli'] = get_string('tahseli', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
-            return $errors;
-        }
-        if ($data['qudorat'] < 0 || $data['qudorat'] > 100) {
-            $errors['qudorat'] = get_string('qudorat', 'local_jra') . ' ' . get_string('in_between_value', 'local_jra', $a);
-            return $errors;
-        }
-
-
+				}
 		return $errors;
 	}
 }
