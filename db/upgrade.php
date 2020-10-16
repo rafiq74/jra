@@ -59,7 +59,7 @@ function xmldb_local_jra_upgrade($oldversion) {
 
     // Put any upgrade step following this.
 
-    $newversion = 2016062488; //put the new version number here
+    $newversion = 2016062489; //put the new version number here
 
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
@@ -210,6 +210,13 @@ function xmldb_local_jra_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
         }
+
+
+        $table = new xmldb_table('si_applicant');
+        $field = new xmldb_field('graduated_max_gpa', XMLDB_TYPE_NUMBER, '20, 2', null, null, null, null, 'graduated_major');
+
+        // Launch change of type for field graduated_max_gpa.
+        $dbman->change_field_type($table, $field);
 
 		// upgrade code ends here
         // jra savepoint reached.
