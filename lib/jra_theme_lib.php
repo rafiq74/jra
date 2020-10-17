@@ -919,6 +919,18 @@ function jra_theme_icon_grid()
 		'role' => 'admin',
 		'subrole' => 'all',
 	);
+	$url = new moodle_url('/local/jra/admin/university/index.php');
+	$str = $str . '<div class="col-lg-3 py-10 ">
+				<div>
+					<a href="'.$url->out(false).'">
+						<p>
+							<i class="fa fa-graduation-cap fa-3x" aria-hidden="true" style="color:#4f1ebe;"></i>
+						</p>
+					</a>
+						<h7 style="color: #555555;"><strong>' . jra_get_string(['university']) . '</strong></h7>
+				</div>
+			</div>';
+			
 	if(jra_access_control($access_rules, false))
 	{
 		$url = new moodle_url('/local/jra/admin/user/index.php');
@@ -931,19 +943,7 @@ function jra_theme_icon_grid()
 						</a>
 							<h7 style="color: #555555;"><strong>' . jra_get_string(['user', 'management']) . '</strong></h7>
 					</div>
-				</div>';
-				
-		$url = new moodle_url('/local/jra/admin/index.php');
-		$str = $str . '<div class="col-lg-3 py-10 ">
-					<div>
-						<a href="'.$url->out(false).'">
-							<p>
-								<i class="fa fa-cogs fa-3x" aria-hidden="true" style="color:#8d5c82;"></i>
-							</p>
-						</a>
-							<h7 style="color: #555555;"><strong>' . get_string('settings', 'local_jra') . '</strong></h7>
-					</div>
-				</div>';
+				</div>';				
 	}
 	$str = $str . '</div>'; //end of row
 	$str = $str .'</div>';
@@ -957,19 +957,17 @@ function jra_theme_icon_grid()
 	);
 	if(jra_access_control($access_rules, false))
 	{
-		$url = new moodle_url('/local/jra/admin/university/index.php');
+		$url = new moodle_url('/local/jra/admin/index.php');
 		$str = $str . '<div class="col-lg-3 py-10 ">
 					<div>
 						<a href="'.$url->out(false).'">
 							<p>
-								<i class="fa fa-graduation-cap fa-3x" aria-hidden="true" style="color:#4f1ebe;"></i>
+								<i class="fa fa-cogs fa-3x" aria-hidden="true" style="color:#8d5c82;"></i>
 							</p>
 						</a>
-							<h7 style="color: #555555;"><strong>' . jra_get_string(['university']) . '</strong></h7>
+							<h7 style="color: #555555;"><strong>' . get_string('settings', 'local_jra') . '</strong></h7>
 					</div>
 				</div>';
-				
-		$url = new moodle_url('/local/jra/admin/index.php');
 	}
 	$str = $str . '</div>'; //end of row
 	$str = $str .'</div>'; //end of span
