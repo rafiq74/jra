@@ -194,7 +194,7 @@ function jra_query_update_cascade($table, $data, $field, $child = array())
 function jra_query_user_list_condition($user_type = '', $deleted = 0)
 {
 	$arr = array(
-		'country' => jra_get_country(),
+		'institute' => jra_get_institute(),
 		'deleted' => $deleted,
 	);
 	if($user_type != '')

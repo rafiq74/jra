@@ -149,7 +149,7 @@ $user_type_filter = '';
 if($user_type != '')
 	$user_type_filter = " and user_type = '$user_type'";
 $sql = "select * from v_jra_user";
-$conditionWhere = " country = '" . jra_get_country() . "' and deleted = 0 $active_status_filter $user_type_filter";
+$conditionWhere = " institute = '" . jra_get_institute() . "' and deleted = 0 $active_status_filter $user_type_filter";
 
 //	$condition['user_type'] = $user_type;
 //setup the table options

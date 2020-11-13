@@ -232,7 +232,8 @@ function jra_allow_application()
 //get the default institute. Pass the field like institute to get the institute of the institute
 function jra_get_institute()
 {
-	return jra_get_config_session('default_institute');
+	return 'HIEI';
+//	return jra_get_config_session('default_institute');
 }
 
 function jra_get_semester()

@@ -83,7 +83,7 @@ else if ($data = $mform->get_data())
 		{
 			$data->date_created = $now;
 			$data->date_updated = $now;
-			$data->country = jra_get_country();
+			$data->institute = jra_get_institute();
 			$DB->insert_record('jra_user_contact', $data);	
 		}
 		else

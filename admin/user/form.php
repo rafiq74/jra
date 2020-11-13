@@ -38,7 +38,7 @@ class user_form extends moodleform
  		$attributes = array();
 
 		$mform->addElement('hidden', 'id', '');	
-		$mform->addElement('hidden', 'country', jra_get_country());	
+		$mform->addElement('hidden', 'institute', jra_get_institute());	
 				
 		$mform->addElement('text', 'username', get_string('username') . ' (' . get_string('email') . ')', array('size' => 45, 'maxlength' => 100));		
 		$mform->setType('username', PARAM_NOTAGS);                   //Set type of element

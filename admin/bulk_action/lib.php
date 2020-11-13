@@ -45,12 +45,12 @@ function jra_admin_bulk_action_lookup()
 
 function jra_admin_bulk_action_update_lookup($value, $category, $subcategory, $sort_order = 1, $description = '')
 {
-	$country = jra_get_institute();
+	$institute = jra_get_institute();
 	$lang = 'en';
 	//one row
-	if(!jra_lookup_duplicate($value, $lang, $category, $subcategory, $country)) //not exist, add it
+	if(!jra_lookup_duplicate($value, $lang, $category, $subcategory, $institute)) //not exist, add it
 	{
-		jra_lookup_insert($value, $lang, $category, $subcategory, $country, $sort_order, $description);
+		jra_lookup_insert($value, $lang, $category, $subcategory, $institute, $sort_order, $description);
 		print_object("INSERTED $value into category ($category) and subcategory ($subcategory)");
 	}
 	//end of one row

@@ -69,7 +69,7 @@ function jra_admin_user_assign_role($to_add, $role, $subrole, $role_value, $camp
 		$data->scope = '';
 		$data->added_user = $USER->id;
 		$data->added_date = $now;
-		$data->country = jra_get_country();
+		$data->institute = jra_get_institute();
 		$duplicate_condition = array(
 			'user_id' => $data->user_id,
 			'role' => $data->role,

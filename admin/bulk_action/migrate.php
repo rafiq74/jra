@@ -69,7 +69,7 @@ echo $output;
 set_time_limit(0);
 $action = optional_param('action', 0, PARAM_INT);
 
-$country = jra_get_country();
+$institute = jra_get_institute();
 
 /* update national id in si_user
 $sql = "select a.id, b.civil_id as national_id from {si_user} a inner join {si_personal_data} b on a.id = b.user_id";
@@ -114,7 +114,7 @@ if($action == 1) //for import of iban number. Don't delete
 		$data->active_date = '1595489849';
 		$data->date_created = '1595489849';
 		$data->date_updated = '1595489849';
-		$data->country = 'SA';
+		$data->institute = 'HIEI';
 		$arr[] = $data;
 	}
 	print_object($arr);
@@ -206,7 +206,7 @@ else if($action == 4)
 		$data->state_a = $a->field2;
 		$data->city = $a->field3;
 		$data->city_a = $a->field4;
-		$data->country = 'SA';
+		$data->institute = 'HIEI';
 		$arr[] = $data;
 	}
 	print_object($arr);

@@ -78,7 +78,7 @@ $role = '';
 if(isset($_GET['role'])) //if there is aountry from query string, get it
 {
 	$role = $_GET['role'];	
-	if(!isset($role_list[$role])) //validate that it is a valid country
+	if(!isset($role_list[$role])) //validate that it is a valid institute
 		$role = '';
 	else
 		jra_set_session('user_account_role', $role);	
@@ -104,7 +104,7 @@ echo '<div class="pull-right rc-attendance-teacher-print">' . html_writer::link(
 $master_filter = '<span class="pull-right"><strong>' . get_string('role', 'local_jra') . '</strong>&nbsp;&nbsp;&nbsp;' . jra_ui_select('role', $role_list, $role, $role_url) . '</span>';
 
 $sql = "select a.id, a.role, a.subrole, a.role_value, a.added_date, b.username, b.fullname, c.username as added_by from {jra_user_role} a inner join v_jra_userlogin b on a.user_id = b.id inner join {user} c on a.added_user = c.id";
-$conditionWhere = " a.country = '" . jra_get_country() . "'";
+$conditionWhere = " a.institute = '" . jra_get_institute() . "'";
 if($role != '')
 	$conditionWhere = $conditionWhere . " and role = '$role'";
 	

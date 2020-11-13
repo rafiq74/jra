@@ -57,7 +57,7 @@ class jra_user_role_available_selector extends jra_user_selector_base {
 		$not_in = $_SESSION['ajax_user_role_not_in'];
 		$params = array(); //leave it empty
 		$sortparams = array(); //leave it empty
-        $wherecondition = "user_type = 'employee' and deleted = 0 and active_status = 'A' and country = '" . jra_get_country() . "'";
+        $wherecondition = "user_type = 'employee' and deleted = 0 and active_status = 'A' and institute = '" . jra_get_institute() . "'";
 		if($not_in != '')
 			$wherecondition = $wherecondition . " and id not in($not_in)";
 		if($search != '')
@@ -127,8 +127,8 @@ class jra_user_assigned_role_selector extends jra_user_selector_base {
 		$this->extrafields = array('role_value');
 		$params = array(); //leave it empty
 		$sortparams = array(); //leave it empty
-		$country = jra_get_country();
-        $wherecondition = "a.role = '$role' and a.subrole = '$subrole' and a.country = '$country'";
+		$institute = jra_get_institute();
+        $wherecondition = "a.role = '$role' and a.subrole = '$subrole' and a.institute = '$institute'";
 		if($search != '')
 			$wherecondition = $wherecondition . " and (b.username like '%$search%' or b.first_name like '%$search%' or b.family_name like '%$search%')";
 
@@ -203,7 +203,7 @@ class jra_user_plan_available_selector extends jra_user_selector_base {
 		$not_in = $_SESSION['ajax_user_plan_not_in'];
 		$params = array(); //leave it empty
 		$sortparams = array(); //leave it empty
-        $wherecondition = "user_type = 'public' and deleted = 0 and country = '" . jra_get_country() . "'";
+        $wherecondition = "user_type = 'public' and deleted = 0 and institute = '" . jra_get_institute() . "'";
 		if($not_in != '')
 			$wherecondition = $wherecondition . " and id not in($not_in)";
 		if($search != '')
@@ -272,8 +272,8 @@ class jra_user_assigned_plan_selector extends jra_user_selector_base {
 		$this->extrafields = array($plan->plan_code);
 		$params = array(); //leave it empty
 		$sortparams = array(); //leave it empty
-		$country = jra_get_country();
-        $wherecondition = "a.plan_code = '$plan->plan_code' and a.country = '$country'";
+		$institute = jra_get_institute();
+        $wherecondition = "a.plan_code = '$plan->plan_code' and a.institute = '$institute'";
 		if($search != '')
 			$wherecondition = $wherecondition . " and (b.username like '%$search%' or b.first_name like '%$search%' or b.family_name like '%$search%')";
 

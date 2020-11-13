@@ -126,7 +126,7 @@ function jra_get_country()
 {
 	global $DB, $USER;
 	//for now we just return MY
-	return 'MY';
+	return 'SA';
 	
 	/////next time
 	if(!jra_is_system_admin())
