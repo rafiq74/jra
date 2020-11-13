@@ -164,7 +164,7 @@ $options = array(
 	'hover-table' => false, //make the table hover (not applicable under generaltable)
 	'action' => true, //automatic add form and javascript for action edit and delete
 	'sortable' => true, //enable clicking of heading to sort
-	'default_sort_field' => 'fullname',
+	'default_sort_field' => 'id',
 	'detail_link' => false, //provide javascript to link to detail page
 	'detail_field' => 'id', //the field to pick up as the id (reference) when going for detail view
 	'detail_var' => 'id', //variable name in query string for id. var=id
@@ -193,7 +193,7 @@ $fields = array(
 	'fullname' => array(
 		'header'=>get_string('name', 'local_jra'), //for custom header
 		'align' => 'left',
-		'size' => '25%',
+		'size' => '20%',
 	),
 	'user_type' => array(
 		'header'=>jra_get_string(['user', 'type']), //for custom header
@@ -212,7 +212,7 @@ $fields = array(
 	'gender' => array(
 		'header'=>get_string('gender', 'local_jra'), //for custom header
 		'align' => 'left',
-		'size' => '10%',
+		'size' => '5%',
 		'format' => 'lookup',
 		'lookup_list' => $gender_list,
 		'show_reference' => true,
@@ -225,6 +225,12 @@ $fields = array(
 		'lookup_list' => $status_list,
 		'show_reference' => true,
 	),	
+	'date_created' => array(
+		'header'=>get_string('date', 'local_jra'), //for custom header
+		'align' => 'left',
+		'size' => '10%',
+		'format' => 'date',
+	),
 	'*' => array(), //action
 );
 
