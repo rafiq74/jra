@@ -59,7 +59,7 @@ function jra_get_config($varname, $subfield = '')
 {
 	global $DB;
 	$condition = array(
-		'country' => jra_get_country(),
+		'institute' => jra_get_institute(),
 		'name' => $varname,
 	);
 	if($subfield != '')
@@ -82,16 +82,16 @@ function jra_get_config($varname, $subfield = '')
 function jra_update_config($varname, $subfield, $value)
 {
 	global $DB;
-	$country = jra_get_country();
+	$institute = jra_get_institute();
 	//delete the value first.
 //	if($subfield != '')
 //		$sub = " and subfield = '$subfield'";
 //	else
 		$sub = '';
-	$sql = "delete from {jra_config} where name = '$varname'" . $sub . " and country = '$country'";
+	$sql = "delete from {jra_config} where name = '$varname'" . $sub . " and institute = '$institute'";
 	$DB->execute($sql);
 	//now add it
-	$sql = "insert into {jra_config} (name, subfield, var_value, country) values('$varname', '$subfield', '$value', '$country')";
+	$sql = "insert into {jra_config} (name, subfield, var_value, institute) values('$varname', '$subfield', '$value', '$institute')";
 	$DB->execute($sql);
 }
 
@@ -101,7 +101,7 @@ function jra_get_config_user($moodle_user_id, $varname, $subfield = '')
 {
 	global $DB;
 	$condition = array(
-		'country' => jra_get_country(),
+		'institute' => jra_get_institute(),
 		'name' => $varname,
 		'moodle_user_id' => $moodle_user_id,
 	);
@@ -126,16 +126,16 @@ function jra_get_config_user($moodle_user_id, $varname, $subfield = '')
 function jra_update_config_user($moodle_user_id, $varname, $subfield, $value)
 {
 	global $DB;
-	$country = jra_get_country();
+	$institute = jra_get_institute();
 	//delete the value first.
 	if($subfield != '')
 		$sub = " and subfield = '$subfield'";
 	else
 		$sub = '';
-	$sql = "delete from {jra_config_user} where name = '$varname'" . $sub . " and country = '$country' and moodle_user_id = '$moodle_user_id'";
+	$sql = "delete from {jra_config_user} where name = '$varname'" . $sub . " and institute = '$institute' and moodle_user_id = '$moodle_user_id'";
 	$DB->execute($sql);
 	//now add it
-	$sql = "insert into {jra_config_user} (moodle_user_id, name, subfield, var_value, country) values('$moodle_user_id', '$varname', '$subfield', '$value', '$country')";
+	$sql = "insert into {jra_config_user} (moodle_user_id, name, subfield, var_value, institute) values('$moodle_user_id', '$varname', '$subfield', '$value', '$institute')";
 	$DB->execute($sql);
 }
 
@@ -229,7 +229,7 @@ function jra_allow_application()
 		throw new moodle_exception('Error!!! User not active to perform this action');
 }
 
-//get the default institute. Pass the field like country to get the country of the institute
+//get the default institute. Pass the field like institute to get the institute of the institute
 function jra_get_institute()
 {
 	return jra_get_config_session('default_institute');
@@ -636,27 +636,33 @@ function jra_has_moodle_role($user, $role)
 function jra_bootstraper($redir = true)
 {
 	global $CFG, $DB, $USER;
-	if($USER->auth == 'db' && !isset($USER->jra_user))
+	if (isloggedin() and !isguestuser()) //only do bootstrap for log in user 
 	{
-		$u = $DB->get_record('jra_user', array('id' => $USER->idnumber));
-		if($u)
-			$USER->jra_user = $u; //remember the session
+		if($USER->auth == 'db' && !isset($USER->jra_user))
+		{
+			$u = $DB->get_record('jra_user', array('id' => $USER->idnumber));
+			if($u)
+				$USER->jra_user = $u; //remember the session
+		}
+		if (isloggedin()) //this part only for logged in user
+		{
+			jra_eula(); //end user licence agreement
+			jra_need_change_password();
+		}	
+		jra_reset_session();
+		//check if user is suspended
+	//	jra_is_suspended();
+		//for course page bootstraper
+			//Check for QC Survey
+	//		if(jra_has_incomplete_survey($COURSE, $USER)) //if has survey, redirect to do survey
+	//		{
+	//			$survey_url = new moodle_url($CFG->wwwroot.'/local/rcyci/survey/survey.php', array('id' => $COURSE->id));		
+	//			redirect($survey_url);
+	//		}		
 	}
-	if (isloggedin()) //this part only for logged in user
+	else //if there is any bootstrap for non log in user
 	{
-		jra_eula(); //end user licence agreement
-		jra_need_change_password();
-	}	
-	jra_reset_session();
-	//check if user is suspended
-//	jra_is_suspended();
-	//for course page bootstraper
-		//Check for QC Survey
-//		if(jra_has_incomplete_survey($COURSE, $USER)) //if has survey, redirect to do survey
-//		{
-//			$survey_url = new moodle_url($CFG->wwwroot.'/local/rcyci/survey/survey.php', array('id' => $COURSE->id));		
-//			redirect($survey_url);
-//		}		
+	}
 	return false;
 }
 

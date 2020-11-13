@@ -30,40 +30,6 @@
 // This is the library for custom user interface
 defined('MOODLE_INTERNAL') || die();
 
-function jra_app_get_applicant($id = '', $semester = '')
-{
-	global $DB, $USER;
-	if($id == '')
-		$id = $USER->jra_user->id;
-	if($semester == '')
-		$semester = jra_get_semester();
-	$applicant = $DB->get_record('si_applicant', array('user_id' => $id, 'semester' => $semester, 'deleted' => 0));
-	return $applicant;
-}
-
-function jra_app_get_applicant_stage($applicant)
-{
-	if($applicant)
-		return $applicant->status;
-	else
-		return 0;
-}
-
-//the stage where the application becomes read only
-function jra_app_read_only_stage()
-{
-	return 5;
-}
-
-//return true if applicant already admitted
-function jra_app_applicant_admitted($applicant)
-{
-	if($applicant->admit_status == 1 && $applicant->idnumber != '') //admitted and has student id
-		return true;
-	else
-		return false;
-}
-
 function jra_app_get_age($aDate)
 {
 	$now = time();
@@ -111,45 +77,5 @@ function jra_app_is_end_date($aDate)
 function jra_app_get_end_date($aDate)
 {
 	return strtotime(date('d-M-Y', $aDate) . ' + 1 day') - 1;
-}
-
-//active_effective_date retrieve those that is active on the retrival date
-function jra_app_get_plan($data, $active_effective_date = true, $custom_eff_date = '')
-{
-	global $DB;
-	$sql = "select * from {jra_plan} a where " . jra_query_eff_date('jra_plan', 'a', array('plan_code'), $active_effective_date, $custom_eff_date) . " and a.plan_code = '$data->plan_code' and a.country = '$data->country'"; //effective date
-	return $DB->get_record_sql($sql); //false if not found	
-}
-
-function jra_app_ref_number($applicant)
-{
-	return str_pad($applicant->id, 5, '0', STR_PAD_LEFT);
-}
-
-function jra_app_recompute_aggregate()
-{
-	global $DB;
-	$semester = $DB->get_record('si_semester', array('semester' => jra_get_semester()));
-	if($semester)
-	{
-		$applicants = $DB->get_records('si_applicant', array('semester' => $semester->semester));
-		foreach($applicants as $applicant)
-		{
-			$obj = new stdClass();
-			$obj->id = $applicant->id;
-			if($applicant->secondary != '' && $applicant->tahseli != '' && $applicant->qudorat != '')
-				$obj->aggregation = jra_app_compute_aggregate($applicant, $semester);
-			else
-				$obj->aggregation = 0;
-			$DB->update_record('si_applicant', $obj);	
-		}
-	}
-}
-
-//calculate the weighted average for aggregation
-function jra_app_compute_aggregate($applicant, $semester)
-{
-	$aggregation = (($applicant->secondary * $semester->secondary_weight) + ($applicant->tahseli * $semester->tahseli_weight) + ($applicant->qudorat * $semester->qudorat_weight)) / ($semester->secondary_weight + $semester->tahseli_weight + $semester->qudorat_weight);
-	return number_format($aggregation, 2);
 }
 

@@ -57,7 +57,7 @@ function jra_get_config($varname, $subfield = '')
 {
 	global $DB;
 	$condition = array(
-		'country' => jra_get_country(),
+		'institute' => jra_get_institute(),
 		'name' => $varname,
 	);
 	if($subfield != '')
@@ -80,16 +80,16 @@ function jra_get_config($varname, $subfield = '')
 function jra_update_config($varname, $subfield, $value)
 {
 	global $DB;
-	$country = jra_get_country();
+	$institute = jra_get_institute();
 	//delete the value first.
 //	if($subfield != '')
 //		$sub = " and subfield = '$subfield'";
 //	else
 		$sub = '';
-	$sql = "delete from {jra_config} where name = '$varname'" . $sub . " and country = '$country'";
+	$sql = "delete from {jra_config} where name = '$varname'" . $sub . " and institute = '$institute'";
 	$DB->execute($sql);
 	//now add it
-	$sql = "insert into {jra_config} (name, subfield, var_value, country) values('$varname', '$subfield', '$value', '$country')";
+	$sql = "insert into {jra_config} (name, subfield, var_value, institute) values('$varname', '$subfield', '$value', '$institute')";
 	$DB->execute($sql);
 }
 
@@ -112,6 +112,13 @@ function jra_include_jquery()
 	$PAGE->requires->jquery();
 	$PAGE->requires->jquery_plugin('ui');
 	$PAGE->requires->jquery_plugin('ui-css'); 
+}
+
+//get the default institute. Pass the field like institute to get the institute of the institute
+function jra_get_institute()
+{
+//	return jra_get_config_session('default_institute');
+	return 'HIEI'; //temporary
 }
 
 //get the default country. Pass the field like country to get the country of the country

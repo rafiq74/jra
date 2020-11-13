@@ -59,7 +59,7 @@ function xmldb_local_jra_upgrade($oldversion) {
 
     // Put any upgrade step following this.
 
-    $newversion = 2016062489; //put the new version number here
+    $newversion = 2016062493; //put the new version number here
 
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
@@ -119,104 +119,7 @@ function xmldb_local_jra_upgrade($oldversion) {
         }
 */
 
-        // Define field suspended to be added to jra_user.
-        $table = new xmldb_table('si_semester');
-        $field = new xmldb_field('admission_type', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'semester_year');
 
-        // Conditionally launch add field suspended.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        $table = new xmldb_table('si_applicant');
-        $field = new xmldb_field('graduated_from', XMLDB_TYPE_CHAR, '225', null, null, null, null, 'institute');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        $field = new xmldb_field('graduated_year', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'graduated_from');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        $field = new xmldb_field('graduated_major', XMLDB_TYPE_CHAR, '225', null, null, null, null, 'graduated_year');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        $field = new xmldb_field('graduated_gpa', XMLDB_TYPE_NUMBER, '20, 2', null, null, null, null, 'graduated_major');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        $field = new xmldb_field('transcript_file', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'graduated_gpa');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        $field = new xmldb_field('uni_approval_file', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'transcript_file');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-
-        // Define table si_university to be created.
-        $table = new xmldb_table('si_university');
-
-        // Adding fields to table si_university.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-        $table->add_field('name_a', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-
-        // Adding keys to table si_university.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-
-        // Conditionally launch create table for si_university.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        $table = new xmldb_table('si_major');
-
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'id_uni');
-        $table->add_field('name_a', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, null, 'name_uni_a');
-
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'), null, null);
-
-        // Conditionally launch create table for si_university.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        // Changing precision of field graduated_gpa on table si_applicant to (20, 2).
-        $table = new xmldb_table('si_applicant');
-        $field = new xmldb_field('graduated_gpa', XMLDB_TYPE_NUMBER, '20, 2', null, null, null, null, 'graduated_major');
-
-        // Launch change of precision for field graduated_gpa.
-        $dbman->change_field_precision($table, $field);
-
-
-        $table = new xmldb_table('si_applicant');
-        $field = new xmldb_field('tabeiah_file', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'uni_approval_file');
-
-        // Conditionally launch add field tabeiah_file.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        $table = new xmldb_table('si_applicant');
-        $field = new xmldb_field('graduated_max_gpa', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'graduated_major');
-
-        // Conditionally launch add field graduated_max_gpa.
-        if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-        }
-
-
-        $table = new xmldb_table('si_applicant');
-        $field = new xmldb_field('graduated_max_gpa', XMLDB_TYPE_NUMBER, '20, 2', null, null, null, null, 'graduated_major');
-
-        // Launch change of type for field graduated_max_gpa.
-        $dbman->change_field_type($table, $field);
 
 		// upgrade code ends here
         // jra savepoint reached.

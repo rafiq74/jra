@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 function jra_lookup_get_list($category, $subcategory = '', $condition = '', $lang = true, $description = false, $empty_text = '')
 {
 	global $DB;
-	$where = " and country = '" . jra_get_institute() . "'"; //initialize a where clause with country
+	$where = " and institute = '" . jra_get_institute() . "'"; //initialize a where clause with institute
 	if($subcategory != '')
 		$where = $where . " and subcategory = '$subcategory'";
 	if($condition != '')
@@ -65,7 +65,7 @@ function jra_lookup_get_list($category, $subcategory = '', $condition = '', $lan
 	return $arr;
 }
 
-function jra_lookup_insert($value, $lang, $category, $subcategory, $country, $sort_order = 1, $description = '')
+function jra_lookup_insert($value, $lang, $category, $subcategory, $institute, $sort_order = 1, $description = '')
 {
 	global $DB;
 	$data = new stdClass();
@@ -75,11 +75,11 @@ function jra_lookup_insert($value, $lang, $category, $subcategory, $country, $so
 	$data->subcategory = $subcategory;
 	$data->sort_order = $sort_order;
 	$data->description = $description;
-	$data->country = $country;
+	$data->institute = $institute;
 	$DB->insert_record('jra_lookup', $data);
 }
 
-function jra_lookup_update($id, $value, $lang = '', $category = '', $subcategory = '', $country = '', $sort_order = '')
+function jra_lookup_update($id, $value, $lang = '', $category = '', $subcategory = '', $institute = '', $sort_order = '')
 {
 	global $DB;
 	$data = new stdClass();
@@ -97,10 +97,10 @@ function jra_lookup_update($id, $value, $lang = '', $category = '', $subcategory
 }
 
 //check if the value of lookup duplicate
-function jra_lookup_duplicate($value, $lang, $category, $subcategory, $country, $id = '')
+function jra_lookup_duplicate($value, $lang, $category, $subcategory, $institute, $id = '')
 {
 	global $DB;
-	$where = "where country = '$country' and category = '$category' and subcategory = '$subcategory' and value = '$value' and lang = '$lang'";
+	$where = "where institute = '$institute' and category = '$category' and subcategory = '$subcategory' and value = '$value' and lang = '$lang'";
 	$sql = "select * from {jra_lookup} $where";
 	//validate that there is no duplicate
 	$isDuplicate = false;

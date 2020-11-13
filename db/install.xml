@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/jra/db" VERSION="20201010" COMMENT="XMLDB file for Moodle local/jra"
+<XMLDB PATH="local/jra/db" VERSION="20201113" COMMENT="XMLDB file for Moodle local/jra"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -10,13 +10,13 @@
         <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="subfield" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="var_value" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
+        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="jra_config_user" COMMENT="Default comment for the table, please edit me">
@@ -27,13 +27,13 @@
         <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="subfield" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="var_value" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
+        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
         <INDEX NAME="user_id" UNIQUE="false" FIELDS="user_id"/>
       </INDEXES>
     </TABLE>
@@ -55,13 +55,13 @@
         <FIELD NAME="field13" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="field14" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="field15" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
+        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="jra_lookup" COMMENT="Default comment for the table, please edit me">
@@ -73,13 +73,13 @@
         <FIELD NAME="subcategory" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sort_order" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
+        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="jra_user" COMMENT="Default comment for the table, please edit me">
@@ -121,13 +121,13 @@
         <FIELD NAME="active_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
+        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="jra_user_contact" COMMENT="Default comment for the table, please edit me">
@@ -149,7 +149,7 @@
         <FIELD NAME="contact_relationship" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -167,13 +167,13 @@
         <FIELD NAME="role_value" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="added_user" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="added_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
+        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="jra_city" COMMENT="Default comment for the table, please edit me">
@@ -210,130 +210,6 @@
         <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="jra_stripepayment" COMMENT="Holds all known information about Stripe transactions">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="business" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="receiver_email" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="receiver_id" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="item_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="moodle_user_id" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="memo" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="tax" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="option_name1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="option_selection1_x" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="option_name2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="option_selection2_x" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="payment_status" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="pending_reason" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="reason_code" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="txn_id" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="parent_txn_id" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="payment_type" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="timeupdated" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="jra_plan" COMMENT="Default comment for the table, please edit me">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="plan_code" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="remark" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="currency" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="duration_denomination" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="cost1" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="duration1" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="message1" TYPE="char" LENGTH="1300" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="cost2" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="duration2" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="message2" TYPE="char" LENGTH="1300" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="cost3" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="duration3" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="message3" TYPE="char" LENGTH="1300" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="cost4" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="duration4" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="message4" TYPE="char" LENGTH="1300" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="cost5" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="duration5" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="message5" TYPE="char" LENGTH="1300" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="icon" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_status" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_date_end" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_seq" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="sort_order" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="action_user" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="country" UNIQUE="false" FIELDS="country"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="jra_plan_user" COMMENT="Assignment of plan to a user">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="plan_code" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="start_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="end_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="action" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="action_remark" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_status" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="action_user" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="plan_code" UNIQUE="false" FIELDS="plan_code"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="jra_asset" COMMENT="Asset defined by user">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="category" TYPE="char" LENGTH="150" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="subcategory" TYPE="char" LENGTH="150" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="capacity" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="location" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="asset_owner" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_status" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="action_user" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="user_id" UNIQUE="false" FIELDS="user_id"/>
-        <INDEX NAME="cateogry" UNIQUE="false" FIELDS="category"/>
-        <INDEX NAME="subcategory" UNIQUE="false" FIELDS="subcategory"/>
-      </INDEXES>
-    </TABLE>
     <TABLE NAME="si_semester" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
@@ -350,164 +226,6 @@
         <FIELD NAME="is_short_sem" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="display" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="campus" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="tahseli_weight" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="qudorat_weight" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="secondary_weight" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="min_aggregate" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="max_aggregate" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="num_applicant" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="placement_test_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="placement_test_venue" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="city_filter" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="confirm_end_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="si_applicant" COMMENT="Default comment for the table, please edit me">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="semester" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="appid" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="idnumber" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="national_id" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="id_type" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="first_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="father_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="grandfather_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="family_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="first_name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="father_name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="grandfather_name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="family_name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="gender" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="dob" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="dob_hijri" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="marital_status" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="city" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="nationality" TYPE="char" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="nationality_at_birth" TYPE="char" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="religion" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="blood_type" TYPE="char" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="tahseli" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="tahseli_weight" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="qudorat" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="qudorat_weight" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="secondary" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="secondary_weight" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="aggregation" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="natioanl_id_file" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="secondary_file" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="tahseli_file" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="qudorat_file" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="study_stream" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="program_apply" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="status_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="status_user" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="ranking" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="acceptance" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="acceptance_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="admit_status" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="admit_status_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="placement_test_score" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="student_id" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="deleted" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="graduated_from" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="graduated_year" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="graduated_major" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="graduated_max_gpa" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="graduated_gpa" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
-        <FIELD NAME="transcript_file" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="uni_approval_file" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="tabeiah_file" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="si_applicant_contact" COMMENT="Default comment for the table, please edit me">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="applicant_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="address_type" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="address1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="address2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="address_city" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="address_state" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="address_country" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="address_postcode" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="phone_home" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="phone_mobile" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="email_primary" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="email_secondary" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="contact_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="contact_relationship" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="contact_mobile" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_status" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="user_id" UNIQUE="false" FIELDS="user_id"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="si_applicant_finance" COMMENT="Default comment for the table, please edit me">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="applicant_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="bank_code" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="bank_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="bank_name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="account_no" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="iban_01" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="iban_02" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="iban_03" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="iban_04" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="iban_05" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="iban_06" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="account_type" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="user_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_created" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="date_updated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="si_program" COMMENT="Default comment for the table, please edit me">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="catalogue_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="program" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="program_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="program_name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="academic_career" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_date" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="eff_status" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="minimum_score" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
         <FIELD NAME="institute" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -516,26 +234,6 @@
       <INDEXES>
         <INDEX NAME="institute" UNIQUE="false" FIELDS="institute"/>
       </INDEXES>
-    </TABLE>
-    <TABLE NAME="si_university" COMMENT="University List">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="si_major" COMMENT="University List">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="name_a" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
     </TABLE>
   </TABLES>
 </XMLDB>
