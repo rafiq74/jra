@@ -236,6 +236,8 @@ function jra_lookup_user_type($blank = '')
 	$arr = array(
 		'public' => get_string('public', 'local_jra'),
 		'employee' => get_string('employee', 'local_jra'),
+		'student' => get_string('student', 'local_jra'),
+		'parent' => get_string('parent', 'local_jra'),
 	);
 	if($blank != '')
 		$arr = array_merge(['' => $blank], $arr);

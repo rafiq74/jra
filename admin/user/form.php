@@ -28,23 +28,23 @@ defined('MOODLE_INTERNAL') || die();
 require_once '../../lib/jra_lookup_lib.php';
 require_once $CFG->libdir.'/formslib.php';
 
-class user_form extends moodleform 
+class user_form extends moodleform
 {
 	//Add elements to form
-	public function definition() 
+	public function definition()
 	{
 		global $CFG, $USER;
-		$mform = $this->_form; // Don't forget the underscore! 
+		$mform = $this->_form; // Don't forget the underscore!
  		$attributes = array();
 
-		$mform->addElement('hidden', 'id', '');	
-		$mform->addElement('hidden', 'institute', jra_get_institute());	
-				
-		$mform->addElement('text', 'username', get_string('username') . ' (' . get_string('email') . ')', array('size' => 45, 'maxlength' => 100));		
+		$mform->addElement('hidden', 'id', '');
+		$mform->addElement('hidden', 'institute', jra_get_institute());
+
+		$mform->addElement('text', 'username', get_string('username') . ' (' . get_string('email') . ')', array('size' => 45, 'maxlength' => 100));
 		$mform->setType('username', PARAM_NOTAGS);                   //Set type of element
 		$mform->addRule('username', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addRule('username', get_string('err_email', 'form'), 'email', '', 'client', false, false);
-		
+
 		$mform->addElement('select', 'user_type', jra_get_string(['user', 'type']), jra_lookup_user_type());
 		$mform->setDefault('user_type', 'employee');
 		$mform->addElement('text', 'first_name', get_string('first_name', 'local_jra'), array('size' => 30));
@@ -62,16 +62,16 @@ class user_form extends moodleform
 		$d->format = 10;
 		$mform->addRule('national_id', get_string('err_maxlength', 'form', $d), 'maxlength', 10, 'client', false, false);
 		$mform->addRule('national_id', get_string('err_minlength', 'form', $d), 'minlength', 10, 'client', false, false);
-		
+
 		$mform->addElement('select', 'gender', get_string('gender', 'local_jra'), jra_lookup_gender());
 
         $user_status = jra_lookup_user_status();
         $mform->addElement('select', 'active_status', 'Status', $user_status, $attributes);
 //		$mform->addElement('text', 'idnumber', get_string('idnumber'), array('size' => 30));
-		
-		$this->add_action_buttons($cancel=true);		
+
+		$this->add_action_buttons($cancel=true);
 	}
-	
+
 	//Custom validation should be added here
 	function validation($data, $files) {
 		return array();
@@ -79,16 +79,16 @@ class user_form extends moodleform
 }
 
 
-class user_contact_form extends moodleform 
+class user_contact_form extends moodleform
 {
 	//Add elements to form
-	public function definition() 
+	public function definition()
 	{
 		global $DB;
-		$mform = $this->_form; // Don't forget the underscore! 
+		$mform = $this->_form; // Don't forget the underscore!
  		$attributes = array();
 
-		$mform->addElement('hidden', 'id', '');	
+		$mform->addElement('hidden', 'id', '');
 
 		$user_id = $this->_customdata['uid'];
 		$mform->addElement('hidden', 'id', '');
@@ -96,55 +96,55 @@ class user_contact_form extends moodleform
 		$mform->addElement('hidden', 'tab', 'contact');
 		$user = $DB->get_record('jra_user', array('id' => $user_id));
 		if(!$user)
-			throw new moodle_exception('Wrong parameters.');		
-		$mform->addElement('hidden', 'user_id', '');		
+			throw new moodle_exception('Wrong parameters.');
+		$mform->addElement('hidden', 'user_id', '');
 
 //		$mform->addElement('header', 'headergradetemplate', get_string('general'));
-		
+
 		$address_type = jra_lookup_get_list('personal_info', 'address_type', '', true);
 		$mform->addElement('select', 'address_type', jra_get_string(['contact', 'type']), $address_type);
-		
+
 		$mform->addElement('text', 'address1', get_string('address1', 'local_jra'), array('size' => 70));
 		$mform->addRule('address1', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addElement('text', 'address2', get_string('address2', 'local_jra'), array('size' => 70));
-		
+
 		$mform->addElement('text', 'address_city', get_string('city', 'local_jra'), array('size' => 20));
 		$mform->addRule('address_city', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addElement('text', 'address_state', get_string('state', 'local_jra'), array('size' => 20));
 		$mform->addRule('address_state', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addElement('text', 'address_postcode', get_string('postcode', 'local_jra'), array('size' => 10));
 		$mform->addRule('address_postcode', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		
+
 		$countries = jra_lookup_countries();
 		$mform->addElement('select', 'address_country', get_string('country', 'local_jra'), $countries);
 		$mform->setDefault('address_country', jra_get_country());
-		
+
 		$mform->addElement('text', 'phone_mobile', get_string('phone_mobile', 'local_jra'), array('size' => 20));
 		$mform->addRule('phone_mobile', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addElement('text', 'phone_home', get_string('phone_home', 'local_jra'), array('size' => 20));
 
 		$mform->addElement('text', 'email_primary', get_string('email', 'local_jra'), array('size' => 60));
 		$mform->addRule('email_primary', get_string('err_email', 'form'), 'email', '', 'client', false, false);
-				
-		$this->add_action_buttons($cancel=true);		
+
+		$this->add_action_buttons($cancel=true);
 	}
-	
+
 	//Custom validation should be added here
 	function validation($data, $files) {
 		return array();
 	}
 }
 
-class personal_info_form extends moodleform 
+class personal_info_form extends moodleform
 {
 	//Add elements to form
-	public function definition() 
+	public function definition()
 	{
 		global $DB;
-		$mform = $this->_form; // Don't forget the underscore! 
+		$mform = $this->_form; // Don't forget the underscore!
  		$attributes = array();
 
-		$mform->addElement('hidden', 'id', '');	
+		$mform->addElement('hidden', 'id', '');
 
 		$user_id = $this->_customdata['uid'];
 		$mform->addElement('hidden', 'id', '');
@@ -152,25 +152,25 @@ class personal_info_form extends moodleform
 		$mform->addElement('hidden', 'tab', 'personal');
 		$user = $DB->get_record('jra_user', array('id' => $user_id));
 		if(!$user)
-			throw new moodle_exception('Wrong parameters.');		
-		$mform->addElement('hidden', 'user_id', '');		
+			throw new moodle_exception('Wrong parameters.');
+		$mform->addElement('hidden', 'user_id', '');
 
 //		$mform->addElement('header', 'headergradetemplate', get_string('general'));
-		
+
 		$mform->addElement('text', 'national_id', jra_get_string(['national_id']), array('size' => 20));
-		
-		$mform->addElement('text', 'passport_id', get_string('passport_no', 'local_jra'), array('size' => 20));		
+
+		$mform->addElement('text', 'passport_id', get_string('passport_no', 'local_jra'), array('size' => 20));
 		$mform->addElement('date_selector', 'dob', get_string('date_of_birth', 'local_jra'));
-		
+
 		$countries = jra_lookup_countries();
 		$mform->addElement('select', 'nationality', get_string('nationality', 'local_jra'), $countries);
 		$mform->setDefault('nationality', jra_get_country());
 		$marital_status = jra_lookup_marital_status();
         $mform->addElement('select', 'marital_status', get_string('marital_status', 'local_jra') ,$marital_status);
-		
-		$this->add_action_buttons($cancel=true);		
+
+		$this->add_action_buttons($cancel=true);
 	}
-	
+
 	//Custom validation should be added here
 	function validation($data, $files) {
 		return array();
@@ -178,16 +178,16 @@ class personal_info_form extends moodleform
 }
 
 
-class account_info_form extends moodleform 
+class account_info_form extends moodleform
 {
 	//Add elements to form
-	public function definition() 
+	public function definition()
 	{
 		global $DB;
-		$mform = $this->_form; // Don't forget the underscore! 
+		$mform = $this->_form; // Don't forget the underscore!
  		$attributes = array();
 
-		$mform->addElement('hidden', 'id', '');	
+		$mform->addElement('hidden', 'id', '');
 
 		$user_id = $this->_customdata['uid'];
 		$mform->addElement('hidden', 'id', '');
@@ -195,20 +195,20 @@ class account_info_form extends moodleform
 		$mform->addElement('hidden', 'tab', 'account');
 		$user = $DB->get_record('jra_user', array('id' => $user_id));
 		if(!$user)
-			throw new moodle_exception('Wrong parameters.');		
-		$mform->addElement('hidden', 'user_id', '');		
+			throw new moodle_exception('Wrong parameters.');
+		$mform->addElement('hidden', 'user_id', '');
 
 //		$mform->addElement('header', 'headergradetemplate', get_string('general'));
-		
+
 		$yesno = jra_lookup_yes_no();
 		$mform->addElement('select', 'enable_login', jra_get_string(['enable', 'login']), $yesno);
 		$mform->addElement('select', 'suspended', get_string('suspended', 'local_jra'), $yesno);
 		$mform->setDefault('suspended', 'N');
 	    $mform->addElement('textarea', 'suspend_message', get_string('suspend_message', 'local_jra'), 'wrap="virtual" rows="5" cols="80"');
-		
-		$this->add_action_buttons($cancel=true);		
+
+		$this->add_action_buttons($cancel=true);
 	}
-	
+
 	//Custom validation should be added here
 	function validation($data, $files) {
 		return array();

@@ -24,7 +24,7 @@
 
 define("MAX_USERS_TO_LIST_PER_ROLE", 20);
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_lookup_lib.php';
 require_once '../../lib/jra_output_lib.php';
@@ -79,7 +79,7 @@ jra_set_session('ajax_user_role_subrole', $subrole);
 //also set the session for the listing
 $list_role = jra_get_session('user_account_role');
 if($list_role != '') //if it is not all
-	jra_set_session('user_account_role', $role);	
+	jra_set_session('user_account_role', $role);
 
 //frontpage - for 2 columns with standard menu on the right
 //jra - 1 column
@@ -109,9 +109,9 @@ jra_set_session('ajax_user_role_not_in', $not_in);
 $available_selector = new jra_user_role_available_selector('addselect');
 $assigned_selector = new jra_user_assigned_role_selector('existingselect');
 
-if (optional_param('add', false, PARAM_BOOL) and confirm_sesskey()) 
+if (optional_param('add', false, PARAM_BOOL) and confirm_sesskey())
 {
-    if ($to_add = $available_selector->get_selected_users()) 
+    if ($to_add = $available_selector->get_selected_users())
 	{
 		$post_role = $_POST['role'];
 		$post_subrole = $_POST['subrole'];
@@ -124,10 +124,10 @@ if (optional_param('add', false, PARAM_BOOL) and confirm_sesskey())
 		$available_selector = new jra_user_role_available_selector('addselect');
 		$assigned_selector = new jra_user_assigned_role_selector('existingselect');
     }
-} 
-else if (optional_param('remove', false, PARAM_BOOL) and confirm_sesskey()) 
+}
+else if (optional_param('remove', false, PARAM_BOOL) and confirm_sesskey())
 {
-    if ($to_remove = $assigned_selector->get_selected_users()) 
+    if ($to_remove = $assigned_selector->get_selected_users())
 	{
 		$post_role = $_POST['role'];
 		$post_subrole = $_POST['subrole'];
@@ -157,11 +157,11 @@ $form = jra_admin_user_role_search_form($role, $subrole, 'role', $role_value);
 		<?php echo $form; ?>
     </div>
     <div class="card-body">
-    
+
     <div id="addadmisform">
         <div>
         <input type="hidden" name="sesskey" value="<?php p(sesskey()); ?>" />
-    
+
         <table class="generaltable generalbox groupmanagementtable boxaligncenter" summary="">
         <tr>
           <td id='existingcell'>
@@ -188,7 +188,7 @@ $form = jra_admin_user_role_search_form($role, $subrole, 'role', $role_value);
         </table>
         </div>
     </div>
-    
+
     </div>  <!-- end of card-body -->
 </div>  <!-- end of card -->
 </form>
