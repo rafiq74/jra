@@ -119,7 +119,14 @@ function xmldb_local_jra_upgrade($oldversion) {
         }
 */
 
+        
+        $table = new xmldb_table('jra_user');
+        $field = new xmldb_field('app_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
 
+        // Conditionally launch add field app_id.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
 		// upgrade code ends here
         // jra savepoint reached.
