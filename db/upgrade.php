@@ -59,7 +59,7 @@ function xmldb_local_jra_upgrade($oldversion) {
 
     // Put any upgrade step following this.
 
-    $newversion = 2016062493; //put the new version number here
+    $newversion = 2016062495; //put the new version number here
 
     if ($oldversion < $newversion) {
 		//Upgrade code starts here
@@ -119,14 +119,15 @@ function xmldb_local_jra_upgrade($oldversion) {
         }
 */
 
-        
-        $table = new xmldb_table('jra_user');
-        $field = new xmldb_field('app_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
 
-        // Conditionally launch add field app_id.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        $table = new xmldb_table('jra_user');
+         $field = new xmldb_field('app_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id');
+
+         // Conditionally launch add field app_id.
+         if (!$dbman->field_exists($table, $field)) {
+             $dbman->add_field($table, $field);
+         }
+
 
 		// upgrade code ends here
         // jra savepoint reached.
