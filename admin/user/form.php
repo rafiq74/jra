@@ -55,9 +55,7 @@ class user_form extends moodleform
 		//$mform->addRule('grandfather_name', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addElement('text', 'family_name', get_string('family_name', 'local_jra'), array('size' => 30));
 		$mform->addRule('family_name', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-		$mform->addElement('text', 'national_id', jra_get_string(['national_id']), array('size' => 20, 'maxlength' => 10));
-//		$mform->addRule('national_id', get_string('err_required', 'form'), 'required', '', 'client', false, false);
-
+	
 		$mform->addElement('text', 'first_name_a', get_string('first_name_a', 'local_jra'), array('size' => 30));
 		$mform->addRule('first_name_a', get_string('err_required', 'form'), 'required', '', 'client', false, false);
 		$mform->addElement('text', 'father_name_a', get_string('father_name_a', 'local_jra'), array('size' => 30));

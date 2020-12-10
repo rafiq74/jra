@@ -23,7 +23,7 @@
  */
 
 require_once '../../../../config.php';
-require_once '../../lib/jra_lib.php'; 
+require_once '../../lib/jra_lib.php';
 require_once '../../lib/jra_ui_lib.php';
 require_once '../../lib/jra_output_lib.php';
 require_once '../../lib/jra_query_lib.php';
@@ -55,7 +55,7 @@ else
 {
 	//Check if a tab has to be active by default
 	if(isset($_GET['tab']))
-		$tab = $_GET['tab'];	
+		$tab = $_GET['tab'];
 	else
 		$tab = jra_get_session('jra_view_user_tab');
 }
@@ -116,6 +116,11 @@ $return_url = new moodle_url($return_link . '.php', $return_params);
 echo '<div class="pull-right rc-attendance-teacher-print">' . html_writer::link($return_url, jra_ui_icon('arrow-circle-left', '1', true) . ' ' . get_string('back', 'local_jra'), array('title' => get_string('back', 'local_jra'))) . '</div>';
 
 $detail_data = array();
+
+$obj = new stdClass();
+$obj->title = get_string('app_id');
+$obj->content = $user->app_id;
+$detail_data[] = $obj;
 //one row of data
 $obj = new stdClass();
 $obj->title = get_string('username');
@@ -168,14 +173,14 @@ else if($personal_active == 'active')
 	include('personal_info.php');
 else if($account_active == 'active')
 	include('personal_account.php');
-$content = ob_get_clean();		
+$content = ob_get_clean();
 
 //build url for tab 1
 $get_params['tab'] = 'contact';
 unset($get_params['op']);
 $contact_url = new moodle_url('view_user.php', $get_params);
 //build the content
-$tab_content = jra_admin_user_contact_info($id, $contact_active, $content);	
+$tab_content = jra_admin_user_contact_info($id, $contact_active, $content);
 $tab_pages['contact'] = array(
 	'active' => $contact_active,
 	'url' => $contact_url,
@@ -187,7 +192,7 @@ $tab_pages['contact'] = array(
 $get_params['tab'] = 'personal';
 unset($get_params['op']);
 $personal_url = new moodle_url('view_user.php', $get_params);
-$tab_content = jra_admin_user_personal_info($id, $personal_active, $content);	
+$tab_content = jra_admin_user_personal_info($id, $personal_active, $content);
 $tab_pages['personal'] = array(
 	'active' => $personal_active,
 	'url' => $personal_url,
@@ -200,7 +205,7 @@ $get_params['tab'] = 'account';
 unset($get_params['op']);
 $account_url = new moodle_url('view_user.php', $get_params);
 //build the content
-$tab_content = jra_admin_user_account_info($id, $account_active, $content);	
+$tab_content = jra_admin_user_account_info($id, $account_active, $content);
 $tab_pages['account'] = array(
 	'active' => $account_active,
 	'url' => $account_url,

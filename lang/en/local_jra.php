@@ -669,3 +669,4 @@ $string['max_cgpa'] = 'Max CGPA';
 
 //new translate
 $string['student'] = 'Student';
+$sttring['app_id'] = 'Application ID';
